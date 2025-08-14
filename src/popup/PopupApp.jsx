@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels, RadioGroup } from '@headlessui/react';
 
 const PopupApp = () => {
   const [messages, setMessages] = useState({});
+  const [domain, setDomain] = useState('');
+  const [proxyOption, setProxyOption] = useState('pac');
 
   useEffect(() => {
     const loadMessages = () => {
@@ -11,12 +13,90 @@ const PopupApp = () => {
         tabPacScript: chrome.i18n.getMessage('tabPacScript'),
         tabExceptions: chrome.i18n.getMessage('tabExceptions'),
         tabOwnProxies: chrome.i18n.getMessage('tabOwnProxies'),
-        tabAbout: chrome.i18n.getMessage('tabAbout')
+        tabAbout: chrome.i18n.getMessage('tabAbout'),
+        domainInputLabel: chrome.i18n.getMessage('domainInputLabel'),
+        domainInputPlaceholder: chrome.i18n.getMessage('domainInputPlaceholder'),
+        proxyOptionPac: chrome.i18n.getMessage('proxyOptionPac'),
+        proxyOptionYes: chrome.i18n.getMessage('proxyOptionYes'),
+        proxyOptionNo: chrome.i18n.getMessage('proxyOptionNo'),
+        proxyOptionsLabel: chrome.i18n.getMessage('proxyOptionsLabel')
       };
       setMessages(msgs);
     };
 
-    loadMessages();
+    const getCurrentDomain = async () => {
+      try {
+        console.log('🔍 Getting current domain with activeTab permission...');
+        
+        // Opening the popup IS a user gesture that grants activeTab permission!
+        // We should be able to query for the active tab directly
+        const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        
+        console.log('📋 Active tab query result:', activeTab ? 'Found' : 'Not found');
+        
+        if (activeTab) {
+          console.log('🎯 Active tab details:');
+          console.log('  - ID:', activeTab.id);
+          console.log('  - URL:', activeTab.url);
+          console.log('  - Title:', activeTab.title);
+          
+          if (activeTab.url && (activeTab.url.startsWith('http://') || activeTab.url.startsWith('https://'))) {
+            try {
+              const url = new URL(activeTab.url);
+              const hostname = url.hostname;
+              
+              console.log('🌐 Extracted hostname:', hostname);
+              
+              if (hostname && !hostname.match(/^[a-z]{32}$/) && hostname !== 'localhost') {
+                const domain = `*.${hostname}`;
+                console.log('✅ SUCCESS! Setting domain to:', domain);
+                setDomain(domain);
+                return;
+              } else {
+                console.log('❌ Invalid hostname, using fallback');
+              }
+            } catch (error) {
+              console.log('❌ Error parsing URL:', error);
+            }
+          } else {
+            console.log('❌ No valid HTTP(S) URL found:', activeTab.url);
+          }
+        } else {
+          console.log('❌ No active tab found');
+        }
+      } catch (error) {
+        console.log('❌ Error in getCurrentDomain:', error);
+        console.log('Error details:', error.message);
+      }
+      
+      // Fallback
+      console.log('🔄 Using fallback domain');
+      setDomain('*.example.com');
+    };
+
+    const initializeWithFallback = async () => {
+      loadMessages();
+      
+      try {
+        await getCurrentDomain();
+      } catch (error) {
+        console.log('🔄 Domain detection failed, using fallback');
+        setDomain('*.example.com');
+      }
+      
+      // Set fallback after delay if getCurrentDomain didn't set anything
+      setTimeout(() => {
+        setDomain(current => {
+          if (!current || current === '') {
+            console.log('🔄 Setting fallback domain due to timeout');
+            return '*.example.com';
+          }
+          return current;
+        });
+      }, 200);
+    };
+
+    initializeWithFallback();
   }, []);
 
   const categories = [
@@ -37,18 +117,7 @@ const PopupApp = () => {
     },
     {
       name: messages.tabExceptions,
-      content: [
-        {
-          id: 1,
-          title: 'Domain Exceptions',
-          description: 'Sites that bypass proxy settings',
-        },
-        {
-          id: 2,
-          title: 'IP Range Exceptions',
-          description: 'IP addresses to access directly',
-        },
-      ],
+      content: 'exceptions-form'
     },
     {
       name: messages.tabOwnProxies,
@@ -98,19 +167,84 @@ const PopupApp = () => {
           </TabList>
           <TabPanels className="mt-3">
             {categories.map(({ name, content }) => (
-              <TabPanel key={name} className="rounded-xl bg-gray-50 p-3 border border-gray-200">
-                <ul>
-                  {content.map((item) => (
-                    <li key={item.id} className="relative rounded-md p-3 text-sm/6 hover:bg-white">
-                      <div className="font-semibold text-gray-900">
-                        {item.title}
-                      </div>
-                      <div className="text-gray-600">
-                        {item.description}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+              <TabPanel key={name} className="rounded-xl bg-gray-50 p-4 border border-gray-200">
+                {content === 'exceptions-form' ? (
+                  <div className="space-y-4">
+                    {/* Domain Input */}
+                    <div>
+                      <label htmlFor="domain-input" className="block text-sm font-semibold text-gray-900 mb-2">
+                        {messages.domainInputLabel}
+                      </label>
+                      <input
+                        id="domain-input"
+                        type="text"
+                        value={domain}
+                        onChange={(e) => setDomain(e.target.value)}
+                        placeholder={messages.domainInputPlaceholder}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    {/* Radio Group */}
+                    <div>
+                      <RadioGroup value={proxyOption} onChange={setProxyOption}>
+                        <RadioGroup.Label className="block text-sm font-semibold text-gray-900 mb-3">
+                          {messages.proxyOptionsLabel}
+                        </RadioGroup.Label>
+                        <div className="flex gap-3">
+                          <RadioGroup.Option value="pac">
+                            {({ checked }) => (
+                              <div className={`flex items-center px-3 py-2 rounded-md cursor-pointer border ${
+                                checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                              }`}>
+                                <RadioGroup.Label className="text-sm font-medium cursor-pointer">
+                                  {messages.proxyOptionPac}
+                                </RadioGroup.Label>
+                              </div>
+                            )}
+                          </RadioGroup.Option>
+
+                          <RadioGroup.Option value="yes">
+                            {({ checked }) => (
+                              <div className={`flex items-center px-3 py-2 rounded-md cursor-pointer border ${
+                                checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                              }`}>
+                                <RadioGroup.Label className="text-sm font-medium cursor-pointer">
+                                  {messages.proxyOptionYes}
+                                </RadioGroup.Label>
+                              </div>
+                            )}
+                          </RadioGroup.Option>
+
+                          <RadioGroup.Option value="no">
+                            {({ checked }) => (
+                              <div className={`flex items-center px-3 py-2 rounded-md cursor-pointer border ${
+                                checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                              }`}>
+                                <RadioGroup.Label className="text-sm font-medium cursor-pointer">
+                                  {messages.proxyOptionNo}
+                                </RadioGroup.Label>
+                              </div>
+                            )}
+                          </RadioGroup.Option>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                ) : (
+                  <ul>
+                    {content.map((item) => (
+                      <li key={item.id} className="relative rounded-md p-3 text-sm/6 hover:bg-white">
+                        <div className="font-semibold text-gray-900">
+                          {item.title}
+                        </div>
+                        <div className="text-gray-600">
+                          {item.description}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </TabPanel>
             ))}
           </TabPanels>

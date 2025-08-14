@@ -38,5 +38,29 @@
   "tabAbout": {
     "message": "О программе",
     "description": "About tab label"
+  },
+  "domainInputLabel": {
+    "message": "Домен для прокси:",
+    "description": "Label for domain input field"
+  },
+  "domainInputPlaceholder": {
+    "message": "*.example.com",
+    "description": "Placeholder for domain input"
+  },
+  "proxyOptionPac": {
+    "message": "🔧 PAC",
+    "description": "PAC proxy option"
+  },
+  "proxyOptionYes": {
+    "message": "✅ Да",
+    "description": "Yes proxy option"
+  },
+  "proxyOptionNo": {
+    "message": "❌ Нет",
+    "description": "No proxy option"
+  },
+  "proxyOptionsLabel": {
+    "message": "Проксировать домен?",
+    "description": "Label for proxy radio options"
   }
 }

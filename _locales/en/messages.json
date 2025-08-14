@@ -38,5 +38,29 @@
   "tabAbout": {
     "message": "About",
     "description": "About tab label"
+  },
+  "domainInputLabel": {
+    "message": "Domain to proxy:",
+    "description": "Label for domain input field"
+  },
+  "domainInputPlaceholder": {
+    "message": "*.example.com",
+    "description": "Placeholder for domain input"
+  },
+  "proxyOptionPac": {
+    "message": "🔧 PAC",
+    "description": "PAC proxy option"
+  },
+  "proxyOptionYes": {
+    "message": "✅ Yes",
+    "description": "Yes proxy option"
+  },
+  "proxyOptionNo": {
+    "message": "❌ No",
+    "description": "No proxy option"
+  },
+  "proxyOptionsLabel": {
+    "message": "Proxy this domain?",
+    "description": "Label for proxy radio options"
   }
 }
