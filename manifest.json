@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "PAC Proxy Manager",
+  "version": "1.0.0",
+  "description": "A Chrome extension to manage PAC (Proxy Auto Configuration) files",
+  "permissions": [
+    "proxy"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "PAC Proxy Manager"
+  }
+}
