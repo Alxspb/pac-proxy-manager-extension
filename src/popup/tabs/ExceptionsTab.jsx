@@ -5,6 +5,7 @@ const ExceptionsTab = () => {
   const [domain, setDomain] = useState('');
   const [proxyOption, setProxyOption] = useState('pac');
   const [messages, setMessages] = useState({});
+  const [exceptions, setExceptions] = useState({});
 
   useEffect(() => {
     const loadMessages = () => {
@@ -17,6 +18,16 @@ const ExceptionsTab = () => {
         proxyOptionsLabel: chrome.i18n.getMessage('proxyOptionsLabel')
       };
       setMessages(msgs);
+    };
+
+    const loadExceptions = async () => {
+      try {
+        const result = await chrome.storage.local.get(['domainExceptions']);
+        const storedExceptions = result.domainExceptions || {};
+        setExceptions(storedExceptions);
+      } catch (error) {
+        setExceptions({});
+      }
     };
 
     const getCurrentDomain = async () => {
@@ -48,6 +59,7 @@ const ExceptionsTab = () => {
 
     const initializeTab = async () => {
       loadMessages();
+      await loadExceptions();
       
       try {
         await getCurrentDomain();
@@ -58,6 +70,40 @@ const ExceptionsTab = () => {
 
     initializeTab();
   }, []);
+
+  useEffect(() => {
+    if (domain && exceptions) {
+      if (exceptions[domain]) {
+        setProxyOption(exceptions[domain]);
+      } else {
+        setProxyOption('pac');
+      }
+    }
+  }, [domain, exceptions]);
+
+  const saveException = async (domain, option) => {
+    if (!domain) return;
+    
+    try {
+      const updatedExceptions = { ...exceptions };
+      
+      if (option === 'pac') {
+        delete updatedExceptions[domain];
+      } else {
+        updatedExceptions[domain] = option;
+      }
+      
+      await chrome.storage.local.set({ domainExceptions: updatedExceptions });
+      setExceptions(updatedExceptions);
+    } catch (error) {
+      // Error saving exception
+    }
+  };
+
+  const handleProxyOptionChange = (newOption) => {
+    setProxyOption(newOption);
+    saveException(domain, newOption);
+  };
 
   return (
     <div className="space-y-4">
@@ -76,7 +122,7 @@ const ExceptionsTab = () => {
       </div>
 
       <div>
-        <RadioGroup value={proxyOption} onChange={setProxyOption}>
+        <RadioGroup value={proxyOption} onChange={handleProxyOptionChange}>
           <RadioGroup.Label className="block text-sm font-semibold text-gray-900 mb-3">
             {messages.proxyOptionsLabel}
           </RadioGroup.Label>

@@ -6,7 +6,8 @@
   "default_locale": "en",
   "permissions": [
     "proxy",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "action": {
     "default_popup": "dist/src/popup/popup.html",
