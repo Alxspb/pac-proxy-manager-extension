@@ -1,0 +1,26 @@
+{
+  "appName": {
+    "message": "Менеджер PAC Прокси",
+    "description": "Name of the extension"
+  },
+  "appDescription": {
+    "message": "Расширение Chrome для управления PAC (Proxy Auto Configuration) файлами",
+    "description": "Description of the extension"
+  },
+  "helloWorld": {
+    "message": "Привет, мир",
+    "description": "Default greeting text"
+  },
+  "changeText": {
+    "message": "Изменить текст:",
+    "description": "Label for the input field"
+  },
+  "typeSomething": {
+    "message": "Введите что-нибудь...",
+    "description": "Placeholder text for the input field"
+  },
+  "pacProxyManager": {
+    "message": "Менеджер PAC Прокси",
+    "description": "Subtitle text in the popup"
+  }
+}

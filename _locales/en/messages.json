@@ -1,0 +1,26 @@
+{
+  "appName": {
+    "message": "PAC Proxy Manager",
+    "description": "Name of the extension"
+  },
+  "appDescription": {
+    "message": "A Chrome extension to manage PAC (Proxy Auto Configuration) files",
+    "description": "Description of the extension"
+  },
+  "helloWorld": {
+    "message": "Hello world",
+    "description": "Default greeting text"
+  },
+  "changeText": {
+    "message": "Change text:",
+    "description": "Label for the input field"
+  },
+  "typeSomething": {
+    "message": "Type something...",
+    "description": "Placeholder text for the input field"
+  },
+  "pacProxyManager": {
+    "message": "PAC Proxy Manager",
+    "description": "Subtitle text in the popup"
+  }
+}
