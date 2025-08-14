@@ -31,9 +31,9 @@
     "message": "Exceptions",
     "description": "Exceptions tab label"
   },
-  "tabOwnProxies": {
-    "message": "Own Proxies",
-    "description": "Own Proxies tab label"
+  "tabProxies": {
+    "message": "Proxy Servers",
+    "description": "Proxy Servers tab label"
   },
   "tabAbout": {
     "message": "About",
@@ -48,19 +48,77 @@
     "description": "Placeholder for domain input"
   },
   "proxyOptionPac": {
-    "message": "🔧 PAC",
+    "message": "PAC",
     "description": "PAC proxy option"
   },
   "proxyOptionYes": {
-    "message": "✅ Yes",
+    "message": "Yes",
     "description": "Yes proxy option"
   },
   "proxyOptionNo": {
-    "message": "❌ No",
+    "message": "No",
     "description": "No proxy option"
   },
   "proxyOptionsLabel": {
     "message": "Proxy this domain?",
     "description": "Label for proxy radio options"
+  },
+  "proxiesTitle": {
+    "message": "Proxy Servers",
+    "description": "Title for proxy servers section"
+  },
+  "addProxy": {
+    "message": "Add Proxy",
+    "description": "Button text to add new proxy"
+  },
+
+  "save": {
+    "message": "Save",
+    "description": "Save button text"
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "Cancel button text"
+  },
+
+  "confirmDelete": {
+    "message": "Are you sure you want to delete this proxy?",
+    "description": "Confirmation message for deleting proxy"
+  },
+  "confirmDeleteTitle": {
+    "message": "Delete Proxy",
+    "description": "Title for delete confirmation dialog"
+  },
+  "proxyUrl": {
+    "message": "Proxy URL",
+    "description": "Label for proxy URL field"
+  },
+  "invalidUrl": {
+    "message": "Please enter a valid proxy URL (e.g., http://proxy.example.com:8080)",
+    "description": "Error message for invalid proxy URL"
+  },
+  "invalidUrlRequired": {
+    "message": "URL is required",
+    "description": "Error message when URL field is empty"
+  },
+  "invalidUrlProtocol": {
+    "message": "Only HTTP, HTTPS, SOCKS4, and SOCKS5 protocols are supported",
+    "description": "Error message for unsupported protocol"
+  },
+  "invalidUrlHostname": {
+    "message": "Hostname is required",
+    "description": "Error message when hostname is missing"
+  },
+  "invalidUrlPort": {
+    "message": "Port must be between 1 and 65535",
+    "description": "Error message for invalid port number"
+  },
+  "invalidUrlFormat": {
+    "message": "Invalid URL format",
+    "description": "Error message for malformed URL"
+  },
+  "duplicateUrl": {
+    "message": "This proxy URL already exists",
+    "description": "Error message for duplicate proxy URL"
   }
 }

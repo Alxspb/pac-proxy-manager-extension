@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import ExceptionsTab from './tabs/ExceptionsTab';
+import ProxiesTab from './tabs/ProxiesTab';
 
 const PopupApp = () => {
   const [messages, setMessages] = useState({});
@@ -11,7 +12,7 @@ const PopupApp = () => {
         pacProxyManager: chrome.i18n.getMessage('pacProxyManager'),
         tabPacScript: chrome.i18n.getMessage('tabPacScript'),
         tabExceptions: chrome.i18n.getMessage('tabExceptions'),
-        tabOwnProxies: chrome.i18n.getMessage('tabOwnProxies'),
+        tabProxies: chrome.i18n.getMessage('tabProxies'),
         tabAbout: chrome.i18n.getMessage('tabAbout')
       };
       setMessages(msgs);
@@ -41,19 +42,8 @@ const PopupApp = () => {
       content: 'exceptions-tab'
     },
     {
-      name: messages.tabOwnProxies,
-      content: [
-        {
-          id: 1,
-          title: 'HTTP Proxy Servers',
-          description: 'Configure your HTTP proxy settings',
-        },
-        {
-          id: 2,
-          title: 'SOCKS Proxy Servers',
-          description: 'Configure your SOCKS proxy settings',
-        },
-      ],
+      name: messages.tabProxies,
+      content: 'proxies-tab'
     },
     {
       name: messages.tabAbout,
@@ -73,7 +63,7 @@ const PopupApp = () => {
   ];
 
   return (
-    <div className="min-w-fit max-w-lg bg-white p-4">
+    <div className="w-full min-w-[480px] bg-white p-4">
       <div className="w-full">
         <TabGroup>
           <TabList className="flex gap-2">
@@ -91,6 +81,8 @@ const PopupApp = () => {
               <TabPanel key={name} className="rounded-xl bg-gray-50 p-4 border border-gray-200">
                 {content === 'exceptions-tab' ? (
                   <ExceptionsTab />
+                ) : content === 'proxies-tab' ? (
+                  <ProxiesTab />
                 ) : (
                   <ul>
                     {content.map((item) => (

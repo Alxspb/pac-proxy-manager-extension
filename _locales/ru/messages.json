@@ -31,9 +31,9 @@
     "message": "Исключения",
     "description": "Exceptions tab label"
   },
-  "tabOwnProxies": {
-    "message": "Собственные Прокси",
-    "description": "Own Proxies tab label"
+  "tabProxies": {
+    "message": "Прокси-серверы",
+    "description": "Proxy Servers tab label"
   },
   "tabAbout": {
     "message": "О программе",
@@ -48,19 +48,77 @@
     "description": "Placeholder for domain input"
   },
   "proxyOptionPac": {
-    "message": "🔧 PAC",
+    "message": "PAC",
     "description": "PAC proxy option"
   },
   "proxyOptionYes": {
-    "message": "✅ Да",
+    "message": "Да",
     "description": "Yes proxy option"
   },
   "proxyOptionNo": {
-    "message": "❌ Нет",
+    "message": "Нет",
     "description": "No proxy option"
   },
   "proxyOptionsLabel": {
     "message": "Проксировать домен?",
     "description": "Label for proxy radio options"
+  },
+  "proxiesTitle": {
+    "message": "Прокси-серверы",
+    "description": "Title for proxy servers section"
+  },
+  "addProxy": {
+    "message": "Добавить прокси",
+    "description": "Button text to add new proxy"
+  },
+
+  "save": {
+    "message": "Сохранить",
+    "description": "Save button text"
+  },
+  "cancel": {
+    "message": "Отмена",
+    "description": "Cancel button text"
+  },
+
+  "confirmDelete": {
+    "message": "Вы уверены, что хотите удалить этот прокси?",
+    "description": "Confirmation message for deleting proxy"
+  },
+  "confirmDeleteTitle": {
+    "message": "Удалить прокси",
+    "description": "Title for delete confirmation dialog"
+  },
+  "proxyUrl": {
+    "message": "URL прокси",
+    "description": "Label for proxy URL field"
+  },
+  "invalidUrl": {
+    "message": "Введите корректный URL прокси (например, http://proxy.example.com:8080)",
+    "description": "Error message for invalid proxy URL"
+  },
+  "invalidUrlRequired": {
+    "message": "URL обязателен",
+    "description": "Error message when URL field is empty"
+  },
+  "invalidUrlProtocol": {
+    "message": "Поддерживаются только протоколы HTTP, HTTPS, SOCKS4 и SOCKS5",
+    "description": "Error message for unsupported protocol"
+  },
+  "invalidUrlHostname": {
+    "message": "Требуется имя хоста",
+    "description": "Error message when hostname is missing"
+  },
+  "invalidUrlPort": {
+    "message": "Порт должен быть в диапазоне от 1 до 65535",
+    "description": "Error message for invalid port number"
+  },
+  "invalidUrlFormat": {
+    "message": "Неверный формат URL",
+    "description": "Error message for malformed URL"
+  },
+  "duplicateUrl": {
+    "message": "Этот URL прокси уже существует",
+    "description": "Error message for duplicate proxy URL"
   }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RadioGroup } from '@headlessui/react';
+import { CogIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const ExceptionsTab = () => {
   const [domain, setDomain] = useState('');
@@ -129,9 +130,10 @@ const ExceptionsTab = () => {
           <div className="flex gap-3">
             <RadioGroup.Option value="pac">
               {({ checked }) => (
-                <div className={`flex items-center px-3 py-2 rounded-md cursor-pointer border ${
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
                   checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
                 }`}>
+                  <CogIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-blue-500'}`} />
                   <RadioGroup.Label className="text-sm font-medium cursor-pointer">
                     {messages.proxyOptionPac}
                   </RadioGroup.Label>
@@ -141,9 +143,10 @@ const ExceptionsTab = () => {
 
             <RadioGroup.Option value="yes">
               {({ checked }) => (
-                <div className={`flex items-center px-3 py-2 rounded-md cursor-pointer border ${
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
                   checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
                 }`}>
+                  <CheckIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-green-500'}`} />
                   <RadioGroup.Label className="text-sm font-medium cursor-pointer">
                     {messages.proxyOptionYes}
                   </RadioGroup.Label>
@@ -153,9 +156,10 @@ const ExceptionsTab = () => {
 
             <RadioGroup.Option value="no">
               {({ checked }) => (
-                <div className={`flex items-center px-3 py-2 rounded-md cursor-pointer border ${
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
                   checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
                 }`}>
+                  <XMarkIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-red-500'}`} />
                   <RadioGroup.Label className="text-sm font-medium cursor-pointer">
                     {messages.proxyOptionNo}
                   </RadioGroup.Label>
