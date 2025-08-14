@@ -8,19 +8,21 @@ const PopupApp = () => {
   };
 
   return (
-    <div className="container">
-      <h1>{text}</h1>
-      <div className="input-section">
-        <label htmlFor="text-input">Change text:</label>
+    <div className="w-80 p-5 text-center bg-gray-50 font-sans">
+      <h1 className="text-2xl font-medium text-gray-800 mb-5 min-h-8">{text}</h1>
+      <div className="my-5">
+        <label htmlFor="text-input" className="block mb-2 text-sm font-medium text-gray-600">
+          Change text:
+        </label>
         <input 
           id="text-input"
           type="text" 
           placeholder="Type something..."
           onChange={handleInputChange}
-          className="text-input"
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md font-inherit transition-colors focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 placeholder:text-gray-400"
         />
       </div>
-      <p className="subtitle">PAC Proxy Manager</p>
+      <p className="mt-5 mb-0 text-xs font-normal text-gray-500">PAC Proxy Manager</p>
     </div>
   );
 };
