@@ -7,7 +7,7 @@
     "proxy"
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "dist/src/popup/popup.html",
     "default_title": "PAC Proxy Manager"
   }
 }
