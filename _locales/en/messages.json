@@ -22,5 +22,21 @@
   "pacProxyManager": {
     "message": "PAC Proxy Manager",
     "description": "Subtitle text in the popup"
+  },
+  "tabPacScript": {
+    "message": "PAC Script",
+    "description": "PAC Script tab label"
+  },
+  "tabExceptions": {
+    "message": "Exceptions",
+    "description": "Exceptions tab label"
+  },
+  "tabOwnProxies": {
+    "message": "Own Proxies",
+    "description": "Own Proxies tab label"
+  },
+  "tabAbout": {
+    "message": "About",
+    "description": "About tab label"
   }
 }
