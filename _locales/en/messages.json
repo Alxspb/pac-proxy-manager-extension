@@ -264,5 +264,13 @@
   "fetchPacScriptError": {
     "message": "Failed to fetch PAC script. Please check the URL and try again.",
     "description": "Error message when PAC script fetch fails"
+  },
+  "proxyServersInfo": {
+    "message": "These proxy servers will be used instead of PAC script proxies when configured",
+    "description": "Info text explaining proxy servers override PAC script proxies"
+  },
+  "exceptionsRequireProxies": {
+    "message": "Domain exceptions require proxy servers to be configured first",
+    "description": "Warning when trying to use exceptions without proxy servers"
   }
 }

@@ -7,6 +7,7 @@ const ExceptionsTab = () => {
   const [proxyOption, setProxyOption] = useState('pac');
   const [messages, setMessages] = useState({});
   const [exceptions, setExceptions] = useState({});
+  const [proxies, setProxies] = useState([]);
   const [bulkImportYesText, setBulkImportYesText] = useState('');
   const [bulkImportNoText, setBulkImportNoText] = useState('');
   const [selectedBulkOption, setSelectedBulkOption] = useState(0);
@@ -27,18 +28,22 @@ const ExceptionsTab = () => {
         bulkImportNoTab: chrome.i18n.getMessage('bulkImportNoTab'),
         bulkImportButton: chrome.i18n.getMessage('bulkImportButton'),
         currentExceptions: chrome.i18n.getMessage('currentExceptions'),
-        noCurrentExceptions: chrome.i18n.getMessage('noCurrentExceptions')
+        noCurrentExceptions: chrome.i18n.getMessage('noCurrentExceptions'),
+        exceptionsRequireProxies: chrome.i18n.getMessage('exceptionsRequireProxies')
       };
       setMessages(msgs);
     };
 
     const loadExceptions = async () => {
       try {
-        const result = await chrome.storage.local.get(['domainExceptions']);
+        const result = await chrome.storage.local.get(['domainExceptions', 'proxies']);
         const storedExceptions = result.domainExceptions || {};
+        const storedProxies = result.proxies || [];
         setExceptions(storedExceptions);
+        setProxies(storedProxies);
       } catch (error) {
         setExceptions({});
+        setProxies([]);
       }
     };
 
@@ -162,6 +167,14 @@ const ExceptionsTab = () => {
 
   return (
     <div className="space-y-4">
+      {proxies.length === 0 && (
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-md">
+          <p className="text-sm text-amber-800">
+            ⚠️ {messages.exceptionsRequireProxies}
+          </p>
+        </div>
+      )}
+
       <div>
         <label htmlFor="domain-input" className="block text-sm font-semibold text-gray-900 mb-2">
           {messages.domainInputLabel}

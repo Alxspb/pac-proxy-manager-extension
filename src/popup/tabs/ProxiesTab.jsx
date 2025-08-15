@@ -6,6 +6,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 const ProxiesTab = () => {
   const [proxyStatus, setProxyStatus] = useState(false);
   const [proxies, setProxies] = useState([]);
+  const [pacScripts, setPacScripts] = useState([]);
   const [messages, setMessages] = useState({});
   const [loading, setLoading] = useState(false);
   
@@ -40,7 +41,8 @@ const ProxiesTab = () => {
         invalidUrlHostname: chrome.i18n.getMessage('invalidUrlHostname'),
         invalidUrlPort: chrome.i18n.getMessage('invalidUrlPort'),
         invalidUrlFormat: chrome.i18n.getMessage('invalidUrlFormat'),
-        duplicateUrl: chrome.i18n.getMessage('duplicateUrl')
+        duplicateUrl: chrome.i18n.getMessage('duplicateUrl'),
+        proxyServersInfo: chrome.i18n.getMessage('proxyServersInfo')
       };
       setMessages(msgs);
     };
@@ -51,10 +53,12 @@ const ProxiesTab = () => {
         const statusResponse = await chrome.runtime.sendMessage({ action: 'getProxyStatus' });
         setProxyStatus(statusResponse.isActive);
 
-        // Load proxies
-        const result = await chrome.storage.local.get(['proxies']);
+        // Load proxies and PAC scripts
+        const result = await chrome.storage.local.get(['proxies', 'pacScripts']);
         const storedProxies = result.proxies || [];
+        const storedPacScripts = result.pacScripts || [];
         setProxies(storedProxies);
+        setPacScripts(storedPacScripts);
       } catch (error) {
         console.error('Failed to load data:', error);
       }
@@ -275,6 +279,14 @@ const ProxiesTab = () => {
             </button>
           )}
         </div>
+
+        {pacScripts.length > 0 && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800">
+              ℹ️ {messages.proxyServersInfo}
+            </p>
+          </div>
+        )}
 
         {proxies.length === 0 && !showForm ? (
           <div className="text-center py-8">
