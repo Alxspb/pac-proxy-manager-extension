@@ -120,5 +120,33 @@
   "duplicateUrl": {
     "message": "This proxy URL already exists",
     "description": "Error message for duplicate proxy URL"
+  },
+  "proxyStatus": {
+    "message": "Proxy Status",
+    "description": "Label for proxy status section"
+  },
+  "activateProxy": {
+    "message": "Activate Proxy",
+    "description": "Button to activate proxy"
+  },
+  "deactivateProxy": {
+    "message": "Deactivate Proxy",
+    "description": "Button to deactivate proxy"
+  },
+  "proxyActive": {
+    "message": "Proxy is Active",
+    "description": "Status when proxy is active"
+  },
+  "proxyInactive": {
+    "message": "Proxy is Inactive",
+    "description": "Status when proxy is inactive"
+  },
+  "noProxyServers": {
+    "message": "No proxy servers configured",
+    "description": "Message when no proxy servers are set up"
+  },
+  "configureProxyServers": {
+    "message": "Configure proxy servers to activate proxy",
+    "description": "Instructions when no proxy servers exist"
   }
 }

@@ -120,5 +120,33 @@
   "duplicateUrl": {
     "message": "Этот URL прокси уже существует",
     "description": "Error message for duplicate proxy URL"
+  },
+  "proxyStatus": {
+    "message": "Статус Прокси",
+    "description": "Label for proxy status section"
+  },
+  "activateProxy": {
+    "message": "Активировать Прокси",
+    "description": "Button to activate proxy"
+  },
+  "deactivateProxy": {
+    "message": "Деактивировать Прокси",
+    "description": "Button to deactivate proxy"
+  },
+  "proxyActive": {
+    "message": "Прокси Активно",
+    "description": "Status when proxy is active"
+  },
+  "proxyInactive": {
+    "message": "Прокси Неактивно",
+    "description": "Status when proxy is inactive"
+  },
+  "noProxyServers": {
+    "message": "Не настроены прокси-серверы",
+    "description": "Message when no proxy servers are set up"
+  },
+  "configureProxyServers": {
+    "message": "Настройте прокси-серверы для активации прокси",
+    "description": "Instructions when no proxy servers exist"
   }
 }
