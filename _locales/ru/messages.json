@@ -180,5 +180,89 @@
   "noCurrentExceptions": {
     "message": "Исключения не настроены",
     "description": "Message when no exceptions exist"
+  },
+  "pacScriptsTitle": {
+    "message": "PAC Скрипты",
+    "description": "Title for PAC scripts section"
+  },
+  "addPacScript": {
+    "message": "Добавить PAC Скрипт",
+    "description": "Button text to add new PAC script"
+  },
+  "noPacScripts": {
+    "message": "PAC скрипты не настроены",
+    "description": "Message when no PAC scripts exist"
+  },
+  "configurePacScripts": {
+    "message": "Настройте PAC скрипты для управления прокси",
+    "description": "Instructions when no PAC scripts exist"
+  },
+  "pacScriptName": {
+    "message": "Название скрипта",
+    "description": "Label for PAC script name field"
+  },
+  "pacScriptNamePlaceholder": {
+    "message": "Мой PAC Скрипт",
+    "description": "Placeholder for PAC script name"
+  },
+  "pacScriptUrl": {
+    "message": "URL PAC Скрипта",
+    "description": "Label for PAC script URL field"
+  },
+  "pacScriptUrlPlaceholder": {
+    "message": "http://example.com/proxy.pac",
+    "description": "Placeholder for PAC script URL"
+  },
+  "pacScriptContent": {
+    "message": "Содержимое PAC Скрипта",
+    "description": "Label for PAC script content field"
+  },
+  "pacScriptContentPlaceholder": {
+    "message": "function FindProxyForURL(url, host) {\n    // Логика вашего PAC скрипта здесь\n    return \"DIRECT\";\n}",
+    "description": "Placeholder for PAC script content"
+  },
+  "inputTypeUrl": {
+    "message": "URL",
+    "description": "URL input type option"
+  },
+  "inputTypePlain": {
+    "message": "Текст",
+    "description": "Plain text input type option"
+  },
+  "inputTypeLabel": {
+    "message": "Тип ввода",
+    "description": "Label for input type selection"
+  },
+  "enabled": {
+    "message": "Включено",
+    "description": "Enabled status"
+  },
+  "disabled": {
+    "message": "Отключено",
+    "description": "Disabled status"
+  },
+  "fetchingPacScript": {
+    "message": "Загрузка PAC скрипта...",
+    "description": "Loading message when fetching PAC script"
+  },
+  "invalidPacScriptName": {
+    "message": "Название скрипта обязательно",
+    "description": "Error message for invalid PAC script name"
+  },
+  "invalidPacScriptUrl": {
+    "message": "Введите корректный URL",
+    "description": "Error message for invalid PAC script URL"
+  },
+  "invalidPacScriptContent": {
+    "message": "Содержимое скрипта обязательно",
+    "description": "Error message for invalid PAC script content"
+  },
+  "duplicatePacScriptName": {
+    "message": "Скрипт с таким названием уже существует",
+    "description": "Error message for duplicate PAC script name"
+  },
+  "fetchPacScriptError": {
+    "message": "Не удалось загрузить PAC скрипт. Проверьте URL и попробуйте снова.",
+    "description": "Error message when PAC script fetch fails"
   }
 }

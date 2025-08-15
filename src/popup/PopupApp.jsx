@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import ExceptionsTab from './tabs/ExceptionsTab';
 import ProxiesTab from './tabs/ProxiesTab';
+import PacScriptsTab from './tabs/PacScriptsTab';
 
 const PopupApp = () => {
   const [messages, setMessages] = useState({});
@@ -24,18 +25,7 @@ const PopupApp = () => {
   const categories = [
     {
       name: messages.tabPacScript,
-      content: [
-        {
-          id: 1,
-          title: 'Configure PAC Script URL',
-          description: 'Set your proxy auto-configuration file location',
-        },
-        {
-          id: 2,
-          title: 'Test PAC Script',
-          description: 'Validate your PAC configuration',
-        },
-      ],
+      content: 'pac-scripts-tab'
     },
     {
       name: messages.tabExceptions,
@@ -79,7 +69,9 @@ const PopupApp = () => {
           <TabPanels className="mt-3 h-auto">
             {categories.map(({ name, content }) => (
               <TabPanel key={name} className="rounded-xl bg-gray-50 p-4 border border-gray-200 h-auto">
-                {content === 'exceptions-tab' ? (
+                {content === 'pac-scripts-tab' ? (
+                  <PacScriptsTab />
+                ) : content === 'exceptions-tab' ? (
                   <ExceptionsTab />
                 ) : content === 'proxies-tab' ? (
                   <ProxiesTab />
