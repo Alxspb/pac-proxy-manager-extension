@@ -68,7 +68,7 @@ const PopupApp = () => {
           </TabList>
           <TabPanels className="mt-3 h-auto">
             {categories.map(({ name, content }) => (
-              <TabPanel key={name} className="rounded-xl bg-gray-50 p-4 border border-gray-200 h-auto">
+              <TabPanel key={name} className="h-auto">
                 {content === 'pac-scripts-tab' ? (
                   <PacScriptsTab />
                 ) : content === 'exceptions-tab' ? (

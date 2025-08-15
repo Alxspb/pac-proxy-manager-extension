@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DocumentTextIcon, ExclamationTriangleIcon, PlusIcon, LinkIcon, DocumentIcon } from '@heroicons/react/24/outline';
-import { PencilSquareIcon, TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon, PlusIcon, LinkIcon, DocumentIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { Switch } from '@headlessui/react';
 
@@ -214,14 +214,7 @@ const PacScriptsTab = () => {
     setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
   };
 
-  const toggleScriptEnabled = async (scriptId, enabled) => {
-    const updatedScripts = pacScripts.map(script => 
-      script.id === scriptId ? { ...script, enabled } : script
-    );
-    await savePacScripts(updatedScripts);
-  };
-
-  const showDeleteDialog = (script) => {
+    const showDeleteDialog = (script) => {
     setDeleteDialog({ 
       isOpen: true, 
       scriptId: script.id, 
@@ -238,25 +231,18 @@ const PacScriptsTab = () => {
   return (
     <div className="space-y-6">
       {/* PAC Scripts Section */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <DocumentTextIcon className="w-5 h-5 text-gray-500" />
-            <h3 className="text-lg font-semibold text-gray-900">
-              {messages.pacScriptsTitle}
-            </h3>
-          </div>
-          
-          {pacScripts.length > 0 && !showForm && (
+      <div>
+        {pacScripts.length > 0 && !showForm && (
+          <div className="mb-4">
             <button
               onClick={() => setShowForm(true)}
-              className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+              className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer"
             >
               <PlusIcon className="w-4 h-4" />
               {messages.addPacScript}
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {pacScripts.length === 0 && !showForm ? (
           <div className="text-center py-8">
@@ -265,17 +251,23 @@ const PacScriptsTab = () => {
             <p className="text-sm text-gray-500 mb-4">{messages.configurePacScripts}</p>
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium text-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium text-sm cursor-pointer"
             >
               <PlusIcon className="w-4 h-4" />
               {messages.addPacScript}
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {pacScripts.map((script) => (
-              <div key={script.id} className="border border-gray-200 rounded-md p-3">
-                <div className="flex justify-between items-start">
+              <div 
+                key={script.id} 
+                className={`border border-gray-200 rounded-md p-3 ${
+                  editingScriptId === script.id ? '' : 'cursor-pointer hover:bg-gray-50'
+                }`}
+                onClick={() => editingScriptId !== script.id && startEdit(script)}
+              >
+                <div className="flex justify-between items-center">
                   <div className="flex-1 mr-2">
                     {editingScriptId === script.id ? (
                       <div className="space-y-3">
@@ -309,12 +301,12 @@ const PacScriptsTab = () => {
                               <Switch
                                 checked={editFormData.enabled}
                                 onChange={(enabled) => setEditFormData({ ...editFormData, enabled })}
-                                className={`relative inline-flex h-4 w-8 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
+                                className={`relative inline-flex h-4 w-8 shrink-0 cursor-pointer rounded-full border-2 border-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
                                   editFormData.enabled ? 'bg-blue-600' : 'bg-gray-200'
                                 }`}
                               >
                                 <span
-                                  className={`pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                                  className={`pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg ring-0 ${
                                     editFormData.enabled ? 'translate-x-4' : 'translate-x-0'
                                   }`}
                                 />
@@ -330,60 +322,25 @@ const PacScriptsTab = () => {
                         )}
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm font-medium text-gray-900">{script.name}</div>
-                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            script.enabled 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-gray-100 text-gray-800'
-                          }`}>
-                            {script.enabled ? messages.enabled : messages.disabled}
-                          </div>
-                        </div>
-                        <div className="text-xs text-gray-500 font-mono bg-gray-50 p-2 rounded max-h-16 overflow-y-auto">
-                          {script.content.substring(0, 100)}...
-                        </div>
-                      </div>
+                      <div className="text-sm text-gray-900 py-1">{script.name}</div>
                     )}
                   </div>
                   
-                  <div className="flex gap-1 items-start">
-                    {editingScriptId === script.id ? (
-                      <>
-                        <button onClick={saveEdit} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600" title="Save">
-                          <CheckIcon className="w-4 h-4" />
-                        </button>
-                        <button onClick={cancelEdit} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600" title="Cancel">
-                          <XMarkIcon className="w-4 h-4" />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Switch.Group>
-                          <Switch
-                            checked={script.enabled}
-                            onChange={(enabled) => toggleScriptEnabled(script.id, enabled)}
-                            className={`relative inline-flex h-4 w-8 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
-                              script.enabled ? 'bg-blue-600' : 'bg-gray-200'
-                            }`}
-                            title={script.enabled ? messages.enabled : messages.disabled}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                                script.enabled ? 'translate-x-4' : 'translate-x-0'
-                              }`}
-                            />
-                          </Switch>
-                        </Switch.Group>
-                        <button onClick={() => startEdit(script)} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-blue-600" title="Edit">
-                          <PencilSquareIcon className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => showDeleteDialog(script)} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600" title="Delete">
-                          <TrashIcon className="w-4 h-4" />
-                        </button>
-                      </>
-                    )}
+                                     <div className="flex gap-1">
+                     {editingScriptId === script.id ? (
+                       <>
+                         <button onClick={(e) => { e.stopPropagation(); saveEdit(); }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
+                           <CheckIcon className="w-4 h-4" />
+                         </button>
+                         <button onClick={(e) => { e.stopPropagation(); cancelEdit(); }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
+                           <XMarkIcon className="w-4 h-4" />
+                         </button>
+                       </>
+                     ) : (
+                       <button onClick={(e) => { e.stopPropagation(); showDeleteDialog(script); }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
+                         <TrashIcon className="w-4 h-4" />
+                       </button>
+                     )}
                   </div>
                 </div>
               </div>
@@ -393,7 +350,7 @@ const PacScriptsTab = () => {
 
         {/* Add PAC Script Form */}
         {showForm && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+          <div className="mt-4 p-4 bg-gray-50 rounded-md">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -501,12 +458,12 @@ const PacScriptsTab = () => {
                     <Switch
                       checked={formData.enabled}
                       onChange={(enabled) => setFormData({ ...formData, enabled })}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
                         formData.enabled ? 'bg-blue-600' : 'bg-gray-200'
                       }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 ${
                           formData.enabled ? 'translate-x-5' : 'translate-x-0'
                         }`}
                       />
@@ -526,7 +483,7 @@ const PacScriptsTab = () => {
                 <button
                   type="submit"
                   disabled={fetchingScript}
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {fetchingScript ? (
                     <>
@@ -545,7 +502,7 @@ const PacScriptsTab = () => {
                     setValidationError('');
                     setFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {messages.cancel}
                 </button>
@@ -578,13 +535,13 @@ const PacScriptsTab = () => {
               <div className="flex gap-3">
                 <button
                   onClick={confirmDelete}
-                  className="flex-1 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer"
                 >
                   Delete
                 </button>
                 <button
                   onClick={() => setDeleteDialog({ isOpen: false, scriptId: null, scriptName: '' })}
-                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 cursor-pointer"
                 >
                   {messages.cancel}
                 </button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlayIcon, StopIcon, ServerIcon, ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { PencilSquareIcon, TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 
 const ProxiesTab = () => {
@@ -243,7 +243,7 @@ const ProxiesTab = () => {
             <button
               onClick={toggleProxy}
               disabled={loading}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-colors ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm ${
                 proxyStatus
                   ? 'bg-red-500 text-white hover:bg-red-600 disabled:bg-red-400'
                   : 'bg-green-500 text-white hover:bg-green-600 disabled:bg-green-400'
@@ -272,7 +272,7 @@ const ProxiesTab = () => {
           {proxies.length > 0 && !showForm && (
             <button
               onClick={() => setShowForm(true)}
-              className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+              className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer"
             >
               <PlusIcon className="w-4 h-4" />
               {messages.addProxy}
@@ -292,7 +292,7 @@ const ProxiesTab = () => {
           <div className="text-center py-8">
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium text-sm"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium text-sm cursor-pointer"
             >
               <PlusIcon className="w-4 h-4" />
               {messages.addProxy}
@@ -301,7 +301,13 @@ const ProxiesTab = () => {
         ) : (
           <div className="space-y-2">
             {proxies.map((proxy) => (
-              <div key={proxy.id} className="border border-gray-200 rounded-md p-3">
+              <div 
+                key={proxy.id} 
+                className={`border border-gray-200 rounded-md p-3 ${
+                  editingProxyId === proxy.id ? '' : 'cursor-pointer hover:bg-gray-50'
+                }`}
+                onClick={() => editingProxyId !== proxy.id && startEdit(proxy)}
+              >
                 <div className="flex justify-between items-center">
                   <div className="flex-1 mr-2">
                     {editingProxyId === proxy.id ? (
@@ -337,22 +343,17 @@ const ProxiesTab = () => {
                   <div className="flex gap-1">
                     {editingProxyId === proxy.id ? (
                       <>
-                        <button onClick={saveEdit} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600" title="Save">
+                        <button onClick={(e) => { e.stopPropagation(); saveEdit(); }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
                           <CheckIcon className="w-4 h-4" />
                         </button>
-                        <button onClick={cancelEdit} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600" title="Cancel">
+                        <button onClick={(e) => { e.stopPropagation(); cancelEdit(); }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
                           <XMarkIcon className="w-4 h-4" />
                         </button>
                       </>
                     ) : (
-                      <>
-                        <button onClick={() => startEdit(proxy)} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-blue-600" title="Edit">
-                          <PencilSquareIcon className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => showDeleteDialog(proxy)} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600" title="Delete">
-                          <TrashIcon className="w-4 h-4" />
-                        </button>
-                      </>
+                      <button onClick={(e) => { e.stopPropagation(); showDeleteDialog(proxy); }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
                     )}
                   </div>
                 </div>
@@ -395,7 +396,7 @@ const ProxiesTab = () => {
               <div className="flex gap-3">
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
                 >
                   {messages.save}
                 </button>
@@ -439,13 +440,13 @@ const ProxiesTab = () => {
               <div className="flex gap-3">
                 <button
                   onClick={confirmDelete}
-                  className="flex-1 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer"
                 >
                   Delete
                 </button>
                 <button
                   onClick={() => setDeleteDialog({ isOpen: false, proxyId: null, proxyUrl: '' })}
-                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 cursor-pointer"
                 >
                   {messages.cancel}
                 </button>
