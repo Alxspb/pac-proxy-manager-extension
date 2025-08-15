@@ -52,8 +52,8 @@ const ProxiesTab = () => {
         setProxyStatus(statusResponse.isActive);
 
         // Load proxies
-        const result = await chrome.storage.local.get(['ownProxies']);
-        const storedProxies = result.ownProxies || [];
+        const result = await chrome.storage.local.get(['proxies']);
+        const storedProxies = result.proxies || [];
         setProxies(storedProxies);
       } catch (error) {
         console.error('Failed to load data:', error);
@@ -130,7 +130,7 @@ const ProxiesTab = () => {
 
   const saveProxies = async (updatedProxies) => {
     try {
-      await chrome.storage.local.set({ ownProxies: updatedProxies });
+      await chrome.storage.local.set({ proxies: updatedProxies });
       setProxies(updatedProxies);
     } catch (error) {
       console.error('Failed to save proxies:', error);

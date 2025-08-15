@@ -7,7 +7,7 @@ class ProxyManager {
   async init() {
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace === 'local') {
-        const relevantChanges = ['domainExceptions', 'ownProxies', 'proxyActive'];
+        const relevantChanges = ['domainExceptions', 'proxies', 'proxyActive'];
         const hasRelevantChanges = relevantChanges.some(key => changes[key]);
 
         if (hasRelevantChanges) {
@@ -65,7 +65,7 @@ function FindProxyForURL(url, host) {
 
   async updateProxySettings() {
     try {
-      const result = await chrome.storage.local.get(['domainExceptions', 'ownProxies', 'proxyActive']);
+      const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
       
       if (!result.proxyActive) {
         await this.deactivateProxy();
@@ -73,14 +73,14 @@ function FindProxyForURL(url, host) {
       }
 
       const domainExceptions = result.domainExceptions || {};
-      const ownProxies = result.ownProxies || [];
+      const proxies = result.proxies || [];
       
-      if (ownProxies.length === 0) {
+      if (proxies.length === 0) {
         await this.deactivateProxy();
         return;
       }
 
-      const pacScript = this.generatePacScript(domainExceptions, ownProxies);
+      const pacScript = this.generatePacScript(domainExceptions, proxies);
       
       await chrome.proxy.settings.set({
         value: {
