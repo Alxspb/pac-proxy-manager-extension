@@ -148,5 +148,37 @@
   "configureProxyServers": {
     "message": "Настройте прокси-серверы для активации прокси",
     "description": "Instructions when no proxy servers exist"
+  },
+  "bulkImport": {
+    "message": "Массовый импорт",
+    "description": "Button text for bulk import feature"
+  },
+  "bulkImportTitle": {
+    "message": "Массовый импорт исключений",
+    "description": "Title for bulk import section"
+  },
+  "bulkImportPlaceholder": {
+    "message": "Введите домены (по одному на строку):\n*.example.com\n*.another-site.org\n*.third-domain.net",
+    "description": "Placeholder text for bulk import textarea"
+  },
+  "bulkImportYesTab": {
+    "message": "Принудительно через прокси (Да)",
+    "description": "Tab label for domains that should always use proxy"
+  },
+  "bulkImportNoTab": {
+    "message": "Блокировать прокси (Нет)",
+    "description": "Tab label for domains that should never use proxy"
+  },
+  "bulkImportButton": {
+    "message": "Импортировать исключения",
+    "description": "Button text to execute bulk import"
+  },
+  "currentExceptions": {
+    "message": "Текущие исключения",
+    "description": "Label for current exceptions section"
+  },
+  "noCurrentExceptions": {
+    "message": "Исключения не настроены",
+    "description": "Message when no exceptions exist"
   }
 }

@@ -148,5 +148,37 @@
   "configureProxyServers": {
     "message": "Configure proxy servers to activate proxy",
     "description": "Instructions when no proxy servers exist"
+  },
+  "bulkImport": {
+    "message": "Bulk Import",
+    "description": "Button text for bulk import feature"
+  },
+  "bulkImportTitle": {
+    "message": "Bulk Import Exceptions",
+    "description": "Title for bulk import section"
+  },
+  "bulkImportPlaceholder": {
+    "message": "Enter domains (one per line):\n*.example.com\n*.another-site.org\n*.third-domain.net",
+    "description": "Placeholder text for bulk import textarea"
+  },
+  "bulkImportYesTab": {
+    "message": "Force Proxy (Yes)",
+    "description": "Tab label for domains that should always use proxy"
+  },
+  "bulkImportNoTab": {
+    "message": "Block Proxy (No)",
+    "description": "Tab label for domains that should never use proxy"
+  },
+  "bulkImportButton": {
+    "message": "Import Exceptions",
+    "description": "Button text to execute bulk import"
+  },
+  "currentExceptions": {
+    "message": "Current Exceptions",
+    "description": "Label for current exceptions section"
+  },
+  "noCurrentExceptions": {
+    "message": "No exceptions configured",
+    "description": "Message when no exceptions exist"
   }
 }

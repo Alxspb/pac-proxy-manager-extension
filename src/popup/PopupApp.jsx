@@ -63,7 +63,7 @@ const PopupApp = () => {
   ];
 
   return (
-    <div className="w-full min-w-[480px] bg-white p-4">
+    <div className="w-full min-w-[480px] max-w-[600px] bg-white p-4 h-auto">
       <div className="w-full">
         <TabGroup>
           <TabList className="flex gap-2">
@@ -76,9 +76,9 @@ const PopupApp = () => {
               </Tab>
             ))}
           </TabList>
-          <TabPanels className="mt-3">
+          <TabPanels className="mt-3 h-auto">
             {categories.map(({ name, content }) => (
-              <TabPanel key={name} className="rounded-xl bg-gray-50 p-4 border border-gray-200">
+              <TabPanel key={name} className="rounded-xl bg-gray-50 p-4 border border-gray-200 h-auto">
                 {content === 'exceptions-tab' ? (
                   <ExceptionsTab />
                 ) : content === 'proxies-tab' ? (
