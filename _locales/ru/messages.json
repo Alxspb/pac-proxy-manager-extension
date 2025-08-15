@@ -272,5 +272,29 @@
   "exceptionsRequireProxies": {
     "message": "Для работы исключений доменов необходимо сначала настроить прокси-серверы",
     "description": "Warning when trying to use exceptions without proxy servers"
+  },
+  "pacScriptTypePlain": {
+    "message": "текст",
+    "description": "Label for plain text PAC scripts"
+  },
+  "pacScriptTypeUrl": {
+    "message": "url",
+    "description": "Label for URL-based PAC scripts"
+  },
+  "reloadScript": {
+    "message": "Перезагрузить из URL",
+    "description": "Tooltip for reload script button"
+  },
+  "reloadingScript": {
+    "message": "Перезагрузка...",
+    "description": "Loading message when reloading PAC script from URL"
+  },
+  "reloadSuccess": {
+    "message": "Скрипт успешно перезагружен",
+    "description": "Success message when script is reloaded"
+  },
+  "reloadError": {
+    "message": "Не удалось перезагрузить скрипт из URL",
+    "description": "Error message when script reload fails"
   }
 }

@@ -272,5 +272,29 @@
   "exceptionsRequireProxies": {
     "message": "Domain exceptions require proxy servers to be configured first",
     "description": "Warning when trying to use exceptions without proxy servers"
+  },
+  "pacScriptTypePlain": {
+    "message": "plain",
+    "description": "Label for plain text PAC scripts"
+  },
+  "pacScriptTypeUrl": {
+    "message": "url",
+    "description": "Label for URL-based PAC scripts"
+  },
+  "reloadScript": {
+    "message": "Reload from URL",
+    "description": "Tooltip for reload script button"
+  },
+  "reloadingScript": {
+    "message": "Reloading...",
+    "description": "Loading message when reloading PAC script from URL"
+  },
+  "reloadSuccess": {
+    "message": "Script reloaded successfully",
+    "description": "Success message when script is reloaded"
+  },
+  "reloadError": {
+    "message": "Failed to reload script from URL",
+    "description": "Error message when script reload fails"
   }
 }

@@ -1,3 +1,55 @@
+// IndexedDB Storage for PAC Scripts
+class IndexedDBStorage {
+  constructor() {
+    this.dbName = 'PacProxyManagerDB';
+    this.version = 1;
+    this.db = null;
+  }
+
+  async init() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, this.version);
+
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        this.db = request.result;
+        resolve(this.db);
+      };
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        
+        if (!db.objectStoreNames.contains('pacScripts')) {
+          const store = db.createObjectStore('pacScripts', { keyPath: 'id' });
+          store.createIndex('name', 'name', { unique: false });
+          store.createIndex('enabled', 'enabled', { unique: false });
+        }
+      };
+    });
+  }
+
+  async ensureDB() {
+    if (!this.db) {
+      await this.init();
+    }
+    return this.db;
+  }
+
+  async getPacScripts() {
+    const db = await this.ensureDB();
+    const transaction = db.transaction(['pacScripts'], 'readonly');
+    const store = transaction.objectStore('pacScripts');
+
+    return new Promise((resolve, reject) => {
+      const request = store.getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+}
+
+const indexedDBStorage = new IndexedDBStorage();
+
 class ProxyManager {
   constructor() {
     this.isProxyActive = false;
@@ -121,7 +173,7 @@ function FindProxyForURL(url, host) {
 
   async updateProxySettings() {
     try {
-      const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'pacScripts', 'proxyActive']);
+      const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
       
       if (!result.proxyActive) {
         await this.deactivateProxy();
@@ -130,7 +182,7 @@ function FindProxyForURL(url, host) {
 
       const domainExceptions = result.domainExceptions || {};
       const proxies = result.proxies || [];
-      const pacScripts = result.pacScripts || [];
+      const pacScripts = await indexedDBStorage.getPacScripts();
       
       const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts);
       
@@ -204,6 +256,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           break;
 
         case 'updateProxySettings':
+          await proxyManager.updateProxySettings();
+          sendResponse(true);
+          break;
+
+        case 'pacScriptsUpdated':
           await proxyManager.updateProxySettings();
           sendResponse(true);
           break;

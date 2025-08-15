@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ExclamationTriangleIcon, PlusIcon, LinkIcon, DocumentIcon } from '@heroicons/react/24/outline';
-import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, CheckIcon, XMarkIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { Switch } from '@headlessui/react';
+import indexedDBStorage from '../../utils/indexedDB';
 
 const PacScriptsTab = () => {
   const [pacScripts, setPacScripts] = useState([]);
@@ -15,6 +16,8 @@ const PacScriptsTab = () => {
   const [validationError, setValidationError] = useState('');
   const [editValidationError, setEditValidationError] = useState('');
   const [fetchingScript, setFetchingScript] = useState(false);
+  const [fetchingEditScript, setFetchingEditScript] = useState(false);
+  const [reloadingScript, setReloadingScript] = useState(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -59,15 +62,20 @@ const PacScriptsTab = () => {
         invalidPacScriptUrl: chrome.i18n.getMessage('invalidPacScriptUrl'),
         invalidPacScriptContent: chrome.i18n.getMessage('invalidPacScriptContent'),
         duplicatePacScriptName: chrome.i18n.getMessage('duplicatePacScriptName'),
-        fetchPacScriptError: chrome.i18n.getMessage('fetchPacScriptError')
+        fetchPacScriptError: chrome.i18n.getMessage('fetchPacScriptError'),
+        pacScriptTypePlain: chrome.i18n.getMessage('pacScriptTypePlain'),
+        pacScriptTypeUrl: chrome.i18n.getMessage('pacScriptTypeUrl'),
+        reloadScript: chrome.i18n.getMessage('reloadScript'),
+        reloadingScript: chrome.i18n.getMessage('reloadingScript'),
+        reloadSuccess: chrome.i18n.getMessage('reloadSuccess'),
+        reloadError: chrome.i18n.getMessage('reloadError')
       };
       setMessages(msgs);
     };
 
     const loadPacScripts = async () => {
       try {
-        const result = await chrome.storage.local.get(['pacScripts']);
-        const storedScripts = result.pacScripts || [];
+        const storedScripts = await indexedDBStorage.getPacScripts();
         setPacScripts(storedScripts);
       } catch (error) {
         console.error('Failed to load PAC scripts:', error);
@@ -124,15 +132,6 @@ const PacScriptsTab = () => {
     return await response.text();
   };
 
-  const savePacScripts = async (updatedScripts) => {
-    try {
-      await chrome.storage.local.set({ pacScripts: updatedScripts });
-      setPacScripts(updatedScripts);
-    } catch (error) {
-      console.error('Failed to save PAC scripts:', error);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -163,22 +162,39 @@ const PacScriptsTab = () => {
       name: formData.name.trim(),
       content: scriptContent.trim(),
       enabled: formData.enabled,
+      sourceType: formData.inputType,
+      sourceUrl: formData.inputType === 'url' ? formData.url.trim() : null,
       createdAt: new Date().toISOString()
     };
 
-    const updatedScripts = [...pacScripts, scriptData];
-    await savePacScripts(updatedScripts);
-    setShowForm(false);
-    setFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
+    try {
+      await indexedDBStorage.addPacScript(scriptData);
+      const updatedScripts = [...pacScripts, scriptData];
+      setPacScripts(updatedScripts);
+      setShowForm(false);
+      setFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
+      
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
+        console.error('Failed to notify background about PAC scripts update:', error)
+      );
+    } catch (error) {
+      console.error('Failed to save PAC script:', error);
+      if (error.name === 'QuotaExceededError') {
+        setValidationError('Storage quota exceeded. PAC script is too large to save.');
+      } else {
+        setValidationError('Failed to save PAC script. Please try again.');
+      }
+    }
   };
 
   const startEdit = (script) => {
     setEditingScriptId(script.id);
+    const isUrlScript = script.sourceType === 'url';
     setEditFormData({
       name: script.name,
-      inputType: 'plain', // Always edit as plain since we store content
-      url: '',
-      content: script.content,
+      inputType: isUrlScript ? 'url' : 'plain',
+      url: isUrlScript ? script.sourceUrl || '' : '',
+      content: isUrlScript ? '' : script.content,
       enabled: script.enabled
     });
   };
@@ -198,20 +214,51 @@ const PacScriptsTab = () => {
     }
     
     setEditValidationError('');
+
+    let scriptContent = editFormData.content;
+
+    if (editFormData.inputType === 'url') {
+      setFetchingEditScript(true);
+      try {
+        scriptContent = await fetchPacScript(editFormData.url.trim());
+      } catch (error) {
+        setEditValidationError(error.message);
+        setFetchingEditScript(false);
+        return;
+      }
+      setFetchingEditScript(false);
+    }
     
-    const updatedScripts = pacScripts.map(script => 
-      script.id === editingScriptId ? {
-        ...script,
-        name: editFormData.name.trim(),
-        content: editFormData.content.trim(),
-        enabled: editFormData.enabled,
-        updatedAt: new Date().toISOString()
-      } : script
-    );
-    
-    await savePacScripts(updatedScripts);
-    setEditingScriptId(null);
-    setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
+    const updatedScript = {
+      ...pacScripts.find(script => script.id === editingScriptId),
+      name: editFormData.name.trim(),
+      content: scriptContent.trim(),
+      enabled: editFormData.enabled,
+      sourceType: editFormData.inputType,
+      sourceUrl: editFormData.inputType === 'url' ? editFormData.url.trim() : null,
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      await indexedDBStorage.updatePacScript(updatedScript);
+      const updatedScripts = pacScripts.map(script => 
+        script.id === editingScriptId ? updatedScript : script
+      );
+      setPacScripts(updatedScripts);
+      setEditingScriptId(null);
+      setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
+      
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
+        console.error('Failed to notify background about PAC scripts update:', error)
+      );
+    } catch (error) {
+      console.error('Failed to update PAC script:', error);
+      if (error.name === 'QuotaExceededError') {
+        setEditValidationError('Storage quota exceeded. PAC script is too large to save.');
+      } else {
+        setEditValidationError('Failed to update PAC script. Please try again.');
+      }
+    }
   };
 
     const showDeleteDialog = (script) => {
@@ -222,10 +269,52 @@ const PacScriptsTab = () => {
     });
   };
 
+  const reloadScript = async (script) => {
+    if (script.sourceType !== 'url' || !script.sourceUrl) {
+      return;
+    }
+
+    setReloadingScript(script.id);
+    
+    try {
+      const newContent = await fetchPacScript(script.sourceUrl);
+      
+      const updatedScript = {
+        ...script,
+        content: newContent.trim(),
+        updatedAt: new Date().toISOString()
+      };
+
+      await indexedDBStorage.updatePacScript(updatedScript);
+      const updatedScripts = pacScripts.map(s => 
+        s.id === script.id ? updatedScript : s
+      );
+      setPacScripts(updatedScripts);
+      
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
+        console.error('Failed to notify background about PAC scripts update:', error)
+      );
+
+    } catch (error) {
+      console.error('Failed to reload PAC script:', error);
+    } finally {
+      setReloadingScript(null);
+    }
+  };
+
   const confirmDelete = async () => {
-    const updatedScripts = pacScripts.filter(script => script.id !== deleteDialog.scriptId);
-    await savePacScripts(updatedScripts);
-    setDeleteDialog({ isOpen: false, scriptId: null, scriptName: '' });
+    try {
+      await indexedDBStorage.deletePacScript(deleteDialog.scriptId);
+      const updatedScripts = pacScripts.filter(script => script.id !== deleteDialog.scriptId);
+      setPacScripts(updatedScripts);
+      setDeleteDialog({ isOpen: false, scriptId: null, scriptName: '' });
+      
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
+        console.error('Failed to notify background about PAC scripts update:', error)
+      );
+    } catch (error) {
+      console.error('Failed to delete PAC script:', error);
+    }
   };
 
   return (
@@ -284,26 +373,47 @@ const PacScriptsTab = () => {
                               ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
                               : 'border-blue-300 focus:border-blue-500 focus:ring-blue-500'
                           }`}
+                          disabled={fetchingEditScript}
                         />
-                        <textarea
-                          value={editFormData.content}
-                          onChange={(e) => setEditFormData({ ...editFormData, content: e.target.value })}
-                          placeholder={messages.pacScriptContentPlaceholder}
-                          rows={4}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:border-blue-500 focus:ring-blue-500 resize-none font-mono"
-                        />
+                        {editFormData.inputType === 'url' ? (
+                          <input
+                            type="url"
+                            value={editFormData.url}
+                            onChange={(e) => {
+                              setEditFormData({ ...editFormData, url: e.target.value });
+                              if (editValidationError) setEditValidationError('');
+                            }}
+                            placeholder={messages.pacScriptUrlPlaceholder}
+                            className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
+                              editValidationError 
+                                ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                                : 'border-blue-300 focus:border-blue-500 focus:ring-blue-500'
+                            }`}
+                            disabled={fetchingEditScript}
+                          />
+                        ) : (
+                          <textarea
+                            value={editFormData.content}
+                            onChange={(e) => setEditFormData({ ...editFormData, content: e.target.value })}
+                            placeholder={messages.pacScriptContentPlaceholder}
+                            rows={4}
+                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:border-blue-500 focus:ring-blue-500 resize-none font-mono"
+                            disabled={fetchingEditScript}
+                          />
+                        )}
                         <div className="flex items-center justify-between">
                           <Switch.Group>
                             <div className="flex items-center gap-2">
                               <Switch.Label className="text-sm text-gray-700">
                                 {editFormData.enabled ? messages.enabled : messages.disabled}
                               </Switch.Label>
-                              <Switch
+                                                              <Switch
                                 checked={editFormData.enabled}
                                 onChange={(enabled) => setEditFormData({ ...editFormData, enabled })}
+                                disabled={fetchingEditScript}
                                 className={`relative inline-flex h-4 w-8 shrink-0 cursor-pointer rounded-full border-2 border-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
                                   editFormData.enabled ? 'bg-blue-600' : 'bg-gray-200'
-                                }`}
+                                } ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`}
                               >
                                 <span
                                   className={`pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg ring-0 ${
@@ -314,7 +424,13 @@ const PacScriptsTab = () => {
                             </div>
                           </Switch.Group>
                         </div>
-                        {editValidationError && (
+                        {fetchingEditScript && (
+                          <div className="text-blue-600 text-xs mt-1 flex items-center gap-1">
+                            <div className="w-3 h-3 border border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                            {messages.fetchingPacScript}
+                          </div>
+                        )}
+                        {editValidationError && !fetchingEditScript && (
                           <div className="text-red-600 text-xs mt-1 flex items-center gap-1">
                             <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
                             {editValidationError}
@@ -322,24 +438,61 @@ const PacScriptsTab = () => {
                         )}
                       </div>
                     ) : (
-                      <div className="text-sm text-gray-900 py-1">{script.name}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-sm text-gray-900 py-1">{script.name}</div>
+                        <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                          script.sourceType === 'url' 
+                            ? 'bg-blue-100 text-blue-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {script.sourceType === 'url' ? messages.pacScriptTypeUrl : messages.pacScriptTypePlain}
+                        </span>
+                        {reloadingScript === script.id && (
+                          <div className="flex items-center gap-1 text-xs text-blue-600">
+                            <div className="w-3 h-3 border border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                            <span>{messages.reloadingScript}</span>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                   
                                      <div className="flex gap-1">
                      {editingScriptId === script.id ? (
                        <>
-                         <button onClick={(e) => { e.stopPropagation(); saveEdit(); }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
+                         <button 
+                           onClick={(e) => { e.stopPropagation(); saveEdit(); }} 
+                           disabled={fetchingEditScript}
+                           className={`p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                           title="Save"
+                         >
                            <CheckIcon className="w-4 h-4" />
                          </button>
-                         <button onClick={(e) => { e.stopPropagation(); cancelEdit(); }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
+                         <button 
+                           onClick={(e) => { e.stopPropagation(); cancelEdit(); }} 
+                           disabled={fetchingEditScript}
+                           className={`p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                           title="Cancel"
+                         >
                            <XMarkIcon className="w-4 h-4" />
                          </button>
                        </>
                      ) : (
-                       <button onClick={(e) => { e.stopPropagation(); showDeleteDialog(script); }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
-                         <TrashIcon className="w-4 h-4" />
-                       </button>
+                       <>
+                         {script.sourceType === 'url' && (
+                           <button 
+                             onClick={(e) => { e.stopPropagation(); reloadScript(script); }} 
+                             disabled={reloadingScript === script.id}
+                             className={`p-1 hover:bg-blue-100 rounded text-gray-500 hover:text-blue-600 cursor-pointer ${reloadingScript === script.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                             title={messages.reloadScript}
+                           >
+                             <ArrowPathIcon className={`w-4 h-4 ${reloadingScript === script.id ? 'animate-spin' : ''}`} />
+                           </button>
+                         )}
+                         <button onClick={(e) => { e.stopPropagation(); showDeleteDialog(script); }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
+                           <TrashIcon className="w-4 h-4" />
+                         </button>
+                       </>
                      )}
                   </div>
                 </div>
