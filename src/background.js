@@ -1,28 +1,26 @@
 class ProxyManager {
   constructor() {
     this.isProxyActive = false;
-    this.init();
+    this.init().catch(error => console.error('Failed to initialize proxy manager:', error));
   }
 
   async init() {
-    // Listen for storage changes to update PAC script
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace === 'local') {
         const relevantChanges = ['domainExceptions', 'ownProxies', 'proxyActive'];
         const hasRelevantChanges = relevantChanges.some(key => changes[key]);
 
         if (hasRelevantChanges) {
-          this.updateProxySettings();
+          this.updateProxySettings().catch(error => console.error('Failed to update proxy settings:', error));
         }
       }
     });
 
-    // Load initial state
     const result = await chrome.storage.local.get(['proxyActive']);
     this.isProxyActive = result.proxyActive || false;
 
     if (this.isProxyActive) {
-      this.updateProxySettings();
+      await this.updateProxySettings();
     }
   }
 
@@ -42,67 +40,34 @@ class ProxyManager {
 
     return `
 function FindProxyForURL(url, host) {
-  // Domain exceptions from storage
   const domainExceptions = ${JSON.stringify(domainExceptions || {})};
   
-  console.log('PAC: Checking URL:', url, 'Host:', host);
-  console.log('PAC: Available domain exceptions:', domainExceptions);
-  
-  // Check for exact domain matches first
   if (domainExceptions[host]) {
     const option = domainExceptions[host];
-    console.log('PAC: Found exact match for', host, 'option:', option);
-    if (option === 'yes') {
-      console.log('PAC: Returning proxy for exact match:', "${proxyString}");
-      return "${proxyString}";
-    }
-    if (option === 'no') {
-      console.log('PAC: Returning DIRECT for exact match');
-      return "DIRECT";
-    }
-    // option === 'pac' falls through to default PAC logic
+    if (option === 'yes') return "${proxyString}";
+    if (option === 'no') return "DIRECT";
   }
 
-  // Check for wildcard domain matches (*.example.com)
   for (const domain in domainExceptions) {
     if (domain.startsWith('*.')) {
-      const baseDomain = domain.slice(2); // Remove '*.'
-      console.log('PAC: Checking wildcard domain:', domain, 'baseDomain:', baseDomain);
-      console.log('PAC: Host equals baseDomain?', host === baseDomain);
-      console.log('PAC: Host ends with baseDomain?', host.endsWith('.' + baseDomain));
-      
+      const baseDomain = domain.slice(2);
       if (host === baseDomain || host.endsWith('.' + baseDomain)) {
         const option = domainExceptions[domain];
-        console.log('PAC: Found wildcard match for', host, 'with domain', domain, 'option:', option);
-        if (option === 'yes') {
-          console.log('PAC: Returning proxy for wildcard match:', "${proxyString}");
-          return "${proxyString}";
-        }
-        if (option === 'no') {
-          console.log('PAC: Returning DIRECT for wildcard match');
-          return "DIRECT";
-        }
-        // option === 'pac' falls through to default PAC logic
+        if (option === 'yes') return "${proxyString}";
+        if (option === 'no') return "DIRECT";
       }
     }
   }
 
-  console.log('PAC: No matches found, returning DIRECT');
   return "DIRECT";
 }`;
   }
 
-    async updateProxySettings() {
+  async updateProxySettings() {
     try {
       const result = await chrome.storage.local.get(['domainExceptions', 'ownProxies', 'proxyActive']);
       
-      console.log('=== PROXY UPDATE DEBUG ===');
-      console.log('proxyActive:', result.proxyActive);
-      console.log('domainExceptions:', result.domainExceptions);
-      console.log('ownProxies:', result.ownProxies);
-      
       if (!result.proxyActive) {
-        console.log('Proxy not active, deactivating...');
         await this.deactivateProxy();
         return;
       }
@@ -111,14 +76,11 @@ function FindProxyForURL(url, host) {
       const ownProxies = result.ownProxies || [];
       
       if (ownProxies.length === 0) {
-        console.warn('No proxy servers configured');
         await this.deactivateProxy();
         return;
       }
 
       const pacScript = this.generatePacScript(domainExceptions, ownProxies);
-      console.log('Generated PAC Script:');
-      console.log(pacScript);
       
       await chrome.proxy.settings.set({
         value: {
@@ -131,8 +93,6 @@ function FindProxyForURL(url, host) {
       });
 
       this.isProxyActive = true;
-      console.log('Proxy activated with PAC script successfully!');
-      console.log('=== END PROXY UPDATE DEBUG ===');
     } catch (error) {
       console.error('Failed to update proxy settings:', error);
     }
@@ -155,7 +115,6 @@ function FindProxyForURL(url, host) {
       await chrome.proxy.settings.clear({ scope: 'regular' });
       await chrome.storage.local.set({ proxyActive: false });
       this.isProxyActive = false;
-      console.log('Proxy deactivated');
       return true;
     } catch (error) {
       console.error('Failed to deactivate proxy:', error);
@@ -171,29 +130,41 @@ function FindProxyForURL(url, host) {
   }
 }
 
-// Initialize proxy manager
 const proxyManager = new ProxyManager();
 
-// Message handling for popup communication
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  switch (request.action) {
-    case 'activateProxy':
-      proxyManager.activateProxy().then(sendResponse);
-      return true; // Keep message channel open for async response
+  const handleAsync = async () => {
+    try {
+      switch (request.action) {
+        case 'activateProxy':
+          const activateResult = await proxyManager.activateProxy();
+          sendResponse(activateResult);
+          break;
 
-    case 'deactivateProxy':
-      proxyManager.deactivateProxy().then(sendResponse);
-      return true;
+        case 'deactivateProxy':
+          const deactivateResult = await proxyManager.deactivateProxy();
+          sendResponse(deactivateResult);
+          break;
 
-    case 'getProxyStatus':
-      proxyManager.getProxyStatus().then(sendResponse);
-      return true;
+        case 'getProxyStatus':
+          const status = await proxyManager.getProxyStatus();
+          sendResponse(status);
+          break;
 
-    case 'updateProxySettings':
-      proxyManager.updateProxySettings().then(() => sendResponse(true));
-      return true;
+        case 'updateProxySettings':
+          await proxyManager.updateProxySettings();
+          sendResponse(true);
+          break;
 
-    default:
-      sendResponse({ error: 'Unknown action' });
-  }
+        default:
+          sendResponse({ error: 'Unknown action' });
+      }
+    } catch (error) {
+      console.error('Error handling message:', error);
+      sendResponse({ error: error.message });
+    }
+  };
+
+  handleAsync();
+  return true;
 });
