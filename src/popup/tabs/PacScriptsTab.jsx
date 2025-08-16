@@ -4,10 +4,12 @@ import { TrashIcon, CheckIcon, XMarkIcon, ArrowPathIcon } from '@heroicons/react
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { Switch } from '@headlessui/react';
 import indexedDBStorage from '../../utils/indexedDB';
+import { PacScriptsSkeleton } from '../components/SkeletonLoader';
 
 const PacScriptsTab = () => {
   const [pacScripts, setPacScripts] = useState([]);
   const [messages, setMessages] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   
   // PAC script management states
   const [showForm, setShowForm] = useState(false);
@@ -80,6 +82,8 @@ const PacScriptsTab = () => {
         setPacScripts(storedScripts);
       } catch (error) {
         setPacScripts([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -306,6 +310,10 @@ const PacScriptsTab = () => {
       // Silently handle error
     }
   };
+
+  if (isLoading) {
+    return <PacScriptsSkeleton />;
+  }
 
   return (
     <div className="space-y-6 min-h-[250px]">

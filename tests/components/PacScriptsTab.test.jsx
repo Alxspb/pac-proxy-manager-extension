@@ -98,6 +98,11 @@ describe('PacScriptsTab Component', () => {
     it('should create a plain PAC script', async () => {
       render(<PacScriptsTab />);
 
+      // Wait for skeleton to disappear and form to be visible
+      await waitFor(() => {
+        expect(screen.getByText('Adding PAC script')).toBeInTheDocument();
+      });
+
       await user.click(screen.getByText('Adding PAC script'));
 
       // Fill in the form
@@ -130,6 +135,11 @@ describe('PacScriptsTab Component', () => {
     it('should create a URL-based PAC script', async () => {
       render(<PacScriptsTab />);
 
+      // Wait for skeleton to disappear and form to be visible
+      await waitFor(() => {
+        expect(screen.getByText('Adding PAC script')).toBeInTheDocument();
+      });
+
       await user.click(screen.getByText('Adding PAC script'));
 
       // Fill in the form
@@ -161,10 +171,16 @@ describe('PacScriptsTab Component', () => {
     it('should handle fetch errors when creating URL-based script', async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
-        status: 404
+        status: 404,
+        text: () => Promise.resolve('Error response')
       });
-
+      
       render(<PacScriptsTab />);
+
+      // Wait for skeleton to disappear and form to be visible
+      await waitFor(() => {
+        expect(screen.getByText('Adding PAC script')).toBeInTheDocument();
+      });
 
       await user.click(screen.getByText('Adding PAC script'));
       await user.type(screen.getByPlaceholderText('My PAC script'), 'Failed Script');
@@ -259,7 +275,8 @@ describe('PacScriptsTab Component', () => {
     it('should handle reload errors gracefully', async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
-        status: 500
+        status: 500,
+        text: () => Promise.resolve('Error response')
       });
 
       render(<PacScriptsTab />);
@@ -472,6 +489,11 @@ describe('PacScriptsTab Component', () => {
     it('should validate script name is required', async () => {
       render(<PacScriptsTab />);
 
+      // Wait for skeleton to disappear and form to be visible
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
+      });
+
       // Form should be automatically visible when no scripts exist
       await user.click(screen.getByRole('button', { name: /save/i }));
 
@@ -482,6 +504,11 @@ describe('PacScriptsTab Component', () => {
 
     it('should validate URL is required for URL-based scripts', async () => {
       render(<PacScriptsTab />);
+
+      // Wait for skeleton to disappear and form to be visible
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('My PAC script')).toBeInTheDocument();
+      });
 
       // Form should be automatically visible when no scripts exist
       await user.type(screen.getByPlaceholderText('My PAC script'), 'Test');
@@ -495,6 +522,11 @@ describe('PacScriptsTab Component', () => {
 
     it('should validate content is required for plain scripts', async () => {
       render(<PacScriptsTab />);
+
+      // Wait for skeleton to disappear and form to be visible
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('My PAC script')).toBeInTheDocument();
+      });
 
       // Form should be automatically visible when no scripts exist
       await user.type(screen.getByPlaceholderText('My PAC script'), 'Test');

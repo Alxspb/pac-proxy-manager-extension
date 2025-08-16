@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import { ProxiesSkeleton } from '../components/SkeletonLoader';
 
 const ProxiesTab = () => {
   const [proxyStatus, setProxyStatus] = useState(false);
@@ -9,6 +10,7 @@ const ProxiesTab = () => {
   const [pacScripts, setPacScripts] = useState([]);
   const [messages, setMessages] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   
   // Proxy management states
   const [showForm, setShowForm] = useState(false);
@@ -62,6 +64,8 @@ const ProxiesTab = () => {
         setPacScripts(storedPacScripts);
       } catch (_error) {
         // Silently handle error
+      } finally {
+        setIsInitialLoading(false);
       }
     };
 
@@ -208,6 +212,10 @@ const ProxiesTab = () => {
     await saveProxies(updatedProxies);
     setDeleteDialog({ isOpen: false, proxyId: null, proxyUrl: '' });
   };
+
+  if (isInitialLoading) {
+    return <ProxiesSkeleton />;
+  }
 
   return (
     <div className="space-y-6 min-h-[250px]">

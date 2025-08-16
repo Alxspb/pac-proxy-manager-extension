@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { RadioGroup, Disclosure, DisclosureButton, DisclosurePanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { CogIcon, CheckIcon, XMarkIcon, ChevronDownIcon, DocumentArrowUpIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { ExceptionsSkeleton } from '../components/SkeletonLoader';
 
 const ExceptionsTab = () => {
   const [domain, setDomain] = useState('');
@@ -12,6 +13,7 @@ const ExceptionsTab = () => {
   const [bulkImportYesText, setBulkImportYesText] = useState('');
   const [bulkImportNoText, setBulkImportNoText] = useState('');
   const [selectedBulkOption, setSelectedBulkOption] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadMessages = () => {
@@ -83,6 +85,8 @@ const ExceptionsTab = () => {
         await getCurrentDomain();
       } catch (_error) {
         // Domain will remain empty, showing placeholder
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -173,6 +177,10 @@ const ExceptionsTab = () => {
       toast.error(messages.importError);
     }
   };
+
+  if (isLoading) {
+    return <ExceptionsSkeleton />;
+  }
 
   return (
     <div className="space-y-6 min-h-[250px]">
