@@ -1,0 +1,72 @@
+Perfekt für den Zugriff auf geografisch eingeschränkte Inhalte, das Sichern Ihrer Verbindung oder die mühelose Verwaltung von Unternehmensnetzwerk-Anforderungen.
+
+✨ Hauptfunktionen:
+• Intelligente PAC-Skript-Verwaltung - von URLs laden oder direkt einfügen
+• Domain-spezifische Ausnahmen mit Wildcard-Unterstützung (*.example.com)
+• Multiple Proxy-Server-Konfigurationen (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Massen-Domain-Import für Unternehmens-Setups
+• Echtzeit-Proxy-Umschaltung mit intelligenten Fallbacks
+• Moderne, responsive Benutzeroberfläche mit React erstellt
+• Mehrsprachige Unterstützung (13+ Sprachen)
+
+🔒 Datenschutz & Sicherheit:
+• 100% kostenlos und open source - prüfen Sie den Code selbst
+• Minimale Berechtigungen (nur 3 erforderlich) - maximaler Datenschutz
+• Alle Daten werden lokal auf Ihrem Gerät gespeichert
+• Keine Verfolgung, keine Analytik, keine Datensammlung
+• Mit Manifest V3 für erweiterte Sicherheit erstellt
+
+🚀 So funktioniert es:
+1. Installieren Sie die Erweiterung und klicken Sie auf das Toolbar-Symbol
+2. Fügen Sie PAC-Skripte von URLs hinzu oder fügen Sie Skript-Inhalte ein
+3. Konfigurieren Sie Domain-Ausnahmen für granulare Kontrolle
+4. Richten Sie bei Bedarf Proxy-Server ein
+5. Die Erweiterung übernimmt automatisch das Proxy-Routing
+
+💡 Perfekt für:
+• Zugriff auf geografisch eingeschränkte Inhalte und Streaming-Dienste
+• Sicherung Ihrer Verbindung in öffentlichen WLAN-Netzwerken
+• Remote-Arbeiter, die sich mit Unternehmensressourcen verbinden
+• Studenten und Forscher, die auf akademische Inhalte zugreifen
+• Geschäftsprofis, die mehrere Netzwerkanforderungen verwalten
+• Jeden, der automatische Proxy-Umschaltung ohne manuelle Probleme möchte
+
+⚙️ Berechtigungen erklärt:
+Wir verwenden nur 3 minimale Berechtigungen für maximale Transparenz:
+• "proxy" - Erforderlich zur Änderung der Proxy-Einstellungen Ihres Browsers
+• "activeTab" - Verwendet zur Erkennung der Domain des aktuellen Tabs für einfache Ausnahmen-Einrichtung
+• "storage" - Speichert Ihre Konfiguration lokal auf Ihrem Gerät
+
+🎯 Intelligentes Prioritätssystem:
+1. Domain-Ausnahmen haben höchste Priorität
+2. Konfigurierte Proxy-Server überschreiben PAC-Skript-Proxies
+3. PAC-Skript-Regeln werden angewendet, wenn keine Proxy-Server konfiguriert sind
+4. Direkte Verbindung als Fallback
+
+🌐 Unternehmensbereit:
+• Massen-Import von Ausnahmen-Domains aus Textlisten
+• Unterstützung für komplexe PAC-Skript-Logik
+• Multiple Proxy-Server-Konfigurationen
+• Wildcard-Domain-Matching für einfache Ausnahmen-Verwaltung
+
+🔧 Erweiterte Funktionen:
+• Live-Nachladen von PAC-Skripten von URLs
+• Saubere, intuitive Benutzeroberfläche mit Registerkarten
+• Echtzeit-Konfigurationsupdates
+
+Warum PAC Proxy Manager wählen?
+Im Gegensatz zu anderen Proxy-Erweiterungen, die geschlossene Black Boxes sind, sind wir völlig transparent. Jede Codezeile ist auf GitHub verfügbar. Unser minimales Berechtigungsmodell bedeutet, dass wir nicht wissen, welche Websites Sie besuchen - PAC-Skripte werden in einer kontrollierten, gekapselten Umgebung ausgeführt, die von Chrome selbst verwaltet wird.
+
+Andere Proxy-Manager erfordern oft breite Berechtigungen wie "alle Websites lesen" oder "alle Daten ändern". Wir fragen nur nach dem, was wir brauchen und nichts mehr.
+
+🆓 Immer kostenlos:
+Diese Erweiterung wird immer kostenlos und open source bleiben. Keine Premium-Funktionen, keine Abonnements, keine versteckten Kosten. Wenn Sie sie jedoch nützlich finden und die Entwicklung unterstützen möchten, sind Kaffee-Spenden sehr willkommen!
+
+💻 Open Source:
+Sehen Sie sich den Quellcode an, tragen Sie Funktionen bei oder melden Sie Probleme:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Den Entwickler unterstützen:
+https://buymeacoffee.com/ilyachase
+
+Mit ❤️ für die Community von Ilya L. erstellt.

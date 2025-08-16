@@ -1,0 +1,72 @@
+Perfect voor het toegang krijgen tot geografisch beperkte content, het beveiligen van je verbinding, of het moeiteloos beheren van bedrijfsnetwerkbehoeften.
+
+✨ Hoofdfuncties:
+• Intelligente PAC-scriptbeheer - laden vanaf URLs of direct plakken
+• Domeinspecifieke uitzonderingen met wildcard-ondersteuning (*.example.com)
+• Meerdere proxyserverconfiguraties (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Bulk domeinimport voor bedrijfssetups
+• Real-time proxy-omschakeling met intelligente fallbacks
+• Moderne, responsieve interface gebouwd met React
+• Meertalige ondersteuning (13+ talen)
+
+🔒 Privacy & Beveiliging:
+• 100% gratis en open source - inspecteer de code zelf
+• Minimale permissies (slechts 3 vereist) - maximale privacy
+• Alle data lokaal opgeslagen op je apparaat
+• Geen tracking, geen analytics, geen dataverzameling
+• Gebouwd met Manifest V3 voor verbeterde beveiliging
+
+🚀 Hoe Het Werkt:
+1. Installeer de extensie en klik op het werkbalk-icoon
+2. Voeg PAC-scripts toe vanaf URLs of plak scriptinhoud
+3. Configureer domeinfuitzonderingen voor granulaire controle
+4. Stel proxyservers in indien nodig
+5. De extensie handelt automatisch proxy-routing af
+
+💡 Perfect Voor:
+• Toegang tot geografisch beperkte content en streamingdiensten
+• Het beveiligen van je verbinding op openbare WiFi-netwerken
+• Thuiswerkers die verbinden met bedrijfsbronnen
+• Studenten en onderzoekers die academische content benaderen
+• Zakelijke professionals die meerdere netwerkbehoeften beheren
+• Iedereen die automatische proxy-omschakeling wil zonder handmatige gedoe
+
+⚙️ Permissies Uitgelegd:
+We gebruiken slechts 3 minimale permissies voor maximale transparantie:
+• "proxy" - Vereist om je browser's proxy-instellingen te wijzigen
+• "activeTab" - Gebruikt om het domein van het huidige tabblad te detecteren voor eenvoudige uitzonderingssetup
+• "storage" - Slaat je configuratie lokaal op je apparaat op
+
+🎯 Intelligent Prioriteitssysteem:
+1. Domeinfuitzonderingen hebben de hoogste prioriteit
+2. Geconfigureerde proxyservers overschrijven PAC-script proxies
+3. PAC-scriptregels worden toegepast wanneer geen proxyservers zijn geconfigureerd
+4. Directe verbinding als fallback
+
+🌐 Enterprise-Ready:
+• Bulk import van uitzonderingsdomeinen uit tekstlijsten
+• Ondersteuning voor complexe PAC-scriptlogica
+• Meerdere proxyserverconfiguraties
+• Wildcard domein matching voor eenvoudig uitzonderingsbeheer
+
+🔧 Geavanceerde Functies:
+• Live PAC-script herladen vanaf URLs
+• Schone, intuïtieve interface met tabbladen
+• Real-time configuratie-updates
+
+Waarom PAC Proxy Manager Kiezen?
+In tegenstelling tot andere proxy-extensies die closed-source black boxes zijn, zijn wij volledig transparant. Elke regel code is beschikbaar op GitHub. Ons minimale permissiemodel betekent dat we niet weten welke websites je bezoekt - PAC-scripts draaien in een gecontroleerde, ingekapselde omgeving beheerd door Chrome zelf.
+
+Andere proxy-beheerders vereisen vaak brede permissies zoals "alle websites lezen" of "alle data wijzigen". Wij vragen alleen om precies wat we nodig hebben en niets meer.
+
+🆓 Altijd Gratis:
+Deze extensie zal altijd gratis en open source blijven. Geen premium-functies, geen abonnementen, geen verborgen kosten. Echter, als je het nuttig vindt en ontwikkeling wilt ondersteunen, zijn koffiedonaties zeer gewaardeerd!
+
+💻 Open Source:
+Bekijk de broncode, draag functies bij of rapporteer problemen:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Ondersteun de Ontwikkelaar:
+https://buymeacoffee.com/ilyachase
+
+Gebouwd met ❤️ voor de community door Ilya L.

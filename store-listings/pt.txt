@@ -1,0 +1,72 @@
+Perfeito para acessar conteúdo geograficamente restrito, proteger sua conexão ou gerenciar requisitos de rede corporativa sem esforço.
+
+✨ Principais Recursos:
+• Gerenciamento inteligente de scripts PAC - carregue de URLs ou cole diretamente
+• Exceções específicas por domínio com suporte a wildcards (*.example.com)
+• Múltiplas configurações de servidores proxy (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Importação em massa de domínios para configurações empresariais
+• Alternância de proxy em tempo real com fallbacks inteligentes
+• Interface moderna e responsiva construída com React
+• Suporte multilíngue (13+ idiomas)
+
+🔒 Privacidade e Segurança:
+• 100% gratuito e open source - inspecione o código você mesmo
+• Permissões mínimas (apenas 3 necessárias) - máxima privacidade
+• Todos os dados armazenados localmente em seu dispositivo
+• Sem rastreamento, sem analytics, sem coleta de dados
+• Construído com Manifest V3 para segurança aprimorada
+
+🚀 Como Funciona:
+1. Instale a extensão e clique no ícone da barra de ferramentas
+2. Adicione scripts PAC de URLs ou cole conteúdo do script
+3. Configure exceções de domínio para controle granular
+4. Configure servidores proxy se necessário
+5. A extensão gerencia automaticamente o roteamento do proxy
+
+💡 Perfeito Para:
+• Acessar conteúdo geograficamente restrito e serviços de streaming
+• Proteger sua conexão em redes WiFi públicas
+• Trabalhadores remotos conectando a recursos corporativos
+• Estudantes e pesquisadores acessando conteúdo acadêmico
+• Profissionais de negócios gerenciando múltiplos requisitos de rede
+• Qualquer um que queira alternância automática de proxy sem problemas manuais
+
+⚙️ Permissões Explicadas:
+Usamos apenas 3 permissões mínimas para máxima transparência:
+• "proxy" - Necessário para modificar as configurações de proxy do seu navegador
+• "activeTab" - Usado para detectar o domínio da aba atual para configuração fácil de exceções
+• "storage" - Salva sua configuração localmente em seu dispositivo
+
+🎯 Sistema de Prioridade Inteligente:
+1. Exceções de domínio têm a prioridade mais alta
+2. Servidores proxy configurados substituem proxies do script PAC
+3. Regras do script PAC se aplicam quando nenhum servidor proxy está configurado
+4. Conexão direta como fallback
+
+🌐 Pronto para Empresas:
+• Importação em massa de domínios de exceção de listas de texto
+• Suporte para lógica complexa de scripts PAC
+• Múltiplas configurações de servidores proxy
+• Correspondência de domínios com wildcards para gerenciamento fácil de exceções
+
+🔧 Recursos Avançados:
+• Recarregamento ao vivo de scripts PAC de URLs
+• Interface limpa e intuitiva com abas
+• Atualizações de configuração em tempo real
+
+Por Que Escolher o PAC Proxy Manager?
+Ao contrário de outras extensões de proxy que são caixas-pretas de código fechado, somos completamente transparentes. Cada linha de código está disponível no GitHub. Nosso modelo de permissões mínimas significa que não sabemos quais sites você visita - scripts PAC executam em um ambiente controlado e encapsulado gerenciado pelo próprio Chrome.
+
+Outros gerenciadores de proxy frequentemente requerem permissões amplas como "ler todos os sites" ou "modificar todos os dados". Pedimos apenas exatamente o que precisamos e nada mais.
+
+🆓 Sempre Gratuito:
+Esta extensão sempre permanecerá gratuita e open source. Sem recursos premium, sem assinaturas, sem custos ocultos. No entanto, se você a considera útil e quer apoiar o desenvolvimento, doações de café são muito apreciadas!
+
+💻 Open Source:
+Veja o código fonte, contribua com recursos ou reporte problemas:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Apoie o Desenvolvedor:
+https://buymeacoffee.com/ilyachase
+
+Construído com ❤️ para a comunidade por Ilya L.

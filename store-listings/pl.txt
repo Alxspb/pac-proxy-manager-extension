@@ -1,0 +1,72 @@
+Idealne do uzyskiwania dostępu do geograficznie ograniczonych treści, zabezpieczania połączenia lub bezproblemowego zarządzania wymaganiami sieciowymi przedsiębiorstwa.
+
+✨ Główne Funkcje:
+• Inteligentne zarządzanie skryptami PAC - wczytywanie z URL lub bezpośrednie wklejanie
+• Wyjątki specyficzne dla domen z obsługą masek (*.example.com)
+• Wiele konfiguracji serwerów proxy (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Masowy import domen dla konfiguracji przedsiębiorstw
+• Przełączanie proxy w czasie rzeczywistym z inteligentnymi zapasowymi opcjami
+• Nowoczesny, responsywny interfejs zbudowany w React
+• Obsługa wielu języków (13+ języków)
+
+🔒 Prywatność i Bezpieczeństwo:
+• 100% darmowe i open source - sprawdź kod samodzielnie
+• Minimalne uprawnienia (wymagane tylko 3) - maksymalna prywatność
+• Wszystkie dane przechowywane lokalnie na twoim urządzeniu
+• Brak śledzenia, brak analityki, brak zbierania danych
+• Zbudowane z Manifest V3 dla zwiększonego bezpieczeństwa
+
+🚀 Jak To Działa:
+1. Zainstaluj rozszerzenie i kliknij ikonę na pasku narzędzi
+2. Dodaj skrypty PAC z URL lub wklej zawartość skryptu
+3. Skonfiguruj wyjątki domenowe dla precyzyjnej kontroli
+4. Skonfiguruj serwery proxy w razie potrzeby
+5. Rozszerzenie automatycznie obsługuje routing proxy
+
+💡 Idealne Dla:
+• Uzyskiwania dostępu do geograficznie ograniczonych treści i usług streamingowych
+• Zabezpieczania połączenia w publicznych sieciach WiFi
+• Pracowników zdalnych łączących się z zasobami firmowymi
+• Studentów i badaczy uzyskujących dostęp do treści akademickich
+• Profesjonalistów biznesowych zarządzających wieloma wymaganiami sieciowymi
+• Każdego, kto chce automatycznego przełączania proxy bez ręcznych problemów
+
+⚙️ Wyjaśnienie Uprawnień:
+Używamy tylko 3 minimalnych uprawnień dla maksymalnej transparentności:
+• "proxy" - Wymagane do modyfikacji ustawień proxy twojej przeglądarki
+• "activeTab" - Używane do wykrywania domeny bieżącej karty dla łatwej konfiguracji wyjątków
+• "storage" - Zapisuje twoją konfigurację lokalnie na twoim urządzeniu
+
+🎯 Inteligentny System Priorytetów:
+1. Wyjątki domenowe mają najwyższy priorytet
+2. Skonfigurowane serwery proxy nadpisują proxy ze skryptów PAC
+3. Reguły skryptu PAC są stosowane, gdy nie ma skonfigurowanych serwerów proxy
+4. Połączenie bezpośrednie jako opcja zapasowa
+
+🌐 Gotowe dla Przedsiębiorstw:
+• Masowy import domen wyjątków z list tekstowych
+• Obsługa złożonej logiki skryptów PAC
+• Wiele konfiguracji serwerów proxy
+• Dopasowywanie domen z maskami dla łatwego zarządzania wyjątkami
+
+🔧 Zaawansowane Funkcje:
+• Żywe przeładowywanie skryptów PAC z URL
+• Czysty, intuicyjny interfejs z zakładkami
+• Aktualizacje konfiguracji w czasie rzeczywistym
+
+Dlaczego Wybrać PAC Proxy Manager?
+W przeciwieństwie do innych rozszerzeń proxy, które są zamkniętymi czarnymi skrzynkami, jesteśmy całkowicie transparentni. Każda linia kodu jest dostępna na GitHub. Nasz model minimalnych uprawnień oznacza, że nie wiemy, jakie strony odwiedzasz - skrypty PAC działają w kontrolowanym, zamkniętym środowisku zarządzanym przez samą przeglądarkę Chrome.
+
+Inne menedżery proxy często wymagają szerokich uprawnień jak "czytanie wszystkich stron" lub "modyfikowanie wszystkich danych". Prosimy tylko o dokładnie to, czego potrzebujemy i nic więcej.
+
+🆓 Zawsze Darmowe:
+To rozszerzenie zawsze pozostanie darmowe i open source. Bez funkcji premium, bez subskrypcji, bez ukrytych kosztów. Jednak jeśli uznasz je za przydatne i chcesz wspierać rozwój, darowizny na kawę są bardzo doceniane!
+
+💻 Open Source:
+Zobacz kod źródłowy, wnieś funkcje lub zgłoś problemy:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Wspieraj Dewelopera:
+https://buymeacoffee.com/ilyachase
+
+Zbudowane z ❤️ dla społeczności przez Ilya L.

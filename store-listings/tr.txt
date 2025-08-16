@@ -1,0 +1,72 @@
+Coğrafi olarak kısıtlanmış içeriğe erişim, bağlantınızı güvence altına alma veya kurumsal ağ gereksinimlerini zahmetsizce yönetme için mükemmel.
+
+✨ Ana Özellikler:
+• Akıllı PAC betik yönetimi - URL'lerden yükle veya doğrudan yapıştır
+• Joker karakter desteği ile etki alanına özgü istisnalar (*.example.com)
+• Birden fazla proxy sunucu yapılandırması (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Kurumsal kurulumlar için toplu etki alanı içe aktarımı
+• Akıllı yedeklerle gerçek zamanlı proxy geçişi
+• React ile inşa edilmiş modern, duyarlı arayüz
+• Çok dil desteği (13+ dil)
+
+🔒 Gizlilik ve Güvenlik:
+• %100 ücretsiz ve açık kaynak - kodu kendiniz inceleyin
+• Minimal izinler (sadece 3 gerekli) - maksimum gizlilik
+• Tüm veriler cihazınızda yerel olarak saklanır
+• Takip yok, analitik yok, veri toplama yok
+• Gelişmiş güvenlik için Manifest V3 ile inşa edildi
+
+🚀 Nasıl Çalışır:
+1. Uzantıyı yükleyin ve araç çubuğu simgesine tıklayın
+2. URL'lerden PAC betikleri ekleyin veya betik içeriğini yapıştırın
+3. Ayrıntılı kontrol için etki alanı istisnalarını yapılandırın
+4. Gerekirse proxy sunucularını ayarlayın
+5. Uzantı otomatik olarak proxy yönlendirmesini işler
+
+💡 Şunlar İçin Mükemmel:
+• Coğrafi olarak kısıtlanmış içeriğe ve akış hizmetlerine erişim
+• Halka açık WiFi ağlarında bağlantınızı güvence altına alma
+• Kurumsal kaynaklara bağlanan uzaktan çalışanlar
+• Akademik içeriğe erişen öğrenciler ve araştırmacılar
+• Birden fazla ağ gereksinimini yöneten iş profesyonelleri
+• Manuel zahmet olmadan otomatik proxy geçişi isteyen herkes
+
+⚙️ İzinler Açıklandı:
+Maksimum şeffaflık için sadece 3 minimal izin kullanıyoruz:
+• "proxy" - Tarayıcınızın proxy ayarlarını değiştirmek için gerekli
+• "activeTab" - Kolay istisna kurulumu için mevcut sekmenin etki alanını tespit etmek için kullanılır
+• "storage" - Yapılandırmanızı cihazınızda yerel olarak saklar
+
+🎯 Akıllı Öncelik Sistemi:
+1. Etki alanı istisnaları en yüksek önceliğe sahiptir
+2. Yapılandırılmış proxy sunucuları PAC betik proxy'lerini geçersiz kılar
+3. Proxy sunucuları yapılandırılmadığında PAC betik kuralları uygulanır
+4. Yedek olarak doğrudan bağlantı
+
+🌐 Kurumsal Hazır:
+• Metin listelerinden istisna etki alanlarının toplu içe aktarımı
+• Karmaşık PAC betik mantığı desteği
+• Birden fazla proxy sunucu yapılandırması
+• Kolay istisna yönetimi için joker karakter etki alanı eşleştirme
+
+🔧 Gelişmiş Özellikler:
+• URL'lerden PAC betiklerinin canlı yeniden yüklenmesi
+• Temiz, sezgisel sekmeli arayüz
+• Gerçek zamanlı yapılandırma güncellemeleri
+
+Neden PAC Proxy Manager'ı Seçmeli?
+Kapalı kaynak kara kutular olan diğer proxy uzantılarının aksine, tamamen şeffafız. Her kod satırı GitHub'da mevcuttur. Minimal izin modelimiz hangi web sitelerini ziyaret ettiğinizi bilmediğimiz anlamına gelir - PAC betikleri Chrome'un kendisi tarafından yönetilen kontrollü, kapsüllenmiş bir ortamda çalışır.
+
+Diğer proxy yöneticileri genellikle "tüm web sitelerini oku" veya "tüm verileri değiştir" gibi geniş izinler gerektirir. Sadece tam olarak ihtiyacımız olanı istiyoruz, daha fazlasını değil.
+
+🆓 Her Zaman Ücretsiz:
+Bu uzantı her zaman ücretsiz ve açık kaynak kalacaktır. Premium özellik yok, abonelik yok, gizli maliyet yok. Ancak, yararlı bulursanız ve geliştirmeyi desteklemek istiyorsanız, kahve bağışları çok takdir edilir!
+
+💻 Açık Kaynak:
+Kaynak kodunu görün, özellik katkıda bulunun veya sorun bildirin:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Geliştiriciyi Destekleyin:
+https://buymeacoffee.com/ilyachase
+
+Topluluk için ❤️ ile Ilya L. tarafından inşa edildi.

@@ -1,0 +1,72 @@
+Parfait pour accéder au contenu géographiquement restreint, sécuriser votre connexion ou gérer les exigences de réseau d'entreprise sans effort.
+
+✨ Fonctionnalités Principales:
+• Gestion intelligente des scripts PAC - chargement depuis les URLs ou collage direct
+• Exceptions spécifiques au domaine avec support de caractères génériques (*.example.com)
+• Configurations multiples de serveurs proxy (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Importation en masse de domaines pour les configurations d'entreprise
+• Commutation proxy en temps réel avec des solutions de secours intelligentes
+• Interface moderne et responsive construite avec React
+• Support multilingue (13+ langues)
+
+🔒 Confidentialité et Sécurité:
+• 100% gratuit et open source - inspectez le code vous-même
+• Permissions minimales (seulement 3 requises) - confidentialité maximale
+• Toutes les données stockées localement sur votre appareil
+• Aucun suivi, aucune analyse, aucune collecte de données
+• Construit avec Manifest V3 pour une sécurité renforcée
+
+🚀 Comment Ça Marche:
+1. Installez l'extension et cliquez sur l'icône de la barre d'outils
+2. Ajoutez des scripts PAC depuis des URLs ou collez le contenu du script
+3. Configurez les exceptions de domaine pour un contrôle granulaire
+4. Configurez des serveurs proxy si nécessaire
+5. L'extension gère automatiquement le routage proxy
+
+💡 Parfait Pour:
+• Accéder au contenu géographiquement restreint et aux services de streaming
+• Sécuriser votre connexion sur les réseaux WiFi publics
+• Les travailleurs à distance se connectant aux ressources d'entreprise
+• Les étudiants et chercheurs accédant au contenu académique
+• Les professionnels gérant plusieurs exigences réseau
+• Quiconque veut une commutation automatique de proxy sans tracas manuels
+
+⚙️ Permissions Expliquées:
+Nous utilisons seulement 3 permissions minimales pour une transparence maximale:
+• "proxy" - Requis pour modifier les paramètres proxy de votre navigateur
+• "activeTab" - Utilisé pour détecter le domaine de l'onglet actuel pour une configuration facile des exceptions
+• "storage" - Sauvegarde votre configuration localement sur votre appareil
+
+🎯 Système de Priorité Intelligent:
+1. Les exceptions de domaine ont la priorité la plus élevée
+2. Les serveurs proxy configurés remplacent les proxies du script PAC
+3. Les règles du script PAC s'appliquent quand aucun serveur proxy n'est configuré
+4. Connexion directe comme solution de secours
+
+🌐 Prêt pour l'Entreprise:
+• Importation en masse de domaines d'exception depuis des listes texte
+• Support pour la logique complexe des scripts PAC
+• Configurations multiples de serveurs proxy
+• Correspondance de domaines avec caractères génériques pour une gestion facile des exceptions
+
+🔧 Fonctionnalités Avancées:
+• Rechargement en direct des scripts PAC depuis les URLs
+• Interface propre et intuitive avec onglets
+• Mises à jour de configuration en temps réel
+
+Pourquoi Choisir PAC Proxy Manager?
+Contrairement à d'autres extensions proxy qui sont des boîtes noires propriétaires, nous sommes complètement transparents. Chaque ligne de code est disponible sur GitHub. Notre modèle de permissions minimales signifie que nous ne savons pas quels sites web vous visitez - les scripts PAC s'exécutent dans un environnement contrôlé et encapsulé géré par Chrome lui-même.
+
+D'autres gestionnaires de proxy requièrent souvent des permissions larges comme "lire tous les sites web" ou "modifier toutes les données". Nous ne demandons que ce dont nous avons besoin et rien de plus.
+
+🆓 Toujours Gratuit:
+Cette extension restera toujours gratuite et open source. Pas de fonctionnalités premium, pas d'abonnements, pas de coûts cachés. Cependant, si vous la trouvez utile et souhaitez soutenir le développement, les dons de café sont très appréciés!
+
+💻 Open Source:
+Voir le code source, contribuer des fonctionnalités ou signaler des problèmes:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Soutenir le Développeur:
+https://buymeacoffee.com/ilyachase
+
+Construit avec ❤️ pour la communauté par Ilya L.
