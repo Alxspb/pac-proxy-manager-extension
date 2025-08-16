@@ -18,7 +18,7 @@ const ExceptionsTab = () => {
       const msgs = {
         exceptionsTitle: chrome.i18n.getMessage('tabExceptions'),
         domainInputLabel: chrome.i18n.getMessage('domainInputLabel'),
-        domainInputPlaceholder: chrome.i18n.getMessage('domainInputPlaceholder'),
+
         proxyOptionPac: chrome.i18n.getMessage('proxyOptionPac'),
         proxyOptionYes: chrome.i18n.getMessage('proxyOptionYes'),
         proxyOptionNo: chrome.i18n.getMessage('proxyOptionNo'),
@@ -64,7 +64,6 @@ const ExceptionsTab = () => {
               if (hostname && !hostname.match(/^[a-z]{32}$/) && hostname !== 'localhost') {
                 const domain = `*.${hostname}`;
                 setDomain(domain);
-                return;
               }
             } catch (_error) {
               // Error parsing URL
@@ -74,8 +73,6 @@ const ExceptionsTab = () => {
       } catch (_error) {
         // Error in getCurrentDomain
       }
-      
-      setDomain('*.example.com');
     };
 
     const initializeTab = async () => {
@@ -85,7 +82,7 @@ const ExceptionsTab = () => {
       try {
         await getCurrentDomain();
       } catch (_error) {
-        setDomain('*.example.com');
+        // Domain will remain empty, showing placeholder
       }
     };
 
@@ -205,7 +202,7 @@ const ExceptionsTab = () => {
               type="text"
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
-              placeholder={messages.domainInputPlaceholder}
+              placeholder="*.example.com"
               className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500"
             />
           </div>

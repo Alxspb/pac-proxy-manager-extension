@@ -43,10 +43,7 @@
     "message": "Домен для прокси:",
     "description": "Label for domain input field"
   },
-  "domainInputPlaceholder": {
-    "message": "*.example.com",
-    "description": "Placeholder for domain input"
-  },
+
   "proxyOptionPac": {
     "message": "PAC",
     "description": "PAC proxy option"
