@@ -87,7 +87,7 @@ const PopupApp = () => {
             {categories.map(({ name }) => (
               <Tab
                 key={name}
-                className="rounded-full px-3 py-2 text-xs font-semibold text-gray-600 whitespace-nowrap focus:outline-none data-hover:bg-blue-50 data-hover:text-blue-700 data-selected:bg-blue-500 data-selected:text-white data-selected:data-hover:bg-blue-600"
+                className="rounded-full px-3 py-2 text-xs font-semibold text-gray-600 whitespace-nowrap focus:outline-none data-hover:bg-slate-100 data-hover:text-slate-600 data-selected:bg-slate-500 data-selected:text-white data-selected:data-hover:bg-slate-600"
               >
                 {name}
               </Tab>

@@ -196,7 +196,7 @@ const ExceptionsTab = () => {
           value={domain}
           onChange={(e) => setDomain(e.target.value)}
           placeholder={messages.domainInputPlaceholder}
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500"
         />
       </div>
 
@@ -209,9 +209,9 @@ const ExceptionsTab = () => {
             <RadioGroup.Option value="pac">
               {({ checked }) => (
                 <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
-                  checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                  checked ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white border-gray-300 text-gray-700'
                 }`}>
-                  <CogIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-blue-500'}`} />
+                  <CogIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-slate-500'}`} />
                   <RadioGroup.Label className="text-sm font-medium cursor-pointer">
                     {messages.proxyOptionPac}
                   </RadioGroup.Label>
@@ -222,7 +222,7 @@ const ExceptionsTab = () => {
             <RadioGroup.Option value="yes">
               {({ checked }) => (
                 <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
-                  checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                  checked ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white border-gray-300 text-gray-700'
                 }`}>
                   <CheckIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-green-500'}`} />
                   <RadioGroup.Label className="text-sm font-medium cursor-pointer">
@@ -235,7 +235,7 @@ const ExceptionsTab = () => {
             <RadioGroup.Option value="no">
               {({ checked }) => (
                 <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
-                  checked ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                  checked ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white border-gray-300 text-gray-700'
                 }`}>
                   <XMarkIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-red-500'}`} />
                   <RadioGroup.Label className="text-sm font-medium cursor-pointer">
@@ -251,13 +251,13 @@ const ExceptionsTab = () => {
       <Disclosure>
         {({ open }) => (
           <>
-            <DisclosureButton className="flex w-full justify-between rounded-lg bg-blue-50 px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-100 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
+            <DisclosureButton className="flex w-full justify-between rounded-lg bg-slate-100 px-4 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring focus-visible:ring-slate-500 focus-visible:ring-opacity-75">
               <span className="flex items-center gap-2">
                 <DocumentArrowUpIcon className="w-5 h-5" />
                 {messages.bulkImport}
               </span>
               <ChevronDownIcon
-                className={`w-5 h-5 text-blue-500 ${
+                className={`w-5 h-5 text-slate-500 ${
                   open ? 'rotate-180 transform' : ''
                 }`}
               />
@@ -270,11 +270,11 @@ const ExceptionsTab = () => {
                 
                 <TabGroup selectedIndex={selectedBulkOption} onChange={setSelectedBulkOption}>
                   <TabList className="flex gap-2 mb-4">
-                    <Tab className="flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-gray-600 whitespace-nowrap focus:outline-none data-hover:bg-blue-50 data-hover:text-blue-700 data-selected:bg-blue-500 data-selected:text-white data-selected:data-hover:bg-blue-600">
+                    <Tab className="flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-gray-600 whitespace-nowrap focus:outline-none data-hover:bg-slate-100 data-hover:text-slate-600 data-selected:bg-slate-500 data-selected:text-white data-selected:data-hover:bg-slate-600">
                       <CheckIcon className="w-4 h-4 flex-shrink-0" />
                       {messages.proxyOptionYes}
                     </Tab>
-                    <Tab className="flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-gray-600 whitespace-nowrap focus:outline-none data-hover:bg-blue-50 data-hover:text-blue-700 data-selected:bg-blue-500 data-selected:text-white data-selected:data-hover:bg-blue-600">
+                    <Tab className="flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-gray-600 whitespace-nowrap focus:outline-none data-hover:bg-slate-100 data-hover:text-slate-600 data-selected:bg-slate-500 data-selected:text-white data-selected:data-hover:bg-slate-600">
                       <XMarkIcon className="w-4 h-4 flex-shrink-0" />
                       {messages.proxyOptionNo}
                     </Tab>
@@ -287,7 +287,7 @@ const ExceptionsTab = () => {
                         onChange={(e) => setBulkImportYesText(e.target.value)}
                         placeholder={messages.bulkImportPlaceholder}
                         rows={4}
-                        className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                        className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 resize-none"
                       />
                     </TabPanel>
                     <TabPanel>
@@ -296,7 +296,7 @@ const ExceptionsTab = () => {
                         onChange={(e) => setBulkImportNoText(e.target.value)}
                         placeholder={messages.bulkImportPlaceholder}
                         rows={4}
-                        className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                        className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500 resize-none"
                       />
                     </TabPanel>
                   </TabPanels>
@@ -305,7 +305,7 @@ const ExceptionsTab = () => {
                 <button
                   onClick={handleBulkImport}
                   disabled={selectedBulkOption === 0 ? !bulkImportYesText.trim() : !bulkImportNoText.trim()}
-                  className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full px-4 py-2 text-sm font-medium text-white bg-slate-500 rounded-md hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {messages.bulkImportButton}
                 </button>

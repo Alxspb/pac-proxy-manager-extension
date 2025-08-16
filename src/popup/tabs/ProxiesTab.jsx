@@ -271,8 +271,8 @@ const ProxiesTab = () => {
         </div>
 
         {pacScripts.length > 0 && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-800">
+          <div className="mb-4 p-3 bg-slate-100 border border-slate-300 rounded-md">
+            <p className="text-sm text-slate-600">
               ℹ️ {messages.proxyServersInfo}
             </p>
           </div>
@@ -282,7 +282,7 @@ const ProxiesTab = () => {
           <div className="text-center py-8">
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium text-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-500 text-white rounded-lg hover:bg-slate-600 font-medium text-sm cursor-pointer"
             >
               <PlusIcon className="w-4 h-4" />
               {messages.addProxy}
@@ -313,7 +313,7 @@ const ProxiesTab = () => {
                         className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
                           editValidationError 
                             ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                            : 'border-blue-300 focus:border-blue-500 focus:ring-blue-500'
+                            : 'border-slate-300 focus:border-slate-500 focus:ring-slate-500'
                         }`}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
@@ -369,7 +369,7 @@ const ProxiesTab = () => {
           <div className="flex justify-center mt-4">
             <button
               onClick={() => setShowForm(true)}
-              className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 cursor-pointer"
+              className="p-3 bg-slate-500 text-white rounded-full hover:bg-slate-600 cursor-pointer"
             >
               <PlusIcon className="w-5 h-5" />
             </button>
@@ -396,7 +396,7 @@ const ProxiesTab = () => {
                   className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
                     validationError 
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                      : 'border-gray-300 focus:border-slate-500 focus:ring-slate-500'
                   }`}
                   placeholder="http://proxy.example.com:8080"
                   required
@@ -412,7 +412,7 @@ const ProxiesTab = () => {
               <div className="flex gap-3">
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
+                  className="flex-1 px-4 py-2 bg-slate-500 text-white text-sm font-medium rounded-md hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 cursor-pointer"
                 >
                   {messages.save}
                 </button>
