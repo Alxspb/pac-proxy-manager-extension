@@ -121,10 +121,7 @@
     "message": "This proxy URL already exists",
     "description": "Error message for duplicate proxy URL"
   },
-  "proxyStatus": {
-    "message": "Proxy Status",
-    "description": "Label for proxy status section"
-  },
+
   "activateProxy": {
     "message": "Activate Proxy",
     "description": "Button to activate proxy"

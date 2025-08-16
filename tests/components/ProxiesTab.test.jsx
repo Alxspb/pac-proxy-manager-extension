@@ -17,25 +17,41 @@ describe('ProxiesTab Component', () => {
   });
 
   describe('Initial State', () => {
-    it('should render proxy status section', async () => {
+    it('should render proxy toggle', async () => {
       mockChrome.storage.local.get.mockResolvedValue({ proxies: [] });
       mockChrome.runtime.sendMessage.mockResolvedValue({ isActive: false });
 
       render(<ProxiesTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('Proxy Status')).toBeInTheDocument();
+        expect(screen.getByRole('switch')).toBeInTheDocument();
       });
     });
 
-    it('should show inactive status when proxy is not active', async () => {
+    it('should show toggle as inactive when proxy is not active', async () => {
       mockChrome.storage.local.get.mockResolvedValue({ proxies: [] });
       mockChrome.runtime.sendMessage.mockResolvedValue({ isActive: false });
 
       render(<ProxiesTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('Proxy is Inactive')).toBeInTheDocument();
+        const toggle = screen.getByRole('switch');
+        expect(toggle).toHaveAttribute('aria-checked', 'false');
+        expect(toggle).toHaveAttribute('aria-label', 'Activate Proxy');
+      });
+    });
+
+    it('should show toggle as active when proxy is active', async () => {
+      const mockProxies = [{ id: 1, url: 'http://proxy.com:8080' }];
+      mockChrome.storage.local.get.mockResolvedValue({ proxies: mockProxies });
+      mockChrome.runtime.sendMessage.mockResolvedValue({ isActive: true });
+
+      render(<ProxiesTab />);
+
+      await waitFor(() => {
+        const toggle = screen.getByRole('switch');
+        expect(toggle).toHaveAttribute('aria-checked', 'true');
+        expect(toggle).toHaveAttribute('aria-label', 'Deactivate Proxy');
       });
     });
 

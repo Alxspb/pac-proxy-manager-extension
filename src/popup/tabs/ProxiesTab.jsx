@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { PlayIcon, StopIcon, ServerIcon, ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 
@@ -210,65 +210,49 @@ const ProxiesTab = () => {
 
   return (
     <div className="space-y-6 min-h-[250px]">
-      {/* Proxy Status Section */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <ServerIcon className="w-5 h-5 text-gray-500" />
-            <h3 className="text-lg font-semibold text-gray-900">
-              {messages.proxyStatus}
-            </h3>
-          </div>
-          
-          <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-            proxyStatus 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-gray-100 text-gray-800'
-          }`}>
-            <div className={`w-2 h-2 rounded-full ${
-              proxyStatus ? 'bg-green-500' : 'bg-gray-400'
-            }`}></div>
-            {proxyStatus ? messages.proxyActive : messages.proxyInactive}
-          </div>
-        </div>
-
-        {proxies.length === 0 ? (
-          <div className="text-center py-6">
-            <ExclamationTriangleIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-600 mb-2">{messages.noProxyServers}</p>
-            <p className="text-sm text-gray-500">{messages.configureProxyServers}</p>
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <button
-              onClick={toggleProxy}
-              disabled={loading}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm ${
-                proxyStatus
-                  ? 'bg-red-500 text-white hover:bg-red-600 disabled:bg-red-400'
-                  : 'bg-green-500 text-white hover:bg-green-600 disabled:bg-green-400'
-              }`}
-            >
-              {loading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : proxyStatus ? (
-                <StopIcon className="w-4 h-4" />
-              ) : (
-                <PlayIcon className="w-4 h-4" />
-              )}
-              {proxyStatus ? messages.deactivateProxy : messages.activateProxy}
-            </button>
-          </div>
-        )}
-      </div>
-
       {/* Proxy Servers Section */}
       <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="mb-4">
+        <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
             {messages.proxiesTitle}
           </h3>
+          
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleProxy}
+              disabled={loading || proxies.length === 0}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                proxyStatus ? 'bg-slate-500' : 'bg-gray-200'
+              }`}
+              role="switch"
+              aria-checked={proxyStatus}
+              aria-label={proxyStatus ? messages.deactivateProxy : messages.activateProxy}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out ${
+                  proxyStatus ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
+
+        {proxies.length === 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <ExclamationTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm text-yellow-800 font-medium mb-1">{messages.noProxyServers}</p>
+                <p className="text-sm text-yellow-700">{messages.configureProxyServers}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {pacScripts.length > 0 && (
           <div className="mb-4 p-3 bg-slate-100 border border-slate-300 rounded-md">
