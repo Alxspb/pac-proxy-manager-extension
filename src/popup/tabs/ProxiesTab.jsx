@@ -264,20 +264,10 @@ const ProxiesTab = () => {
 
       {/* Proxy Servers Section */}
       <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
             {messages.proxiesTitle}
           </h3>
-          
-          {proxies.length > 0 && !showForm && (
-            <button
-              onClick={() => setShowForm(true)}
-              className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer"
-            >
-              <PlusIcon className="w-4 h-4" />
-              {messages.addProxy}
-            </button>
-          )}
         </div>
 
         {pacScripts.length > 0 && (
@@ -359,6 +349,18 @@ const ProxiesTab = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Centered Add Button */}
+        {proxies.length > 0 && !showForm && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setShowForm(true)}
+              className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 cursor-pointer"
+            >
+              <PlusIcon className="w-5 h-5" />
+            </button>
           </div>
         )}
 

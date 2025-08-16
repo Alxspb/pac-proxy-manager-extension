@@ -321,17 +321,7 @@ const PacScriptsTab = () => {
     <div className="space-y-6">
       {/* PAC Scripts Section */}
       <div>
-        {pacScripts.length > 0 && !showForm && (
-          <div className="mb-4">
-            <button
-              onClick={() => setShowForm(true)}
-              className="flex items-center gap-1 px-3 py-1 text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer"
-            >
-              <PlusIcon className="w-4 h-4" />
-              {messages.addPacScript}
-            </button>
-          </div>
-        )}
+
 
         {pacScripts.length === 0 && !showForm ? (
           <div className="text-center py-8">
@@ -498,6 +488,18 @@ const PacScriptsTab = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Centered Add Button */}
+        {pacScripts.length > 0 && !showForm && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setShowForm(true)}
+              className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 cursor-pointer"
+            >
+              <PlusIcon className="w-5 h-5" />
+            </button>
           </div>
         )}
 
