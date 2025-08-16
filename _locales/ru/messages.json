@@ -296,5 +296,13 @@
   "reloadError": {
     "message": "Не удалось перезагрузить скрипт из URL",
     "description": "Error message when script reload fails"
+  },
+  "importSuccess": {
+    "message": "Исключения успешно импортированы",
+    "description": "Success message when exceptions are imported"
+  },
+  "importError": {
+    "message": "Не удалось импортировать исключения. Попробуйте еще раз.",
+    "description": "Error message when exception import fails"
   }
 }

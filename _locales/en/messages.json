@@ -296,5 +296,13 @@
   "reloadError": {
     "message": "Failed to reload script from URL",
     "description": "Error message when script reload fails"
+  },
+  "importSuccess": {
+    "message": "Exceptions imported successfully",
+    "description": "Success message when exceptions are imported"
+  },
+  "importError": {
+    "message": "Failed to import exceptions. Please try again.",
+    "description": "Error message when exception import fails"
   }
 }

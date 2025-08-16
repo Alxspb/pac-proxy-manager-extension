@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { Toaster } from 'react-hot-toast';
 import ExceptionsTab from './tabs/ExceptionsTab';
 import ProxiesTab from './tabs/ProxiesTab';
 import PacScriptsTab from './tabs/PacScriptsTab';
@@ -54,6 +55,32 @@ const PopupApp = () => {
 
   return (
     <div className="w-[500px] bg-white p-4 h-auto">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#ffffff',
+            color: '#374151',
+            border: '1px solid #d1d5db',
+            borderRadius: '0.375rem',
+            fontSize: '0.875rem',
+            fontWeight: '500'
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#ffffff'
+            }
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#ffffff'
+            }
+          }
+        }}
+      />
       <div className="w-full">
         <TabGroup>
           <TabList className="flex gap-2">

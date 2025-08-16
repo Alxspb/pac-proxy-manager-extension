@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RadioGroup, Disclosure, DisclosureButton, DisclosurePanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { CogIcon, CheckIcon, XMarkIcon, ChevronDownIcon, DocumentArrowUpIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 const ExceptionsTab = () => {
   const [domain, setDomain] = useState('');
@@ -29,7 +30,9 @@ const ExceptionsTab = () => {
         bulkImportButton: chrome.i18n.getMessage('bulkImportButton'),
         currentExceptions: chrome.i18n.getMessage('currentExceptions'),
         noCurrentExceptions: chrome.i18n.getMessage('noCurrentExceptions'),
-        exceptionsRequireProxies: chrome.i18n.getMessage('exceptionsRequireProxies')
+        exceptionsRequireProxies: chrome.i18n.getMessage('exceptionsRequireProxies'),
+        importSuccess: chrome.i18n.getMessage('importSuccess'),
+        importError: chrome.i18n.getMessage('importError')
       };
       setMessages(msgs);
     };
@@ -166,8 +169,10 @@ const ExceptionsTab = () => {
 
       await chrome.storage.local.set({ domainExceptions: updatedExceptions });
       setExceptions(updatedExceptions);
+      
+      toast.success(messages.importSuccess);
     } catch (_error) {
-      // Error saving bulk exceptions
+      toast.error(messages.importError);
     }
   };
 
@@ -275,7 +280,7 @@ const ExceptionsTab = () => {
                     </Tab>
                   </TabList>
                   
-                  <TabPanels>
+                  <TabPanels className={'mb-1'}>
                     <TabPanel>
                       <textarea
                         value={bulkImportYesText}

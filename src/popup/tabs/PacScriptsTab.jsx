@@ -287,7 +287,7 @@ const PacScriptsTab = () => {
       chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
 
     } catch (_error) {
-      // Silently handle error
+      // Silently handle error - don't update script on error
     } finally {
       setReloadingScript(null);
     }
@@ -465,7 +465,7 @@ const PacScriptsTab = () => {
                             className={`p-1 hover:bg-blue-100 rounded text-gray-500 hover:text-blue-600 cursor-pointer ${reloadingScript === script.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
                             title={messages.reloadScript}
                           >
-                            <ArrowPathIcon className={`w-4 h-4 ${reloadingScript === script.id ? 'animate-spin' : ''}`} />
+                            <ArrowPathIcon className={`w-4 h-4 ${reloadingScript === script.id ? '' : ''}`} />
                           </button>
                         )}
                         <button onClick={(e) => {
