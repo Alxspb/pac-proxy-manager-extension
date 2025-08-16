@@ -172,7 +172,7 @@ const ExceptionsTab = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 min-h-[250px]">
       {proxies.length === 0 && (
         <div className="p-3 bg-amber-50 border border-amber-200 rounded-md">
           <p className="text-sm text-amber-800">

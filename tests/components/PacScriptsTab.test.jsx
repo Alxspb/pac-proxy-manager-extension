@@ -50,10 +50,15 @@ describe('PacScriptsTab Component', () => {
     it('should render empty state when no PAC scripts exist', async () => {
       render(<PacScriptsTab />);
 
+      // Now shows form instead of empty state message
       await waitFor(() => {
-        expect(screen.getByText('No PAC scripts configured')).toBeInTheDocument();
-        expect(screen.getByText('Add PAC Script')).toBeInTheDocument();
+        expect(screen.getByText('Adding PAC script')).toBeInTheDocument(); // Form header
+        expect(screen.getByText('Script Name')).toBeInTheDocument(); // Form field
+        expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument(); // Form buttons
       });
+      
+      // Should not show the old empty state message
+      expect(screen.queryByText('No PAC scripts configured')).not.toBeInTheDocument();
     });
 
     it('should display existing PAC scripts', async () => {
@@ -89,14 +94,14 @@ describe('PacScriptsTab Component', () => {
     });
   });
 
-  describe('PAC Script Creation', () => {
+  describe('PAC script Creation', () => {
     it('should create a plain PAC script', async () => {
       render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'));
+      await user.click(screen.getByText('Adding PAC script'));
 
       // Fill in the form
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test Script');
+      await user.type(screen.getByPlaceholderText('My PAC script'), 'Test Script');
       
       // Select plain text option
       await user.click(screen.getByLabelText('Plain'));
@@ -125,10 +130,10 @@ describe('PacScriptsTab Component', () => {
     it('should create a URL-based PAC script', async () => {
       render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'));
+      await user.click(screen.getByText('Adding PAC script'));
 
       // Fill in the form
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'URL Script');
+      await user.type(screen.getByPlaceholderText('My PAC script'), 'URL Script');
       
       // URL is selected by default, fill in URL
       await user.type(
@@ -161,8 +166,8 @@ describe('PacScriptsTab Component', () => {
 
       render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'));
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Failed Script');
+      await user.click(screen.getByText('Adding PAC script'));
+      await user.type(screen.getByPlaceholderText('My PAC script'), 'Failed Script');
       await user.type(
         screen.getByPlaceholderText('http://example.com/proxy.pac'), 
         'http://example.com/nonexistent.pac'
@@ -178,7 +183,7 @@ describe('PacScriptsTab Component', () => {
     });
   });
 
-  describe('PAC Script Reload Functionality', () => {
+  describe('PAC script Reload Functionality', () => {
     beforeEach(() => {
       const urlScript = {
         id: 1,
@@ -310,7 +315,7 @@ describe('PacScriptsTab Component', () => {
     });
   });
 
-  describe('PAC Script Editing', () => {
+  describe('PAC script Editing', () => {
     it('should edit URL-based script by editing URL', async () => {
       const urlScript = {
         id: 1,
@@ -404,7 +409,7 @@ describe('PacScriptsTab Component', () => {
     });
   });
 
-  describe('PAC Script Deletion', () => {
+  describe('PAC script Deletion', () => {
     it('should delete PAC script', async () => {
       const mockScript = {
         id: 1,
@@ -445,11 +450,29 @@ describe('PacScriptsTab Component', () => {
     });
   });
 
+  describe('Auto-show Form', () => {
+    it('should automatically show form when there are no PAC scripts', async () => {
+      render(<PacScriptsTab />);
+
+      // Form should be automatically visible when no scripts exist
+      await waitFor(() => {
+        expect(screen.getByText('Script Name')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('My PAC script')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
+      });
+
+      // The "Adding PAC script" text exists as form header, but not as a separate button
+      expect(screen.getByText('Adding PAC script')).toBeInTheDocument(); // Form header
+      expect(screen.queryByRole('button', { name: 'Adding PAC script' })).not.toBeInTheDocument(); // No separate button
+    });
+  });
+
   describe('Form Validation', () => {
     it('should validate script name is required', async () => {
       render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'));
+      // Form should be automatically visible when no scripts exist
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
@@ -460,8 +483,8 @@ describe('PacScriptsTab Component', () => {
     it('should validate URL is required for URL-based scripts', async () => {
       render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'));
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test');
+      // Form should be automatically visible when no scripts exist
+      await user.type(screen.getByPlaceholderText('My PAC script'), 'Test');
       // URL input is empty
       await user.click(screen.getByRole('button', { name: /save/i }));
 
@@ -473,8 +496,8 @@ describe('PacScriptsTab Component', () => {
     it('should validate content is required for plain scripts', async () => {
       render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'));
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test');
+      // Form should be automatically visible when no scripts exist
+      await user.type(screen.getByPlaceholderText('My PAC script'), 'Test');
       await user.click(screen.getByLabelText('Plain'));
       // Content is empty
       await user.click(screen.getByRole('button', { name: /save/i }));

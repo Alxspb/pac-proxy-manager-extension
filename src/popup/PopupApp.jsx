@@ -53,7 +53,7 @@ const PopupApp = () => {
   ];
 
   return (
-    <div className="w-full min-w-[480px] max-w-[600px] bg-white p-4 h-auto">
+    <div className="w-[500px] bg-white p-4 h-auto">
       <div className="w-full">
         <TabGroup>
           <TabList className="flex gap-2">

@@ -24,8 +24,8 @@
     "description": "Subtitle text in the popup"
   },
   "tabPacScript": {
-    "message": "PAC Скрипт",
-    "description": "PAC Script tab label"
+    "message": "PAC скрипт",
+    "description": "PAC script tab label"
   },
   "tabExceptions": {
     "message": "Исключения",
@@ -182,12 +182,12 @@
     "description": "Message when no exceptions exist"
   },
   "pacScriptsTitle": {
-    "message": "PAC Скрипты",
+    "message": "PAC скрипты",
     "description": "Title for PAC scripts section"
   },
   "addPacScript": {
-    "message": "Добавить PAC Скрипт",
-    "description": "Button text to add new PAC script"
+    "message": "Добавление PAC скрипта",
+    "description": "Header text for adding new PAC script"
   },
   "noPacScripts": {
     "message": "PAC скрипты не настроены",
@@ -202,11 +202,11 @@
     "description": "Label for PAC script name field"
   },
   "pacScriptNamePlaceholder": {
-    "message": "Мой PAC Скрипт",
+    "message": "Мой PAC скрипт",
     "description": "Placeholder for PAC script name"
   },
   "pacScriptUrl": {
-    "message": "URL PAC Скрипта",
+    "message": "URL PAC скрипта",
     "description": "Label for PAC script URL field"
   },
   "pacScriptUrlPlaceholder": {
@@ -214,7 +214,7 @@
     "description": "Placeholder for PAC script URL"
   },
   "pacScriptContent": {
-    "message": "Содержимое PAC Скрипта",
+    "message": "Содержимое PAC скрипта",
     "description": "Label for PAC script content field"
   },
   "pacScriptContentPlaceholder": {
@@ -242,7 +242,7 @@
     "description": "Disabled status"
   },
   "fetchingPacScript": {
-    "message": "Загрузка PAC скрипта...",
+    "message": "Загрузка...",
     "description": "Loading message when fetching PAC script"
   },
   "invalidPacScriptName": {
