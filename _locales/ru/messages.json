@@ -24,8 +24,8 @@
     "description": "Subtitle text in the popup"
   },
   "tabPacScript": {
-    "message": "PAC скрипт",
-    "description": "PAC script tab label"
+    "message": "PAC скрипты",
+    "description": "PAC scripts tab label"
   },
   "tabExceptions": {
     "message": "Исключения",
@@ -79,6 +79,10 @@
   "cancel": {
     "message": "Отмена",
     "description": "Cancel button text"
+  },
+  "delete": {
+    "message": "Удалить",
+    "description": "Delete button text"
   },
 
   "confirmDelete": {

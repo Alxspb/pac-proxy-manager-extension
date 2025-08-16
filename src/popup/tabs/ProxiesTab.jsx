@@ -33,6 +33,7 @@ const ProxiesTab = () => {
         addProxy: chrome.i18n.getMessage('addProxy'),
         save: chrome.i18n.getMessage('save'),
         cancel: chrome.i18n.getMessage('cancel'),
+        delete: chrome.i18n.getMessage('delete'),
         confirmDelete: chrome.i18n.getMessage('confirmDelete'),
         confirmDeleteTitle: chrome.i18n.getMessage('confirmDeleteTitle'),
         proxyUrl: chrome.i18n.getMessage('proxyUrl'),
@@ -426,7 +427,7 @@ const ProxiesTab = () => {
                   onClick={confirmDelete}
                   className="flex-1 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer"
                 >
-                  Delete
+                  {messages.delete}
                 </button>
                 <button
                   onClick={() => setDeleteDialog({ isOpen: false, proxyId: null, proxyUrl: '' })}

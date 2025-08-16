@@ -24,8 +24,8 @@
     "description": "Subtitle text in the popup"
   },
   "tabPacScript": {
-    "message": "PAC script",
-    "description": "PAC script tab label"
+    "message": "PAC scripts",
+    "description": "PAC scripts tab label"
   },
   "tabExceptions": {
     "message": "Exceptions",
@@ -79,6 +79,10 @@
   "cancel": {
     "message": "Cancel",
     "description": "Cancel button text"
+  },
+  "delete": {
+    "message": "Delete",
+    "description": "Delete button text"
   },
 
   "confirmDelete": {

@@ -178,9 +178,9 @@ describe('AboutTab Component', () => {
         const container = screen.getByText(/PAC Proxy Manager/).closest('.space-y-6');
         expect(container).toBeInTheDocument();
         
-        const contentBox = screen.getByText(/PAC Proxy Manager/).closest('.bg-gray-50');
+        const contentBox = screen.getByText(/PAC Proxy Manager/).closest('.bg-white');
         expect(contentBox).toBeInTheDocument();
-        expect(contentBox).toHaveClass('relative', 'rounded-md', 'p-4', 'bg-gray-50', 'border', 'border-gray-100');
+        expect(contentBox).toHaveClass('bg-white', 'border', 'border-gray-200', 'rounded-lg', 'p-4');
       });
     });
 

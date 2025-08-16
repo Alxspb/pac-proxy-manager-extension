@@ -56,6 +56,7 @@ const PacScriptsTab = () => {
         fetchingPacScript: chrome.i18n.getMessage('fetchingPacScript'),
         save: chrome.i18n.getMessage('save'),
         cancel: chrome.i18n.getMessage('cancel'),
+        delete: chrome.i18n.getMessage('delete'),
         confirmDelete: chrome.i18n.getMessage('confirmDelete'),
         confirmDeleteTitle: chrome.i18n.getMessage('confirmDeleteTitle'),
         invalidPacScriptName: chrome.i18n.getMessage('invalidPacScriptName'),
@@ -309,7 +310,12 @@ const PacScriptsTab = () => {
   return (
     <div className="space-y-6 min-h-[250px]">
       {/* PAC Scripts Section */}
-      <div>
+      <div className="bg-white border border-gray-200 rounded-lg p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">
+            {messages.pacScriptsTitle}
+          </h3>
+        </div>
 
 
         {pacScripts.length === 0 ? (
@@ -694,7 +700,7 @@ const PacScriptsTab = () => {
                   onClick={confirmDelete}
                   className="flex-1 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer"
                 >
-                  Delete
+                  {messages.delete}
                 </button>
                 <button
                   onClick={() => setDeleteDialog({ isOpen: false, scriptId: null, scriptName: '' })}
