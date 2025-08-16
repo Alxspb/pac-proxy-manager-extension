@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import ExceptionsTab from './tabs/ExceptionsTab';
 import ProxiesTab from './tabs/ProxiesTab';
 import PacScriptsTab from './tabs/PacScriptsTab';
+import AboutTab from './tabs/AboutTab';
 
 const PopupApp = () => {
   const [messages, setMessages] = useState({});
@@ -29,27 +30,16 @@ const PopupApp = () => {
       content: 'pac-scripts-tab'
     },
     {
-      name: messages.tabExceptions,
-      content: 'exceptions-tab'
-    },
-    {
       name: messages.tabProxies,
       content: 'proxies-tab'
     },
     {
+      name: messages.tabExceptions,
+      content: 'exceptions-tab'
+    },
+    {
       name: messages.tabAbout,
-      content: [
-        {
-          id: 1,
-          title: 'PAC Proxy Manager v1.0.0',
-          description: 'Chrome extension for proxy management'
-        },
-        {
-          id: 2,
-          title: 'Documentation',
-          description: 'Learn how to use proxy auto-configuration'
-        }
-      ]
+      content: 'about-tab'
     }
   ];
 
@@ -96,26 +86,15 @@ const PopupApp = () => {
           <TabPanels className="mt-3 h-auto">
             {categories.map(({ name, content }) => (
               <TabPanel key={name} className="h-auto">
-                {content === 'pac-scripts-tab' ? (
+                {content === 'about-tab' ? (
+                  <AboutTab />
+                ) : content === 'pac-scripts-tab' ? (
                   <PacScriptsTab />
                 ) : content === 'exceptions-tab' ? (
                   <ExceptionsTab />
                 ) : content === 'proxies-tab' ? (
                   <ProxiesTab />
-                ) : (
-                  <ul>
-                    {content.map((item) => (
-                      <li key={item.id} className="relative rounded-md p-3 text-sm/6 hover:bg-white">
-                        <div className="font-semibold text-gray-900">
-                          {item.title}
-                        </div>
-                        <div className="text-gray-600">
-                          {item.description}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                ) : null}
               </TabPanel>
             ))}
           </TabPanels>

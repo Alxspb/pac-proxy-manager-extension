@@ -304,5 +304,33 @@
   "importError": {
     "message": "Failed to import exceptions. Please try again.",
     "description": "Error message when exception import fails"
+  },
+  "aboutDescription": {
+    "message": "Take control of your browsing experience with intelligent proxy management. Free, open source, and easy to use.",
+    "description": "Main description text in About tab"
+  },
+  "aboutMadeBy": {
+    "message": "Made with ❤️ by",
+    "description": "Made by text in About tab"
+  },
+  "aboutSupportAuthor": {
+    "message": "Support the author:",
+    "description": "Support author text in About tab"
+  },
+  "aboutSupportLink": {
+    "message": "ilyachase",
+    "description": "Support link text in About tab"
+  },
+  "aboutSupportUrl": {
+    "message": "https://buymeacoffee.com/ilyachase",
+    "description": "Support URL in About tab"
+  },
+  "aboutSourceCode": {
+    "message": "Source code:",
+    "description": "Source code text in About tab"
+  },
+  "aboutSourceCodeLink": {
+    "message": "pac-proxy-manager",
+    "description": "Source code link text in About tab"
   }
 }

@@ -304,5 +304,33 @@
   "importError": {
     "message": "Не удалось импортировать исключения. Попробуйте еще раз.",
     "description": "Error message when exception import fails"
+  },
+  "aboutDescription": {
+    "message": "Теперь ваш сёрфинг в интернете под контролем благодаря интеллектуальному управлению прокси. Бесплатно, с открытым исходным кодом и просто в использовании.",
+    "description": "Main description text in About tab"
+  },
+  "aboutMadeBy": {
+    "message": "Создано с ❤️ автором",
+    "description": "Made by text in About tab"
+  },
+  "aboutSupportAuthor": {
+    "message": "Поддержать:",
+    "description": "Support author text in About tab"
+  },
+  "aboutSupportLink": {
+    "message": "ilyachase",
+    "description": "Support link text in About tab"
+  },
+  "aboutSupportUrl": {
+    "message": "https://boosty.to/ilyachase",
+    "description": "Support URL in About tab"
+  },
+  "aboutSourceCode": {
+    "message": "Исходный код:",
+    "description": "Source code text in About tab"
+  },
+  "aboutSourceCodeLink": {
+    "message": "pac-proxy-manager",
+    "description": "Source code link text in About tab"
   }
 }

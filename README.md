@@ -4,6 +4,5 @@ start "Chrome-EN" "C:\Program Files\Google\Chrome\Application\chrome.exe" --user
 ```
 
 Todo:
-- make sure non-wildcard domains are working as is, e.g. "world.hey.com"
+- load all settings at once for all tabs on popup open
 - detect other extensions controlling proxy settings
-- icon
