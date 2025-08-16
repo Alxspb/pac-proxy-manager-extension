@@ -44,3 +44,5 @@ Thumbs.db
 
 # Vite cache files
 vite.config.js.timestamp-*
+
+/chrome-extension.zip
