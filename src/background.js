@@ -171,7 +171,7 @@ function FindProxyForURL(url, host) {
 }`;
   }
 
-  async updateProxySettings() {
+  async updateProxySettings(providedProxies = null) {
     try {
       const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
       
@@ -181,7 +181,7 @@ function FindProxyForURL(url, host) {
       }
 
       const domainExceptions = result.domainExceptions || {};
-      const proxies = result.proxies || [];
+      const proxies = providedProxies || result.proxies || [];
       const pacScripts = await indexedDBStorage.getPacScripts();
       
       const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts);
@@ -202,11 +202,19 @@ function FindProxyForURL(url, host) {
     }
   }
 
-  async activateProxy() {
+  async activateProxy(proxies = null) {
     try {
-      await chrome.storage.local.set({ proxyActive: true });
+      if (proxies) {
+        // Atomic operation: save both proxies and activation state together
+        await chrome.storage.local.set({ 
+          proxies: proxies,
+          proxyActive: true 
+        });
+      } else {
+        await chrome.storage.local.set({ proxyActive: true });
+      }
       this.isProxyActive = true;
-      await this.updateProxySettings();
+      await this.updateProxySettings(proxies);
       return true;
     } catch (error) {
       return false;
@@ -241,7 +249,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     try {
       switch (request.action) {
       case 'activateProxy': {
-        const activateResult = await proxyManager.activateProxy();
+        const activateResult = await proxyManager.activateProxy(request.proxies);
         sendResponse(activateResult);
         break;
       }

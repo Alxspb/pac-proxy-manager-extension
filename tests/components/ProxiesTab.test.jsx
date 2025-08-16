@@ -124,5 +124,95 @@ describe('ProxiesTab Component', () => {
       const toggle = screen.getByRole('switch');
       expect(toggle).toBeDisabled();
     });
+
+    it('should automatically activate proxy when first proxy is added', async () => {
+      const user = userEvent.setup();
+      
+      mockChrome.storage.local.get.mockResolvedValue({ proxies: [] });
+      mockChrome.runtime.sendMessage.mockImplementation((request) => {
+        if (request.action === 'getProxyStatus') {
+          return Promise.resolve({ isActive: false });
+        }
+        if (request.action === 'activateProxy') {
+          return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
+      });
+
+      render(<ProxiesTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Add Proxy')).toBeInTheDocument();
+      });
+
+      const urlInput = screen.getByPlaceholderText('http://proxy.example.com:8080');
+      await user.type(urlInput, 'http://proxy.example.com:8080');
+
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
+      await waitFor(() => {
+        expect(mockChrome.runtime.sendMessage).toHaveBeenCalledWith({ 
+          action: 'activateProxy',
+          proxies: [
+            expect.objectContaining({
+              url: 'http://proxy.example.com:8080',
+              id: expect.any(Number)
+            })
+          ]
+        });
+      });
+
+      await waitFor(() => {
+        const toggle = screen.getByRole('switch');
+        expect(toggle).toHaveAttribute('aria-checked', 'true');
+      });
+    });
+
+    it('should not automatically activate proxy when adding subsequent proxies', async () => {
+      const user = userEvent.setup();
+      const existingProxies = [{ id: 1, url: 'http://existing-proxy.com:8080' }];
+      
+      mockChrome.storage.local.get.mockResolvedValue({ proxies: existingProxies });
+      mockChrome.runtime.sendMessage.mockImplementation((request) => {
+        if (request.action === 'getProxyStatus') {
+          return Promise.resolve({ isActive: false });
+        }
+        return Promise.resolve(false);
+      });
+
+      render(<ProxiesTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('http://existing-proxy.com:8080')).toBeInTheDocument();
+      });
+
+      const addButton = screen.getByRole('button', { name: '' });
+      await user.click(addButton);
+
+      await waitFor(() => {
+        expect(screen.getByText('Add Proxy')).toBeInTheDocument();
+      });
+
+      const urlInput = screen.getByPlaceholderText('http://proxy.example.com:8080');
+      await user.type(urlInput, 'http://second-proxy.com:8080');
+
+      const saveButton = screen.getByRole('button', { name: /save/i });
+      await user.click(saveButton);
+
+      await waitFor(() => {
+        expect(mockChrome.storage.local.set).toHaveBeenCalledWith({
+          proxies: [
+            existingProxies[0],
+            expect.objectContaining({
+              url: 'http://second-proxy.com:8080',
+              id: expect.any(Number)
+            })
+          ]
+        });
+      });
+
+      expect(mockChrome.runtime.sendMessage).not.toHaveBeenCalledWith({ action: 'activateProxy' });
+    });
   });
 });

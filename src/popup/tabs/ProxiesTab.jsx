@@ -162,8 +162,29 @@ const ProxiesTab = () => {
       id: Date.now()
     };
 
+    const isFirstProxy = proxies.length === 0;
     const updatedProxies = [...proxies, proxyData];
-    await saveProxies(updatedProxies);
+    
+    if (isFirstProxy) {
+      // For first proxy, let background script handle both proxy save and activation atomically
+      try {
+        const response = await chrome.runtime.sendMessage({ 
+          action: 'activateProxy',
+          proxies: updatedProxies 
+        });
+        if (response === true) {
+          setProxies(updatedProxies);
+          setProxyStatus(true);
+        }
+      } catch (_error) {
+        // Fallback to normal save if activation fails
+        await saveProxies(updatedProxies);
+      }
+    } else {
+      // For subsequent proxies, just save normally
+      await saveProxies(updatedProxies);
+    }
+    
     setShowForm(false);
     setFormData({ url: '' });
   };
