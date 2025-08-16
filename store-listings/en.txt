@@ -1,0 +1,72 @@
+Perfect for accessing geo-restricted content, securing your connection, or managing corporate network requirements effortlessly.
+
+✨ Key Features:
+• Smart PAC script management - load from URLs or paste directly
+• Domain-specific exceptions with wildcard support (*.example.com)
+• Multiple proxy server configurations (HTTP, HTTPS, SOCKS4, SOCKS5)
+• Bulk domain import for enterprise setups
+• Real-time proxy switching with intelligent fallbacks
+• Modern, responsive interface built with React
+• Multi-language support (13+ languages)
+
+🔒 Privacy & Security:
+• 100% free and open source - inspect the code yourself
+• Minimal permissions (only 3 required) - maximum privacy
+• All data stored locally on your device
+• No tracking, no analytics, no data collection
+• Built with Manifest V3 for enhanced security
+
+🚀 How It Works:
+1. Install the extension and click the toolbar icon
+2. Add PAC scripts from URLs or paste script content
+3. Configure domain exceptions for granular control
+4. Set up proxy servers if needed
+5. The extension automatically handles proxy routing
+
+💡 Perfect For:
+• Accessing geo-restricted content and streaming services
+• Securing your connection on public WiFi networks
+• Remote workers connecting to corporate resources
+• Students and researchers accessing academic content
+• Business professionals managing multiple network requirements
+• Anyone wanting automatic proxy switching without manual hassles
+
+⚙️ Permissions Explained:
+We use only 3 minimal permissions for maximum transparency:
+• "proxy" - Required to modify your browser's proxy settings
+• "activeTab" - Used to detect the current tab's domain for easy exception setup
+• "storage" - Saves your configuration locally on your device
+
+🎯 Smart Priority System:
+1. Domain exceptions take highest priority
+2. Configured proxy servers override PAC script proxies
+3. PAC script rules applied when no proxy servers configured
+4. Direct connection as fallback
+
+🌐 Enterprise Ready:
+• Bulk import exception domains from text lists
+• Support for complex PAC script logic
+• Multiple proxy server configurations
+• Wildcard domain matching for easy exception management
+
+🔧 Advanced Features:
+• Live PAC script reloading from URLs
+• Clean, intuitive tabbed interface
+• Real-time configuration updates
+
+Why Choose PAC Proxy Manager?
+Unlike other proxy extensions that are closed-source black boxes, we're completely transparent. Every line of code is available on GitHub. Our minimal permission model means we don't know what websites you access - PAC scripts execute in a controlled, encapsulated environment managed by Chrome itself.
+
+Other proxy managers often require broad permissions like "read all websites" or "modify all data." We only ask for exactly what we need and nothing more.
+
+🆓 Always Free:
+This extension will always remain free and open source. No premium features, no subscriptions, no hidden costs. However, if you find it useful and want to support development, coffee donations are greatly appreciated!
+
+💻 Open Source:
+View the source code, contribute features, or report issues:
+https://github.com/ilyachase/pac-proxy-manager-extension
+
+☕ Support the Developer:
+https://buymeacoffee.com/ilyachase
+
+Built with ❤️ for the community by Ilya L.
