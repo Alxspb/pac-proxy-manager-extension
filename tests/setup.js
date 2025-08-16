@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 const mockChrome = {
   storage: {
@@ -34,10 +34,10 @@ const mockChrome = {
   i18n: {
     getMessage: vi.fn((key) => key)
   }
-}
+};
 
-global.chrome = mockChrome
+global.chrome = mockChrome;
 
 beforeEach(() => {
-  vi.clearAllMocks()
-})
+  vi.clearAllMocks();
+});

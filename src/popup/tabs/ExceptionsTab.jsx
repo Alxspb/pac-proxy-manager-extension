@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { RadioGroup, Disclosure, DisclosureButton, DisclosurePanel, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { CogIcon, CheckIcon, XMarkIcon, ChevronDownIcon, DocumentArrowUpIcon } from '@heroicons/react/24/outline';
 
@@ -41,7 +41,7 @@ const ExceptionsTab = () => {
         const storedProxies = result.proxies || [];
         setExceptions(storedExceptions);
         setProxies(storedProxies);
-      } catch (error) {
+      } catch (_error) {
         setExceptions({});
         setProxies([]);
       }
@@ -62,12 +62,12 @@ const ExceptionsTab = () => {
                 setDomain(domain);
                 return;
               }
-            } catch (error) {
+            } catch (_error) {
               // Error parsing URL
             }
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Error in getCurrentDomain
       }
       
@@ -80,7 +80,7 @@ const ExceptionsTab = () => {
       
       try {
         await getCurrentDomain();
-      } catch (error) {
+      } catch (_error) {
         setDomain('*.example.com');
       }
     };
@@ -107,7 +107,9 @@ const ExceptionsTab = () => {
   }, [exceptions]);
 
   const saveException = async (domain, option) => {
-    if (!domain) return;
+    if (!domain) {
+      return;
+    }
     
     try {
       const updatedExceptions = { ...exceptions };
@@ -120,7 +122,7 @@ const ExceptionsTab = () => {
       
       await chrome.storage.local.set({ domainExceptions: updatedExceptions });
       setExceptions(updatedExceptions);
-    } catch (error) {
+    } catch (_error) {
       // Error saving exception
     }
   };
@@ -132,14 +134,18 @@ const ExceptionsTab = () => {
 
   const handleBulkImport = async () => {
     const currentText = selectedBulkOption === 0 ? bulkImportYesText : bulkImportNoText;
-    if (!currentText.trim()) return;
+    if (!currentText.trim()) {
+      return;
+    }
 
     const domains = currentText
       .split('\n')
       .map(line => line.trim())
       .filter(line => line && !line.startsWith('#'));
 
-    if (domains.length === 0) return;
+    if (domains.length === 0) {
+      return;
+    }
 
     const option = selectedBulkOption === 0 ? 'yes' : 'no';
 
@@ -160,7 +166,7 @@ const ExceptionsTab = () => {
 
       await chrome.storage.local.set({ domainExceptions: updatedExceptions });
       setExceptions(updatedExceptions);
-    } catch (error) {
+    } catch (_error) {
       // Error saving bulk exceptions
     }
   };

@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import PacScriptsTab from '../../src/popup/tabs/PacScriptsTab.jsx'
-import { createMockChrome } from '../mocks/chrome.js'
-import indexedDBStorage from '../../src/utils/indexedDB'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import PacScriptsTab from '../../src/popup/tabs/PacScriptsTab.jsx';
+import { createMockChrome } from '../mocks/chrome.js';
+import indexedDBStorage from '../../src/utils/indexedDB';
 
 // Mock IndexedDB storage
 vi.mock('../../src/utils/indexedDB', () => ({
@@ -12,49 +12,49 @@ vi.mock('../../src/utils/indexedDB', () => ({
     addPacScript: vi.fn(),
     updatePacScript: vi.fn(),
     deletePacScript: vi.fn(),
-    savePacScripts: vi.fn(),
+    savePacScripts: vi.fn()
   }
-}))
+}));
 
 vi.mock('chrome', () => ({
   default: {}
-}))
+}));
 
 // Mock fetch for PAC script URLs
-global.fetch = vi.fn()
+global.fetch = vi.fn();
 
 describe('PacScriptsTab Component', () => {
-  let mockChrome
-  let user
+  let mockChrome;
+  let user;
 
   beforeEach(() => {
-    mockChrome = createMockChrome()
-    global.chrome = mockChrome
-    user = userEvent.setup()
+    mockChrome = createMockChrome();
+    global.chrome = mockChrome;
+    user = userEvent.setup();
     
     // Reset mocks
-    vi.clearAllMocks()
-    indexedDBStorage.getPacScripts.mockResolvedValue([])
-    indexedDBStorage.addPacScript.mockResolvedValue()
-    indexedDBStorage.updatePacScript.mockResolvedValue()
-    indexedDBStorage.deletePacScript.mockResolvedValue()
+    vi.clearAllMocks();
+    indexedDBStorage.getPacScripts.mockResolvedValue([]);
+    indexedDBStorage.addPacScript.mockResolvedValue();
+    indexedDBStorage.updatePacScript.mockResolvedValue();
+    indexedDBStorage.deletePacScript.mockResolvedValue();
     
     // Mock fetch
     fetch.mockResolvedValue({
       ok: true,
       text: () => Promise.resolve('function FindProxyForURL(url, host) { return "DIRECT"; }')
-    })
-  })
+    });
+  });
 
   describe('Initial State', () => {
     it('should render empty state when no PAC scripts exist', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('No PAC scripts configured')).toBeInTheDocument()
-        expect(screen.getByText('Add PAC Script')).toBeInTheDocument()
-      })
-    })
+        expect(screen.getByText('No PAC scripts configured')).toBeInTheDocument();
+        expect(screen.getByText('Add PAC Script')).toBeInTheDocument();
+      });
+    });
 
     it('should display existing PAC scripts', async () => {
       const mockScripts = [
@@ -74,40 +74,40 @@ describe('PacScriptsTab Component', () => {
           sourceType: 'url',
           sourceUrl: 'http://example.com/proxy.pac'
         }
-      ]
+      ];
 
-      indexedDBStorage.getPacScripts.mockResolvedValue(mockScripts)
+      indexedDBStorage.getPacScripts.mockResolvedValue(mockScripts);
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('Test Script')).toBeInTheDocument()
-        expect(screen.getByText('URL Script')).toBeInTheDocument()
-        expect(screen.getByText('plain')).toBeInTheDocument()
-        expect(screen.getByText('url')).toBeInTheDocument()
-      })
-    })
-  })
+        expect(screen.getByText('Test Script')).toBeInTheDocument();
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+        expect(screen.getByText('plain')).toBeInTheDocument();
+        expect(screen.getByText('url')).toBeInTheDocument();
+      });
+    });
+  });
 
   describe('PAC Script Creation', () => {
     it('should create a plain PAC script', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'))
+      await user.click(screen.getByText('Add PAC Script'));
 
       // Fill in the form
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test Script')
+      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test Script');
       
       // Select plain text option
-      await user.click(screen.getByLabelText('Plain'))
+      await user.click(screen.getByLabelText('Plain'));
       
       // Fill in content
-      const contentArea = screen.getByPlaceholderText(/function FindProxyForURL/)
-      await user.clear(contentArea)
-      await user.type(contentArea, 'function FindProxyForURL(url, host) [[ return "DIRECT"; ]]')
+      const contentArea = screen.getByPlaceholderText(/function FindProxyForURL/);
+      await user.clear(contentArea);
+      await user.type(contentArea, 'function FindProxyForURL(url, host) [[ return "DIRECT"; ]]');
 
       // Submit form
-      await user.click(screen.getByRole('button', { name: /save/i }))
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
         expect(indexedDBStorage.addPacScript).toHaveBeenCalledWith({
@@ -118,29 +118,29 @@ describe('PacScriptsTab Component', () => {
           sourceType: 'plain',
           sourceUrl: null,
           createdAt: expect.any(String)
-        })
-      })
-    })
+        });
+      });
+    });
 
     it('should create a URL-based PAC script', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'))
+      await user.click(screen.getByText('Add PAC Script'));
 
       // Fill in the form
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'URL Script')
+      await user.type(screen.getByPlaceholderText('My PAC Script'), 'URL Script');
       
       // URL is selected by default, fill in URL
       await user.type(
         screen.getByPlaceholderText('http://example.com/proxy.pac'), 
         'http://example.com/test.pac'
-      )
+      );
 
       // Submit form
-      await user.click(screen.getByRole('button', { name: /save/i }))
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/test.pac')
+        expect(fetch).toHaveBeenCalledWith('http://example.com/test.pac');
         expect(indexedDBStorage.addPacScript).toHaveBeenCalledWith({
           id: expect.any(Number),
           name: 'URL Script',
@@ -149,34 +149,34 @@ describe('PacScriptsTab Component', () => {
           sourceType: 'url',
           sourceUrl: 'http://example.com/test.pac',
           createdAt: expect.any(String)
-        })
-      })
-    })
+        });
+      });
+    });
 
     it('should handle fetch errors when creating URL-based script', async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 404
-      })
+      });
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'))
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Failed Script')
+      await user.click(screen.getByText('Add PAC Script'));
+      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Failed Script');
       await user.type(
         screen.getByPlaceholderText('http://example.com/proxy.pac'), 
         'http://example.com/nonexistent.pac'
-      )
+      );
 
-      await user.click(screen.getByRole('button', { name: /save/i }))
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/Failed to fetch PAC script/)).toBeInTheDocument()
-      })
+        expect(screen.getByText(/Failed to fetch PAC script/)).toBeInTheDocument();
+      });
 
-      expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled()
-    })
-  })
+      expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled();
+    });
+  });
 
   describe('PAC Script Reload Functionality', () => {
     beforeEach(() => {
@@ -187,7 +187,7 @@ describe('PacScriptsTab Component', () => {
         enabled: true,
         sourceType: 'url',
         sourceUrl: 'http://example.com/proxy.pac'
-      }
+      };
       
       const plainScript = {
         id: 2,
@@ -196,44 +196,44 @@ describe('PacScriptsTab Component', () => {
         enabled: true,
         sourceType: 'plain',
         sourceUrl: null
-      }
+      };
 
-      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript, plainScript])
-    })
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript, plainScript]);
+    });
 
     it('should show reload button only for URL-based scripts', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('URL Script')).toBeInTheDocument()
-        expect(screen.getByText('Plain Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+        expect(screen.getByText('Plain Script')).toBeInTheDocument();
+      });
 
       // Should have one reload button (for URL script only)
-      const reloadButtons = screen.getAllByTitle('Reload from URL')
-      expect(reloadButtons).toHaveLength(1)
-    })
+      const reloadButtons = screen.getAllByTitle('Reload from URL');
+      expect(reloadButtons).toHaveLength(1);
+    });
 
     it('should reload URL-based PAC script when reload button is clicked', async () => {
-      const updatedContent = 'function FindProxyForURL(url, host) { return "PROXY updated.com:8080"; }'
+      const updatedContent = 'function FindProxyForURL(url, host) { return "PROXY updated.com:8080"; }';
       fetch.mockResolvedValueOnce({
         ok: true,
         text: () => Promise.resolve(updatedContent)
-      })
+      });
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('URL Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
 
       // Click reload button
-      const reloadButton = screen.getByTitle('Reload from URL')
-      await user.click(reloadButton)
+      const reloadButton = screen.getByTitle('Reload from URL');
+      await user.click(reloadButton);
 
       // Should fetch from URL and update script
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac')
+        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac');
         expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith({
           id: 1,
           name: 'URL Script',
@@ -242,73 +242,73 @@ describe('PacScriptsTab Component', () => {
           sourceType: 'url',
           sourceUrl: 'http://example.com/proxy.pac',
           updatedAt: expect.any(String)
-        })
-      })
+        });
+      });
 
       // Should notify background script
       expect(mockChrome.runtime.sendMessage).toHaveBeenCalledWith({
         action: 'pacScriptsUpdated'
-      })
-    })
+      });
+    });
 
     it('should handle reload errors gracefully', async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 500
-      })
+      });
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('URL Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
 
-      const reloadButton = screen.getByTitle('Reload from URL')
-      await user.click(reloadButton)
+      const reloadButton = screen.getByTitle('Reload from URL');
+      await user.click(reloadButton);
 
       // Wait for the fetch to complete and error to be handled
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac')
-      })
+        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac');
+      });
 
       // Should not update script on error
-      expect(indexedDBStorage.updatePacScript).not.toHaveBeenCalled()
-    })
+      expect(indexedDBStorage.updatePacScript).not.toHaveBeenCalled();
+    });
 
     it('should disable reload button while reloading', async () => {
-      let resolvePromise
+      let resolvePromise;
       const slowFetch = new Promise(resolve => {
-        resolvePromise = resolve
-      })
+        resolvePromise = resolve;
+      });
 
-      fetch.mockReturnValueOnce(slowFetch)
+      fetch.mockReturnValueOnce(slowFetch);
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('URL Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
 
-      const reloadButton = screen.getByTitle('Reload from URL')
-      await user.click(reloadButton)
+      const reloadButton = screen.getByTitle('Reload from URL');
+      await user.click(reloadButton);
 
       // Button should be disabled while loading
       await waitFor(() => {
-        expect(reloadButton).toHaveClass('opacity-50', 'cursor-not-allowed')
-      })
+        expect(reloadButton).toHaveClass('opacity-50', 'cursor-not-allowed');
+      });
 
       // Complete the fetch
       resolvePromise({
         ok: true,
         text: () => Promise.resolve('updated content')
-      })
+      });
 
       // Button should be enabled again
       await waitFor(() => {
-        expect(reloadButton).not.toHaveClass('opacity-50', 'cursor-not-allowed')
-      })
-    })
-  })
+        expect(reloadButton).not.toHaveClass('opacity-50', 'cursor-not-allowed');
+      });
+    });
+  });
 
   describe('PAC Script Editing', () => {
     it('should edit URL-based script by editing URL', async () => {
@@ -319,43 +319,43 @@ describe('PacScriptsTab Component', () => {
         enabled: true,
         sourceType: 'url',
         sourceUrl: 'http://example.com/old.pac'
-      }
+      };
 
-      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript])
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('URL Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
 
       // Click on script to edit
-      await user.click(screen.getByText('URL Script'))
+      await user.click(screen.getByText('URL Script'));
 
       // Should show URL input for URL-based scripts
-      const urlInput = screen.getByDisplayValue('http://example.com/old.pac')
-      expect(urlInput).toBeInTheDocument()
+      const urlInput = screen.getByDisplayValue('http://example.com/old.pac');
+      expect(urlInput).toBeInTheDocument();
 
       // Should not show content textarea for URL scripts
-      expect(screen.queryByDisplayValue('old content')).not.toBeInTheDocument()
+      expect(screen.queryByDisplayValue('old content')).not.toBeInTheDocument();
 
       // Change URL
-      await user.clear(urlInput)
-      await user.type(urlInput, 'http://example.com/new.pac')
+      await user.clear(urlInput);
+      await user.type(urlInput, 'http://example.com/new.pac');
 
       // Save changes
-      const saveButton = screen.getByTitle('Save')
-      await user.click(saveButton)
+      const saveButton = screen.getByTitle('Save');
+      await user.click(saveButton);
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/new.pac')
+        expect(fetch).toHaveBeenCalledWith('http://example.com/new.pac');
         expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
           expect.objectContaining({
             sourceUrl: 'http://example.com/new.pac'
           })
-        )
-      })
-    })
+        );
+      });
+    });
 
     it('should edit plain script by editing content', async () => {
       const plainScript = {
@@ -365,30 +365,30 @@ describe('PacScriptsTab Component', () => {
         enabled: true,
         sourceType: 'plain',
         sourceUrl: null
-      }
+      };
 
-      indexedDBStorage.getPacScripts.mockResolvedValue([plainScript])
+      indexedDBStorage.getPacScripts.mockResolvedValue([plainScript]);
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('Plain Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('Plain Script')).toBeInTheDocument();
+      });
 
       // Click on script to edit
-      await user.click(screen.getByText('Plain Script'))
+      await user.click(screen.getByText('Plain Script'));
 
       // Should show content textarea for plain scripts
-      const contentArea = screen.getByDisplayValue('old content')
-      expect(contentArea).toBeInTheDocument()
+      const contentArea = screen.getByDisplayValue('old content');
+      expect(contentArea).toBeInTheDocument();
 
       // Change content
-      await user.clear(contentArea)
-      await user.type(contentArea, 'new content')
+      await user.clear(contentArea);
+      await user.type(contentArea, 'new content');
 
       // Save changes
-      const saveButton = screen.getByTitle('Save')
-      await user.click(saveButton)
+      const saveButton = screen.getByTitle('Save');
+      await user.click(saveButton);
 
       await waitFor(() => {
         expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
@@ -396,13 +396,13 @@ describe('PacScriptsTab Component', () => {
             content: 'new content',
             sourceType: 'plain'
           })
-        )
-      })
+        );
+      });
 
       // Should not fetch from URL for plain scripts
-      expect(fetch).not.toHaveBeenCalled()
-    })
-  })
+      expect(fetch).not.toHaveBeenCalled();
+    });
+  });
 
   describe('PAC Script Deletion', () => {
     it('should delete PAC script', async () => {
@@ -412,76 +412,76 @@ describe('PacScriptsTab Component', () => {
         content: 'content',
         enabled: true,
         sourceType: 'plain'
-      }
+      };
 
-      indexedDBStorage.getPacScripts.mockResolvedValue([mockScript])
+      indexedDBStorage.getPacScripts.mockResolvedValue([mockScript]);
 
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('Test Script')).toBeInTheDocument()
-      })
+        expect(screen.getByText('Test Script')).toBeInTheDocument();
+      });
 
       // Click delete button
-      const deleteButton = screen.getByTitle('Delete')
-      await user.click(deleteButton)
+      const deleteButton = screen.getByTitle('Delete');
+      await user.click(deleteButton);
 
       // Should show confirmation dialog
       await waitFor(() => {
-        expect(screen.getByText('Delete Proxy')).toBeInTheDocument()
-        expect(screen.getByRole('dialog')).toBeInTheDocument()
-      })
+        expect(screen.getByText('Delete Proxy')).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      });
 
       // Confirm deletion
-      const confirmButton = screen.getByRole('button', { name: 'Delete' })
-      await user.click(confirmButton)
+      const confirmButton = screen.getByRole('button', { name: 'Delete' });
+      await user.click(confirmButton);
 
       await waitFor(() => {
-        expect(indexedDBStorage.deletePacScript).toHaveBeenCalledWith(1)
+        expect(indexedDBStorage.deletePacScript).toHaveBeenCalledWith(1);
         expect(mockChrome.runtime.sendMessage).toHaveBeenCalledWith({
           action: 'pacScriptsUpdated'
-        })
-      })
-    })
-  })
+        });
+      });
+    });
+  });
 
   describe('Form Validation', () => {
     it('should validate script name is required', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'))
-      await user.click(screen.getByRole('button', { name: /save/i }))
+      await user.click(screen.getByText('Add PAC Script'));
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled()
-      })
-    })
+        expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled();
+      });
+    });
 
     it('should validate URL is required for URL-based scripts', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'))
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test')
+      await user.click(screen.getByText('Add PAC Script'));
+      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test');
       // URL input is empty
-      await user.click(screen.getByRole('button', { name: /save/i }))
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled()
-      })
-    })
+        expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled();
+      });
+    });
 
     it('should validate content is required for plain scripts', async () => {
-      render(<PacScriptsTab />)
+      render(<PacScriptsTab />);
 
-      await user.click(screen.getByText('Add PAC Script'))
-      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test')
-      await user.click(screen.getByLabelText('Plain'))
+      await user.click(screen.getByText('Add PAC Script'));
+      await user.type(screen.getByPlaceholderText('My PAC Script'), 'Test');
+      await user.click(screen.getByLabelText('Plain'));
       // Content is empty
-      await user.click(screen.getByRole('button', { name: /save/i }))
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled()
-      })
-    })
-  })
-})
+        expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled();
+      });
+    });
+  });
+});

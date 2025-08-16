@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ExclamationTriangleIcon, PlusIcon, LinkIcon, DocumentIcon } from '@heroicons/react/24/outline';
 import { TrashIcon, CheckIcon, XMarkIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
@@ -78,7 +78,6 @@ const PacScriptsTab = () => {
         const storedScripts = await indexedDBStorage.getPacScripts();
         setPacScripts(storedScripts);
       } catch (error) {
-        console.error('Failed to load PAC scripts:', error);
         setPacScripts([]);
       }
     };
@@ -112,7 +111,7 @@ const PacScriptsTab = () => {
       
       try {
         new URL(data.url.trim());
-      } catch (error) {
+      } catch (_error) {
         return messages.invalidPacScriptUrl;
       }
     } else {
@@ -174,11 +173,8 @@ const PacScriptsTab = () => {
       setShowForm(false);
       setFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
       
-      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
-        console.error('Failed to notify background about PAC scripts update:', error)
-      );
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
     } catch (error) {
-      console.error('Failed to save PAC script:', error);
       if (error.name === 'QuotaExceededError') {
         setValidationError('Storage quota exceeded. PAC script is too large to save.');
       } else {
@@ -248,11 +244,8 @@ const PacScriptsTab = () => {
       setEditingScriptId(null);
       setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
       
-      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
-        console.error('Failed to notify background about PAC scripts update:', error)
-      );
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
     } catch (error) {
-      console.error('Failed to update PAC script:', error);
       if (error.name === 'QuotaExceededError') {
         setEditValidationError('Storage quota exceeded. PAC script is too large to save.');
       } else {
@@ -261,7 +254,7 @@ const PacScriptsTab = () => {
     }
   };
 
-    const showDeleteDialog = (script) => {
+  const showDeleteDialog = (script) => {
     setDeleteDialog({ 
       isOpen: true, 
       scriptId: script.id, 
@@ -291,12 +284,10 @@ const PacScriptsTab = () => {
       );
       setPacScripts(updatedScripts);
       
-      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
-        console.error('Failed to notify background about PAC scripts update:', error)
-      );
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
 
-    } catch (error) {
-      console.error('Failed to reload PAC script:', error);
+    } catch (_error) {
+      // Silently handle error
     } finally {
       setReloadingScript(null);
     }
@@ -309,11 +300,9 @@ const PacScriptsTab = () => {
       setPacScripts(updatedScripts);
       setDeleteDialog({ isOpen: false, scriptId: null, scriptName: '' });
       
-      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(error => 
-        console.error('Failed to notify background about PAC scripts update:', error)
-      );
-    } catch (error) {
-      console.error('Failed to delete PAC script:', error);
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
+    } catch (_error) {
+      // Silently handle error
     }
   };
 
@@ -355,7 +344,9 @@ const PacScriptsTab = () => {
                           value={editFormData.name}
                           onChange={(e) => {
                             setEditFormData({ ...editFormData, name: e.target.value });
-                            if (editValidationError) setEditValidationError('');
+                            if (editValidationError) {
+                              setEditValidationError('');
+                            }
                           }}
                           placeholder={messages.pacScriptNamePlaceholder}
                           className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
@@ -371,7 +362,9 @@ const PacScriptsTab = () => {
                             value={editFormData.url}
                             onChange={(e) => {
                               setEditFormData({ ...editFormData, url: e.target.value });
-                              if (editValidationError) setEditValidationError('');
+                              if (editValidationError) {
+                                setEditValidationError('');
+                              }
                             }}
                             placeholder={messages.pacScriptUrlPlaceholder}
                             className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
@@ -397,7 +390,7 @@ const PacScriptsTab = () => {
                               <Switch.Label className="text-sm text-gray-700">
                                 {editFormData.enabled ? messages.enabled : messages.disabled}
                               </Switch.Label>
-                                                              <Switch
+                              <Switch
                                 checked={editFormData.enabled}
                                 onChange={(enabled) => setEditFormData({ ...editFormData, enabled })}
                                 disabled={fetchingEditScript}
@@ -447,43 +440,51 @@ const PacScriptsTab = () => {
                     )}
                   </div>
                   
-                                     <div className="flex gap-1">
-                     {editingScriptId === script.id ? (
-                       <>
-                         <button 
-                           onClick={(e) => { e.stopPropagation(); saveEdit(); }} 
-                           disabled={fetchingEditScript}
-                           className={`p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                           title="Save"
-                         >
-                           <CheckIcon className="w-4 h-4" />
-                         </button>
-                         <button 
-                           onClick={(e) => { e.stopPropagation(); cancelEdit(); }} 
-                           disabled={fetchingEditScript}
-                           className={`p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                           title="Cancel"
-                         >
-                           <XMarkIcon className="w-4 h-4" />
-                         </button>
-                       </>
-                     ) : (
-                       <>
-                         {script.sourceType === 'url' && (
-                           <button 
-                             onClick={(e) => { e.stopPropagation(); reloadScript(script); }} 
-                             disabled={reloadingScript === script.id}
-                             className={`p-1 hover:bg-blue-100 rounded text-gray-500 hover:text-blue-600 cursor-pointer ${reloadingScript === script.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                             title={messages.reloadScript}
-                           >
-                             <ArrowPathIcon className={`w-4 h-4 ${reloadingScript === script.id ? 'animate-spin' : ''}`} />
-                           </button>
-                         )}
-                         <button onClick={(e) => { e.stopPropagation(); showDeleteDialog(script); }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
-                           <TrashIcon className="w-4 h-4" />
-                         </button>
-                       </>
-                     )}
+                  <div className="flex gap-1">
+                    {editingScriptId === script.id ? (
+                      <>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation(); saveEdit(); 
+                          }} 
+                          disabled={fetchingEditScript}
+                          className={`p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                          title="Save"
+                        >
+                          <CheckIcon className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation(); cancelEdit(); 
+                          }} 
+                          disabled={fetchingEditScript}
+                          className={`p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer ${fetchingEditScript ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                          title="Cancel"
+                        >
+                          <XMarkIcon className="w-4 h-4" />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {script.sourceType === 'url' && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation(); reloadScript(script); 
+                            }} 
+                            disabled={reloadingScript === script.id}
+                            className={`p-1 hover:bg-blue-100 rounded text-gray-500 hover:text-blue-600 cursor-pointer ${reloadingScript === script.id ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                            title={messages.reloadScript}
+                          >
+                            <ArrowPathIcon className={`w-4 h-4 ${reloadingScript === script.id ? 'animate-spin' : ''}`} />
+                          </button>
+                        )}
+                        <button onClick={(e) => {
+                          e.stopPropagation(); showDeleteDialog(script); 
+                        }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -516,7 +517,9 @@ const PacScriptsTab = () => {
                   value={formData.name}
                   onChange={(e) => {
                     setFormData({ ...formData, name: e.target.value });
-                    if (validationError) setValidationError('');
+                    if (validationError) {
+                      setValidationError('');
+                    }
                   }}
                   placeholder={messages.pacScriptNamePlaceholder}
                   className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
@@ -570,7 +573,9 @@ const PacScriptsTab = () => {
                     value={formData.url}
                     onChange={(e) => {
                       setFormData({ ...formData, url: e.target.value });
-                      if (validationError) setValidationError('');
+                      if (validationError) {
+                        setValidationError('');
+                      }
                     }}
                     placeholder={messages.pacScriptUrlPlaceholder}
                     className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
@@ -590,7 +595,9 @@ const PacScriptsTab = () => {
                     value={formData.content}
                     onChange={(e) => {
                       setFormData({ ...formData, content: e.target.value });
-                      if (validationError) setValidationError('');
+                      if (validationError) {
+                        setValidationError('');
+                      }
                     }}
                     placeholder={messages.pacScriptContentPlaceholder}
                     rows={6}

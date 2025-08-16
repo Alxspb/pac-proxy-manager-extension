@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { PlayIcon, StopIcon, ServerIcon, ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
@@ -59,8 +59,8 @@ const ProxiesTab = () => {
         const storedPacScripts = result.pacScripts || [];
         setProxies(storedProxies);
         setPacScripts(storedPacScripts);
-      } catch (error) {
-        console.error('Failed to load data:', error);
+      } catch (_error) {
+        // Silently handle error
       }
     };
 
@@ -85,8 +85,8 @@ const ProxiesTab = () => {
       if (response === true) {
         setProxyStatus(!proxyStatus);
       }
-    } catch (error) {
-      console.error('Failed to toggle proxy:', error);
+    } catch (_error) {
+      // Silently handle error
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ const ProxiesTab = () => {
       }
       
       return null;
-    } catch (error) {
+    } catch (_error) {
       return messages.invalidUrlFormat || 'Invalid URL format';
     }
   };
@@ -136,8 +136,8 @@ const ProxiesTab = () => {
     try {
       await chrome.storage.local.set({ proxies: updatedProxies });
       setProxies(updatedProxies);
-    } catch (error) {
-      console.error('Failed to save proxies:', error);
+    } catch (_error) {
+      // Silently handle error
     }
   };
 
@@ -306,7 +306,9 @@ const ProxiesTab = () => {
                         value={editingUrl}
                         onChange={(e) => {
                           setEditingUrl(e.target.value);
-                          if (editValidationError) setEditValidationError('');
+                          if (editValidationError) {
+                            setEditValidationError('');
+                          }
                         }}
                         className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
                           editValidationError 
@@ -314,8 +316,12 @@ const ProxiesTab = () => {
                             : 'border-blue-300 focus:border-blue-500 focus:ring-blue-500'
                         }`}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') saveEdit();
-                          if (e.key === 'Escape') cancelEdit();
+                          if (e.key === 'Enter') {
+                            saveEdit();
+                          }
+                          if (e.key === 'Escape') {
+                            cancelEdit();
+                          }
                         }}
                         autoFocus
                       />
@@ -333,15 +339,21 @@ const ProxiesTab = () => {
                   <div className="flex gap-1">
                     {editingProxyId === proxy.id ? (
                       <>
-                        <button onClick={(e) => { e.stopPropagation(); saveEdit(); }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
+                        <button onClick={(e) => {
+                          e.stopPropagation(); saveEdit(); 
+                        }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
                           <CheckIcon className="w-4 h-4" />
                         </button>
-                        <button onClick={(e) => { e.stopPropagation(); cancelEdit(); }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
+                        <button onClick={(e) => {
+                          e.stopPropagation(); cancelEdit(); 
+                        }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
                           <XMarkIcon className="w-4 h-4" />
                         </button>
                       </>
                     ) : (
-                      <button onClick={(e) => { e.stopPropagation(); showDeleteDialog(proxy); }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
+                      <button onClick={(e) => {
+                        e.stopPropagation(); showDeleteDialog(proxy); 
+                      }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
                         <TrashIcon className="w-4 h-4" />
                       </button>
                     )}
@@ -377,7 +389,9 @@ const ProxiesTab = () => {
                   value={formData.url}
                   onChange={(e) => {
                     setFormData({ ...formData, url: e.target.value });
-                    if (validationError) setValidationError('');
+                    if (validationError) {
+                      setValidationError('');
+                    }
                   }}
                   className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
                     validationError 

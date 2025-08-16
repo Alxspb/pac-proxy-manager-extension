@@ -53,7 +53,7 @@ const indexedDBStorage = new IndexedDBStorage();
 class ProxyManager {
   constructor() {
     this.isProxyActive = false;
-    this.init().catch(error => console.error('Failed to initialize proxy manager:', error));
+    this.init().catch(() => {});
   }
 
   async init() {
@@ -63,7 +63,7 @@ class ProxyManager {
         const hasRelevantChanges = relevantChanges.some(key => changes[key]);
 
         if (hasRelevantChanges) {
-          this.updateProxySettings().catch(error => console.error('Failed to update proxy settings:', error));
+          this.updateProxySettings().catch(() => {});
         }
       }
     });
@@ -84,7 +84,7 @@ class ProxyManager {
         const protocol = url.protocol === 'https:' ? 'HTTPS' : 'PROXY';
         const port = url.port || (url.protocol === 'https:' ? '443' : '80');
         return `${protocol} ${url.hostname}:${port}`;
-      } catch (e) {
+      } catch (_e) {
         return `PROXY ${proxy.url}`;
       }
     }).join('; ');
@@ -197,8 +197,8 @@ function FindProxyForURL(url, host) {
       });
 
       this.isProxyActive = true;
-    } catch (error) {
-      console.error('Failed to update proxy settings:', error);
+    } catch (_error) {
+      // Silently handle error
     }
   }
 
@@ -209,7 +209,6 @@ function FindProxyForURL(url, host) {
       await this.updateProxySettings();
       return true;
     } catch (error) {
-      console.error('Failed to activate proxy:', error);
       return false;
     }
   }
@@ -221,7 +220,6 @@ function FindProxyForURL(url, host) {
       this.isProxyActive = false;
       return true;
     } catch (error) {
-      console.error('Failed to deactivate proxy:', error);
       return false;
     }
   }
@@ -240,36 +238,38 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const handleAsync = async () => {
     try {
       switch (request.action) {
-        case 'activateProxy':
-          const activateResult = await proxyManager.activateProxy();
-          sendResponse(activateResult);
-          break;
+      case 'activateProxy': {
+        const activateResult = await proxyManager.activateProxy();
+        sendResponse(activateResult);
+        break;
+      }
 
-        case 'deactivateProxy':
-          const deactivateResult = await proxyManager.deactivateProxy();
-          sendResponse(deactivateResult);
-          break;
+      case 'deactivateProxy': {
+        const deactivateResult = await proxyManager.deactivateProxy();
+        sendResponse(deactivateResult);
+        break;
+      }
 
-        case 'getProxyStatus':
-          const status = await proxyManager.getProxyStatus();
-          sendResponse(status);
-          break;
+      case 'getProxyStatus': {
+        const status = await proxyManager.getProxyStatus();
+        sendResponse(status);
+        break;
+      }
 
-        case 'updateProxySettings':
-          await proxyManager.updateProxySettings();
-          sendResponse(true);
-          break;
+      case 'updateProxySettings':
+        await proxyManager.updateProxySettings();
+        sendResponse(true);
+        break;
 
-        case 'pacScriptsUpdated':
-          await proxyManager.updateProxySettings();
-          sendResponse(true);
-          break;
+      case 'pacScriptsUpdated':
+        await proxyManager.updateProxySettings();
+        sendResponse(true);
+        break;
 
-        default:
-          sendResponse({ error: 'Unknown action' });
+      default:
+        sendResponse({ error: 'Unknown action' });
       }
     } catch (error) {
-      console.error('Error handling message:', error);
       sendResponse({ error: error.message });
     }
   };

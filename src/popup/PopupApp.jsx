@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import ExceptionsTab from './tabs/ExceptionsTab';
 import ProxiesTab from './tabs/ProxiesTab';
@@ -41,15 +41,15 @@ const PopupApp = () => {
         {
           id: 1,
           title: 'PAC Proxy Manager v1.0.0',
-          description: 'Chrome extension for proxy management',
+          description: 'Chrome extension for proxy management'
         },
         {
           id: 2,
           title: 'Documentation',
-          description: 'Learn how to use proxy auto-configuration',
-        },
-      ],
-    },
+          description: 'Learn how to use proxy auto-configuration'
+        }
+      ]
+    }
   ];
 
   return (

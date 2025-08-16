@@ -1,4 +1,4 @@
-import { vi } from 'vitest'
+import { vi } from 'vitest';
 
 export const createMockChrome = () => ({
   storage: {
@@ -75,8 +75,8 @@ export const createMockChrome = () => ({
         'reloadError': 'Failed to reload script from URL',
         'confirmDelete': 'Are you sure you want to delete this proxy?',
         'confirmDeleteTitle': 'Delete Proxy'
-      }
-      return translations[key] || key
+      };
+      return translations[key] || key;
     })
   }
-})
+});
