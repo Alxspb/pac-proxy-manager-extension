@@ -227,6 +227,7 @@ const ProxiesTab = () => {
               role="switch"
               aria-checked={proxyStatus}
               aria-label={proxyStatus ? messages.deactivateProxy : messages.activateProxy}
+              title={proxies.length === 0 ? messages.configureProxyServers : (proxyStatus ? messages.deactivateProxy : messages.activateProxy)}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out ${
@@ -242,19 +243,9 @@ const ProxiesTab = () => {
           </div>
         </div>
 
-        {proxies.length === 0 && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-            <div className="flex items-start gap-3">
-              <ExclamationTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm text-yellow-800 font-medium mb-1">{messages.noProxyServers}</p>
-                <p className="text-sm text-yellow-700">{messages.configureProxyServers}</p>
-              </div>
-            </div>
-          </div>
-        )}
 
-        {pacScripts.length > 0 && (
+
+        {pacScripts.length > 0 && proxies.length > 0 && (
           <div className="mb-4 p-3 bg-slate-100 border border-slate-300 rounded-md">
             <p className="text-sm text-slate-600">
               ℹ️ {messages.proxyServersInfo}
@@ -262,91 +253,79 @@ const ProxiesTab = () => {
           </div>
         )}
 
-        {proxies.length === 0 && !showForm ? (
-          <div className="text-center py-8">
-            <button
-              onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-500 text-white rounded-lg hover:bg-slate-600 font-medium text-sm cursor-pointer"
+        <div className="space-y-2">
+          {proxies.map((proxy) => (
+            <div 
+              key={proxy.id} 
+              className={`border border-gray-200 rounded-md p-3 ${
+                editingProxyId === proxy.id ? '' : 'cursor-pointer hover:bg-gray-50'
+              }`}
+              onClick={() => editingProxyId !== proxy.id && startEdit(proxy)}
             >
-              <PlusIcon className="w-4 h-4" />
-              {messages.addProxy}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {proxies.map((proxy) => (
-              <div 
-                key={proxy.id} 
-                className={`border border-gray-200 rounded-md p-3 ${
-                  editingProxyId === proxy.id ? '' : 'cursor-pointer hover:bg-gray-50'
-                }`}
-                onClick={() => editingProxyId !== proxy.id && startEdit(proxy)}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex-1 mr-2">
-                    {editingProxyId === proxy.id ? (
-                      <input
-                        type="text"
-                        value={editingUrl}
-                        onChange={(e) => {
-                          setEditingUrl(e.target.value);
-                          if (editValidationError) {
-                            setEditValidationError('');
-                          }
-                        }}
-                        className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
-                          editValidationError 
-                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                            : 'border-slate-300 focus:border-slate-500 focus:ring-slate-500'
-                        }`}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            saveEdit();
-                          }
-                          if (e.key === 'Escape') {
-                            cancelEdit();
-                          }
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      <div className="text-sm text-gray-900 py-1">{proxy.url}</div>
-                    )}
-                    {editingProxyId === proxy.id && editValidationError && (
-                      <div className="text-red-600 text-xs mt-1 flex items-center gap-1">
-                        <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
-                        {editValidationError}
-                      </div>
-                    )}
-                  </div>
+              <div className="flex justify-between items-center">
+                <div className="flex-1 mr-2">
+                  {editingProxyId === proxy.id ? (
+                    <input
+                      type="text"
+                      value={editingUrl}
+                      onChange={(e) => {
+                        setEditingUrl(e.target.value);
+                        if (editValidationError) {
+                          setEditValidationError('');
+                        }
+                      }}
+                      className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
+                        editValidationError 
+                          ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
+                          : 'border-slate-300 focus:border-slate-500 focus:ring-slate-500'
+                      }`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          saveEdit();
+                        }
+                        if (e.key === 'Escape') {
+                          cancelEdit();
+                        }
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <div className="text-sm text-gray-900 py-1">{proxy.url}</div>
+                  )}
+                  {editingProxyId === proxy.id && editValidationError && (
+                    <div className="text-red-600 text-xs mt-1 flex items-center gap-1">
+                      <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
+                      {editValidationError}
+                    </div>
+                  )}
+                </div>
                   
-                  <div className="flex gap-1">
-                    {editingProxyId === proxy.id ? (
-                      <>
-                        <button onClick={(e) => {
-                          e.stopPropagation(); saveEdit(); 
-                        }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
-                          <CheckIcon className="w-4 h-4" />
-                        </button>
-                        <button onClick={(e) => {
-                          e.stopPropagation(); cancelEdit(); 
-                        }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
-                          <XMarkIcon className="w-4 h-4" />
-                        </button>
-                      </>
-                    ) : (
+                <div className="flex gap-1">
+                  {editingProxyId === proxy.id ? (
+                    <>
                       <button onClick={(e) => {
-                        e.stopPropagation(); showDeleteDialog(proxy); 
-                      }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
-                        <TrashIcon className="w-4 h-4" />
+                        e.stopPropagation(); saveEdit(); 
+                      }} className="p-1 hover:bg-green-100 rounded text-gray-500 hover:text-green-600 cursor-pointer" title="Save">
+                        <CheckIcon className="w-4 h-4" />
                       </button>
-                    )}
-                  </div>
+                      <button onClick={(e) => {
+                        e.stopPropagation(); cancelEdit(); 
+                      }} className="p-1 hover:bg-red-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Cancel">
+                        <XMarkIcon className="w-4 h-4" />
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={(e) => {
+                      e.stopPropagation(); showDeleteDialog(proxy); 
+                    }} className="p-1 hover:bg-gray-100 rounded text-gray-500 hover:text-red-600 cursor-pointer" title="Delete">
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
 
         {/* Centered Add Button */}
         {proxies.length > 0 && !showForm && (
@@ -361,8 +340,11 @@ const ProxiesTab = () => {
         )}
 
         {/* Add Proxy Form */}
-        {showForm && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+        {(showForm || proxies.length === 0) && (
+          <div className="mt-4 p-4 bg-gray-50 rounded-md">
+            <div className="mb-4">
+              <h3 className="text-lg font-medium text-gray-900">{messages.addProxy}</h3>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -403,7 +385,9 @@ const ProxiesTab = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowForm(false);
+                    if (proxies.length > 0) {
+                      setShowForm(false);
+                    }
                     setValidationError('');
                     setFormData({ url: '' });
                   }}

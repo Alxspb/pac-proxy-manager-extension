@@ -55,7 +55,7 @@ describe('ProxiesTab Component', () => {
       });
     });
 
-    it('should show add proxy button when no proxies exist', async () => {
+    it('should show add proxy form when no proxies exist', async () => {
       mockChrome.storage.local.get.mockResolvedValue({ proxies: [] });
       mockChrome.runtime.sendMessage.mockResolvedValue({ isActive: false });
 
@@ -63,6 +63,7 @@ describe('ProxiesTab Component', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Add Proxy')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('http://proxy.example.com:8080')).toBeInTheDocument();
       });
     });
   });
@@ -92,7 +93,9 @@ describe('ProxiesTab Component', () => {
 
       render(<ProxiesTab />);
 
-      await user.click(screen.getByText('Add Proxy'));
+      await waitFor(() => {
+        expect(screen.getByText('Add Proxy')).toBeInTheDocument();
+      });
 
       const urlInput = screen.getByPlaceholderText('http://proxy.example.com:8080');
       await user.type(urlInput, 'not-a-valid-url');
@@ -107,17 +110,19 @@ describe('ProxiesTab Component', () => {
   });
 
   describe('Proxy Activation', () => {
-    it('should not show activate button when no proxies configured', async () => {
+    it('should show form directly when no proxies configured', async () => {
       mockChrome.storage.local.get.mockResolvedValue({ proxies: [] });
       mockChrome.runtime.sendMessage.mockResolvedValue({ isActive: false });
 
       render(<ProxiesTab />);
 
       await waitFor(() => {
-        expect(screen.getByText('No proxy servers configured')).toBeInTheDocument();
+        expect(screen.getByText('Add Proxy')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('http://proxy.example.com:8080')).toBeInTheDocument();
       });
 
-      expect(screen.queryByText('Activate Proxy')).not.toBeInTheDocument();
+      const toggle = screen.getByRole('switch');
+      expect(toggle).toBeDisabled();
     });
   });
 });
