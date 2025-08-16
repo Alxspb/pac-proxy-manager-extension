@@ -330,5 +330,17 @@
   "aboutSourceCodeLink": {
     "message": "pac-proxy-manager",
     "description": "Source code link text in About tab"
+  },
+  "proxyControlWarningTitle": {
+    "message": "Another Extension Controls Proxy",
+    "description": "Title for proxy control warning"
+  },
+  "proxyControlWarningDescription": {
+    "message": "Another browser extension is currently controlling the proxy settings. This extension's PAC scripts cannot be active until you disable the other proxy extension.",
+    "description": "Description explaining proxy control conflict"
+  },
+  "proxyControlWarningAction": {
+    "message": "Disable other proxy extensions to use PAC scripts from this extension.",
+    "description": "Action suggestion when another extension controls proxy"
   }
 }

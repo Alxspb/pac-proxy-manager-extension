@@ -330,5 +330,17 @@
   "aboutSourceCodeLink": {
     "message": "pac-proxy-manager",
     "description": "Source code link text in About tab"
+  },
+  "proxyControlWarningTitle": {
+    "message": "Другое расширение контролирует прокси",
+    "description": "Title for proxy control warning"
+  },
+  "proxyControlWarningDescription": {
+    "message": "Другое расширение браузера в настоящее время контролирует настройки прокси. PAC скрипты этого расширения не могут быть активны, пока вы не отключите другое прокси-расширение.",
+    "description": "Description explaining proxy control conflict"
+  },
+  "proxyControlWarningAction": {
+    "message": "Отключите другие прокси-расширения для использования PAC скриптов из этого расширения.",
+    "description": "Action suggestion when another extension controls proxy"
   }
 }

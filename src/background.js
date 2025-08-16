@@ -225,9 +225,11 @@ function FindProxyForURL(url, host) {
   }
 
   async getProxyStatus() {
+    const settings = await chrome.proxy.settings.get({ incognito: false });
     return {
       isActive: this.isProxyActive,
-      settings: await chrome.proxy.settings.get({ incognito: false })
+      settings,
+      isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
     };
   }
 }

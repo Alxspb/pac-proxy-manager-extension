@@ -39,6 +39,21 @@ describe('PacScriptsTab Component', () => {
     indexedDBStorage.updatePacScript.mockResolvedValue();
     indexedDBStorage.deletePacScript.mockResolvedValue();
     
+    // Mock chrome.runtime.sendMessage to handle getProxyStatus action
+    mockChrome.runtime.sendMessage.mockImplementation((message) => {
+      if (message.action === 'getProxyStatus') {
+        return Promise.resolve({
+          isActive: false,
+          settings: { 
+            value: { mode: 'direct' },
+            levelOfControl: 'controllable_by_this_extension'
+          },
+          isBlocked: false
+        });
+      }
+      return Promise.resolve({ isActive: false });
+    });
+    
     // Mock fetch
     fetch.mockResolvedValue({
       ok: true,
@@ -482,6 +497,100 @@ describe('PacScriptsTab Component', () => {
       // The "Adding PAC script" text exists as form header, but not as a separate button
       expect(screen.getByText('Adding PAC script')).toBeInTheDocument(); // Form header
       expect(screen.queryByRole('button', { name: 'Adding PAC script' })).not.toBeInTheDocument(); // No separate button
+    });
+  });
+
+  describe('Proxy Control Warning', () => {
+    it('should not show warning when this extension has control', async () => {
+      mockChrome.runtime.sendMessage.mockImplementation((message) => {
+        if (message.action === 'getProxyStatus') {
+          return Promise.resolve({
+            isActive: true,
+            settings: { 
+              value: { mode: 'pac_script' },
+              levelOfControl: 'controlled_by_this_extension'
+            },
+            isBlocked: false
+          });
+        }
+        return Promise.resolve({ isActive: false });
+      });
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('PAC scripts')).toBeInTheDocument();
+      });
+
+      // Should not show warning when not blocked
+      expect(screen.queryByText('Another Extension Controls Proxy')).not.toBeInTheDocument();
+    });
+
+    it('should show warning when another extension controls proxy', async () => {
+      mockChrome.runtime.sendMessage.mockImplementation((message) => {
+        if (message.action === 'getProxyStatus') {
+          return Promise.resolve({
+            isActive: false,
+            settings: { 
+              value: { mode: 'pac_script' },
+              levelOfControl: 'controlled_by_other_extensions'
+            },
+            isBlocked: true
+          });
+        }
+        return Promise.resolve({ isActive: false });
+      });
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Another Extension Controls Proxy')).toBeInTheDocument();
+        expect(screen.getByText(/Another browser extension is currently controlling/)).toBeInTheDocument();
+        expect(screen.getByText(/Disable other proxy extensions/)).toBeInTheDocument();
+      });
+    });
+
+    it('should not show warning when no extension controls proxy', async () => {
+      mockChrome.runtime.sendMessage.mockImplementation((message) => {
+        if (message.action === 'getProxyStatus') {
+          return Promise.resolve({
+            isActive: false,
+            settings: { 
+              value: { mode: 'direct' },
+              levelOfControl: 'controllable_by_this_extension'
+            },
+            isBlocked: false
+          });
+        }
+        return Promise.resolve({ isActive: false });
+      });
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('PAC scripts')).toBeInTheDocument();
+      });
+
+      // Should not show warning when no other extension controls proxy
+      expect(screen.queryByText('Another Extension Controls Proxy')).not.toBeInTheDocument();
+    });
+
+    it('should handle proxy status error gracefully', async () => {
+      mockChrome.runtime.sendMessage.mockImplementation((message) => {
+        if (message.action === 'getProxyStatus') {
+          return Promise.reject(new Error('Failed to get proxy status'));
+        }
+        return Promise.resolve({ isActive: false });
+      });
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('PAC scripts')).toBeInTheDocument();
+      });
+
+      // Should not show warning when proxy status check fails
+      expect(screen.queryByText('Another Extension Controls Proxy')).not.toBeInTheDocument();
     });
   });
 

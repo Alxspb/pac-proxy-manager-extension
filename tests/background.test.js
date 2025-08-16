@@ -65,6 +65,15 @@ function FindProxyForURL(url, host) {
         this.isProxyActive = false;
         return true;
       }
+
+      async getProxyStatus() {
+        const settings = await chrome.proxy.settings.get({ incognito: false });
+        return {
+          isActive: this.isProxyActive,
+          settings,
+          isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
+        };
+      }
     };
   });
 
@@ -136,6 +145,81 @@ function FindProxyForURL(url, host) {
       expect(proxyManager.isProxyActive).toBe(false);
       expect(mockChrome.proxy.settings.clear).toHaveBeenCalledWith({ scope: 'regular' });
       expect(mockChrome.storage.local.set).toHaveBeenCalledWith({ proxyActive: false });
+    });
+  });
+
+  describe('Proxy Status', () => {
+    it('should return proxy status with control information', async () => {
+      const proxyManager = new ProxyManager();
+      proxyManager.isProxyActive = true;
+      
+      // Mock proxy settings response
+      mockChrome.proxy.settings.get.mockResolvedValue({
+        value: { mode: 'pac_script' },
+        levelOfControl: 'controlled_by_this_extension'
+      });
+      
+      const status = await proxyManager.getProxyStatus();
+      
+      expect(status).toEqual({
+        isActive: true,
+        settings: {
+          value: { mode: 'pac_script' },
+          levelOfControl: 'controlled_by_this_extension'
+        },
+        isBlocked: false
+      });
+      
+      expect(mockChrome.proxy.settings.get).toHaveBeenCalledWith({ incognito: false });
+    });
+
+    it('should detect when another extension controls proxy', async () => {
+      const proxyManager = new ProxyManager();
+      proxyManager.isProxyActive = false;
+      
+      // Mock proxy settings response indicating another extension has control
+      mockChrome.proxy.settings.get.mockResolvedValue({
+        value: { mode: 'pac_script' },
+        levelOfControl: 'controlled_by_other_extensions'
+      });
+      
+      const status = await proxyManager.getProxyStatus();
+      
+      expect(status).toEqual({
+        isActive: false,
+        settings: {
+          value: { mode: 'pac_script' },
+          levelOfControl: 'controlled_by_other_extensions'
+        },
+        isBlocked: true
+      });
+    });
+
+    it('should not be blocked when this extension has control', async () => {
+      const proxyManager = new ProxyManager();
+      proxyManager.isProxyActive = true;
+      
+      mockChrome.proxy.settings.get.mockResolvedValue({
+        value: { mode: 'pac_script' },
+        levelOfControl: 'controlled_by_this_extension'
+      });
+      
+      const status = await proxyManager.getProxyStatus();
+      
+      expect(status.isBlocked).toBe(false);
+    });
+
+    it('should not be blocked when no extension controls proxy', async () => {
+      const proxyManager = new ProxyManager();
+      
+      mockChrome.proxy.settings.get.mockResolvedValue({
+        value: { mode: 'direct' },
+        levelOfControl: 'controllable_by_this_extension'
+      });
+      
+      const status = await proxyManager.getProxyStatus();
+      
+      expect(status.isBlocked).toBe(false);
     });
   });
 

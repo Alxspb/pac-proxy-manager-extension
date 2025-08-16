@@ -10,6 +10,7 @@ const PacScriptsTab = () => {
   const [pacScripts, setPacScripts] = useState([]);
   const [messages, setMessages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [proxyStatus, setProxyStatus] = useState(null);
   
   // PAC script management states
   const [showForm, setShowForm] = useState(false);
@@ -71,7 +72,10 @@ const PacScriptsTab = () => {
         reloadScript: chrome.i18n.getMessage('reloadScript'),
         reloadingScript: chrome.i18n.getMessage('reloadingScript'),
         reloadSuccess: chrome.i18n.getMessage('reloadSuccess'),
-        reloadError: chrome.i18n.getMessage('reloadError')
+        reloadError: chrome.i18n.getMessage('reloadError'),
+        proxyControlWarningTitle: chrome.i18n.getMessage('proxyControlWarningTitle'),
+        proxyControlWarningDescription: chrome.i18n.getMessage('proxyControlWarningDescription'),
+        proxyControlWarningAction: chrome.i18n.getMessage('proxyControlWarningAction')
       };
       setMessages(msgs);
     };
@@ -87,9 +91,18 @@ const PacScriptsTab = () => {
       }
     };
 
+    const loadProxyStatus = async () => {
+      try {
+        const response = await chrome.runtime.sendMessage({ action: 'getProxyStatus' });
+        setProxyStatus(response);
+      } catch (error) {
+        setProxyStatus(null);
+      }
+    };
+
     const initializeTab = async () => {
       loadMessages();
-      await loadPacScripts();
+      await Promise.all([loadPacScripts(), loadProxyStatus()]);
     };
 
     initializeTab();
@@ -317,6 +330,25 @@ const PacScriptsTab = () => {
 
   return (
     <div className="space-y-6 min-h-[250px]">
+      {proxyStatus?.isBlocked && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <ExclamationTriangleIcon className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-sm font-medium text-amber-800 mb-1">
+                {messages.proxyControlWarningTitle}
+              </h4>
+              <p className="text-sm text-amber-700 mb-2">
+                {messages.proxyControlWarningDescription}
+              </p>
+              <p className="text-sm text-amber-600 font-medium">
+                {messages.proxyControlWarningAction}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* PAC Scripts Section */}
       <div className="bg-white border border-gray-200 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">

@@ -37,7 +37,10 @@ export const createMockChrome = () => ({
   proxy: {
     settings: {
       set: vi.fn(() => Promise.resolve()),
-      get: vi.fn(() => Promise.resolve({ value: { mode: 'direct' } })),
+      get: vi.fn(() => Promise.resolve({ 
+        value: { mode: 'direct' },
+        levelOfControl: 'controllable_by_this_extension'
+      })),
       clear: vi.fn(() => Promise.resolve())
     }
   },
