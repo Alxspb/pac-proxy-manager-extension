@@ -1,0 +1,346 @@
+{
+  "appName": {
+    "message": "PAC Proxy Manager",
+    "description": "Name of the extension"
+  },
+  "appDescription": {
+    "message": "PAC (Proxy Auto Configuration) 파일을 관리하는 Chrome 확장 프로그램",
+    "description": "Description of the extension"
+  },
+  "helloWorld": {
+    "message": "안녕하세요",
+    "description": "Default greeting text"
+  },
+  "changeText": {
+    "message": "텍스트 변경:",
+    "description": "Label for the input field"
+  },
+  "typeSomething": {
+    "message": "무언가를 입력하세요...",
+    "description": "Placeholder text for the input field"
+  },
+  "pacProxyManager": {
+    "message": "PAC Proxy Manager",
+    "description": "Subtitle text in the popup"
+  },
+  "tabPacScript": {
+    "message": "PAC 스크립트",
+    "description": "PAC scripts tab label"
+  },
+  "tabExceptions": {
+    "message": "예외",
+    "description": "Exceptions tab label"
+  },
+  "tabProxies": {
+    "message": "프록시 서버",
+    "description": "Proxy Servers tab label"
+  },
+  "tabAbout": {
+    "message": "정보",
+    "description": "About tab label"
+  },
+  "domainInputLabel": {
+    "message": "프록시할 도메인:",
+    "description": "Label for domain input field"
+  },
+
+  "proxyOptionPac": {
+    "message": "PAC",
+    "description": "PAC proxy option"
+  },
+  "proxyOptionYes": {
+    "message": "예",
+    "description": "Yes proxy option"
+  },
+  "proxyOptionNo": {
+    "message": "아니오",
+    "description": "No proxy option"
+  },
+  "proxyOptionsLabel": {
+    "message": "이 도메인을 프록시하시겠습니까?",
+    "description": "Label for proxy radio options"
+  },
+  "proxiesTitle": {
+    "message": "프록시 서버",
+    "description": "Title for proxy servers section"
+  },
+  "addProxy": {
+    "message": "프록시 추가",
+    "description": "Button text to add new proxy"
+  },
+
+  "save": {
+    "message": "저장",
+    "description": "Save button text"
+  },
+  "cancel": {
+    "message": "취소",
+    "description": "Cancel button text"
+  },
+  "delete": {
+    "message": "삭제",
+    "description": "Delete button text"
+  },
+
+  "confirmDelete": {
+    "message": "이 프록시를 삭제하시겠습니까?",
+    "description": "Confirmation message for deleting proxy"
+  },
+  "confirmDeleteTitle": {
+    "message": "프록시 삭제",
+    "description": "Title for delete confirmation dialog"
+  },
+  "proxyUrl": {
+    "message": "프록시 URL",
+    "description": "Label for proxy URL field"
+  },
+  "invalidUrl": {
+    "message": "유효한 프록시 URL을 입력하세요 (예: http://proxy.example.com:8080)",
+    "description": "Error message for invalid proxy URL"
+  },
+  "invalidUrlRequired": {
+    "message": "URL이 필요합니다",
+    "description": "Error message when URL field is empty"
+  },
+  "invalidUrlProtocol": {
+    "message": "HTTP, HTTPS, SOCKS4, SOCKS5 프로토콜만 지원됩니다",
+    "description": "Error message for unsupported protocol"
+  },
+  "invalidUrlHostname": {
+    "message": "호스트명이 필요합니다",
+    "description": "Error message when hostname is missing"
+  },
+  "invalidUrlPort": {
+    "message": "포트는 1부터 65535 사이여야 합니다",
+    "description": "Error message for invalid port number"
+  },
+  "invalidUrlFormat": {
+    "message": "잘못된 URL 형식",
+    "description": "Error message for malformed URL"
+  },
+  "duplicateUrl": {
+    "message": "이 프록시 URL이 이미 존재합니다",
+    "description": "Error message for duplicate proxy URL"
+  },
+
+  "activateProxy": {
+    "message": "프록시 활성화",
+    "description": "Button to activate proxy"
+  },
+  "deactivateProxy": {
+    "message": "프록시 비활성화",
+    "description": "Button to deactivate proxy"
+  },
+  "proxyActive": {
+    "message": "프록시 활성",
+    "description": "Status when proxy is active"
+  },
+  "proxyInactive": {
+    "message": "프록시 비활성",
+    "description": "Status when proxy is inactive"
+  },
+  "noProxyServers": {
+    "message": "구성된 프록시 서버가 없습니다",
+    "description": "Message when no proxy servers are set up"
+  },
+  "configureProxyServers": {
+    "message": "프록시를 활성화하려면 프록시 서버를 구성하세요",
+    "description": "Instructions when no proxy servers exist"
+  },
+  "bulkImport": {
+    "message": "일괄 가져오기",
+    "description": "Button text for bulk import feature"
+  },
+  "bulkImportTitle": {
+    "message": "예외 일괄 가져오기",
+    "description": "Title for bulk import section"
+  },
+  "bulkImportPlaceholder": {
+    "message": "도메인 입력 (한 줄에 하나씩):\n*.example.com\n*.another-site.org\n*.third-domain.net",
+    "description": "Placeholder text for bulk import textarea"
+  },
+  "bulkImportYesTab": {
+    "message": "강제 프록시 (예)",
+    "description": "Tab label for domains that should always use proxy"
+  },
+  "bulkImportNoTab": {
+    "message": "프록시 차단 (아니오)",
+    "description": "Tab label for domains that should never use proxy"
+  },
+  "bulkImportButton": {
+    "message": "예외 가져오기",
+    "description": "Button text to execute bulk import"
+  },
+  "currentExceptions": {
+    "message": "현재 예외",
+    "description": "Label for current exceptions section"
+  },
+  "noCurrentExceptions": {
+    "message": "구성된 예외가 없습니다",
+    "description": "Message when no exceptions exist"
+  },
+  "pacScriptsTitle": {
+    "message": "PAC 스크립트",
+    "description": "Title for PAC scripts section"
+  },
+  "addPacScript": {
+    "message": "PAC 스크립트 추가",
+    "description": "Header text for adding new PAC script"
+  },
+  "noPacScripts": {
+    "message": "구성된 PAC 스크립트가 없습니다",
+    "description": "Message when no PAC scripts exist"
+  },
+  "configurePacScripts": {
+    "message": "프록시 설정을 관리하려면 PAC 스크립트를 구성하세요",
+    "description": "Instructions when no PAC scripts exist"
+  },
+  "pacScriptName": {
+    "message": "스크립트 이름",
+    "description": "Label for PAC script name field"
+  },
+  "pacScriptNamePlaceholder": {
+    "message": "내 PAC 스크립트",
+    "description": "Placeholder for PAC script name"
+  },
+  "pacScriptUrl": {
+    "message": "PAC 스크립트 URL",
+    "description": "Label for PAC script URL field"
+  },
+  "pacScriptUrlPlaceholder": {
+    "message": "http://example.com/proxy.pac",
+    "description": "Placeholder for PAC script URL"
+  },
+  "pacScriptContent": {
+    "message": "PAC 스크립트 내용",
+    "description": "Label for PAC script content field"
+  },
+  "pacScriptContentPlaceholder": {
+    "message": "function FindProxyForURL(url, host) {\n    // 여기에 PAC 스크립트 로직을 작성하세요\n    return \"DIRECT\";\n}",
+    "description": "Placeholder for PAC script content"
+  },
+  "inputTypeUrl": {
+    "message": "URL",
+    "description": "URL input type option"
+  },
+  "inputTypePlain": {
+    "message": "일반 텍스트",
+    "description": "Plain text input type option"
+  },
+  "inputTypeLabel": {
+    "message": "입력 타입",
+    "description": "Label for input type selection"
+  },
+  "enabled": {
+    "message": "활성화됨",
+    "description": "Enabled status"
+  },
+  "disabled": {
+    "message": "비활성화됨",
+    "description": "Disabled status"
+  },
+  "fetchingPacScript": {
+    "message": "로딩 중...",
+    "description": "Loading message when fetching PAC script"
+  },
+  "invalidPacScriptName": {
+    "message": "스크립트 이름이 필요합니다",
+    "description": "Error message for invalid PAC script name"
+  },
+  "invalidPacScriptUrl": {
+    "message": "유효한 URL을 입력하세요",
+    "description": "Error message for invalid PAC script URL"
+  },
+  "invalidPacScriptContent": {
+    "message": "스크립트 내용이 필요합니다",
+    "description": "Error message for invalid PAC script content"
+  },
+  "duplicatePacScriptName": {
+    "message": "이 이름의 스크립트가 이미 존재합니다",
+    "description": "Error message for duplicate PAC script name"
+  },
+  "fetchPacScriptError": {
+    "message": "PAC 스크립트를 가져오는데 실패했습니다. URL을 확인하고 다시 시도하세요.",
+    "description": "Error message when PAC script fetch fails"
+  },
+  "proxyServersInfo": {
+    "message": "이 프록시 서버들은 구성 시 PAC 스크립트 프록시 대신 사용됩니다",
+    "description": "Info text explaining proxy servers override PAC script proxies"
+  },
+  "exceptionsRequireProxies": {
+    "message": "도메인 예외를 사용하려면 먼저 프록시 서버를 구성해야 합니다",
+    "description": "Warning when trying to use exceptions without proxy servers"
+  },
+  "pacScriptTypePlain": {
+    "message": "일반 텍스트",
+    "description": "Label for plain text PAC scripts"
+  },
+  "pacScriptTypeUrl": {
+    "message": "URL",
+    "description": "Label for URL-based PAC scripts"
+  },
+  "reloadScript": {
+    "message": "URL에서 다시 로드",
+    "description": "Tooltip for reload script button"
+  },
+  "reloadingScript": {
+    "message": "다시 로딩 중...",
+    "description": "Loading message when reloading PAC script from URL"
+  },
+  "reloadSuccess": {
+    "message": "스크립트가 성공적으로 다시 로드되었습니다",
+    "description": "Success message when script is reloaded"
+  },
+  "reloadError": {
+    "message": "URL에서 스크립트 다시 로드에 실패했습니다",
+    "description": "Error message when script reload fails"
+  },
+  "importSuccess": {
+    "message": "예외가 성공적으로 가져와졌습니다",
+    "description": "Success message when exceptions are imported"
+  },
+  "importError": {
+    "message": "예외 가져오기에 실패했습니다. 다시 시도하세요.",
+    "description": "Error message when exception import fails"
+  },
+  "aboutDescription": {
+    "message": "지능적인 프록시 관리로 브라우징 경험을 제어하세요. 무료, 오픈 소스이며 사용하기 쉽습니다.",
+    "description": "Main description text in About tab"
+  },
+  "aboutMadeBy": {
+    "message": "❤️로 제작",
+    "description": "Made by text in About tab"
+  },
+  "aboutSupportAuthor": {
+    "message": "개발자 지원:",
+    "description": "Support author text in About tab"
+  },
+  "aboutSupportLink": {
+    "message": "ilyachase",
+    "description": "Support link text in About tab"
+  },
+  "aboutSupportUrl": {
+    "message": "https://buymeacoffee.com/ilyachase",
+    "description": "Support URL in About tab"
+  },
+  "aboutSourceCode": {
+    "message": "소스 코드:",
+    "description": "Source code text in About tab"
+  },
+  "aboutSourceCodeLink": {
+    "message": "pac-proxy-manager",
+    "description": "Source code link text in About tab"
+  },
+  "proxyControlWarningTitle": {
+    "message": "다른 확장 프로그램이 프록시를 제어합니다",
+    "description": "Title for proxy control warning"
+  },
+  "proxyControlWarningDescription": {
+    "message": "다른 브라우저 확장 프로그램이 현재 프록시 설정을 제어하고 있습니다. 다른 프록시 확장 프로그램을 비활성화할 때까지 이 확장 프로그램의 PAC 스크립트를 활성화할 수 없습니다.",
+    "description": "Description explaining proxy control conflict"
+  },
+  "proxyControlWarningAction": {
+    "message": "이 확장 프로그램의 PAC 스크립트를 사용하려면 다른 프록시 확장 프로그램을 비활성화하세요.",
+    "description": "Action suggestion when another extension controls proxy"
+  }
+}

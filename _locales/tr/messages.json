@@ -1,0 +1,346 @@
+{
+  "appName": {
+    "message": "PAC Proxy Manager",
+    "description": "Name of the extension"
+  },
+  "appDescription": {
+    "message": "PAC (Proxy Auto Configuration) dosyalarını yönetmek için Chrome uzantısı",
+    "description": "Description of the extension"
+  },
+  "helloWorld": {
+    "message": "Merhaba dünya",
+    "description": "Default greeting text"
+  },
+  "changeText": {
+    "message": "Metni değiştir:",
+    "description": "Label for the input field"
+  },
+  "typeSomething": {
+    "message": "Bir şeyler yazın...",
+    "description": "Placeholder text for the input field"
+  },
+  "pacProxyManager": {
+    "message": "PAC Proxy Manager",
+    "description": "Subtitle text in the popup"
+  },
+  "tabPacScript": {
+    "message": "PAC Betikleri",
+    "description": "PAC scripts tab label"
+  },
+  "tabExceptions": {
+    "message": "İstisnalar",
+    "description": "Exceptions tab label"
+  },
+  "tabProxies": {
+    "message": "Proxy Sunucuları",
+    "description": "Proxy Servers tab label"
+  },
+  "tabAbout": {
+    "message": "Hakkında",
+    "description": "About tab label"
+  },
+  "domainInputLabel": {
+    "message": "Proxy için domain:",
+    "description": "Label for domain input field"
+  },
+
+  "proxyOptionPac": {
+    "message": "PAC",
+    "description": "PAC proxy option"
+  },
+  "proxyOptionYes": {
+    "message": "Evet",
+    "description": "Yes proxy option"
+  },
+  "proxyOptionNo": {
+    "message": "Hayır",
+    "description": "No proxy option"
+  },
+  "proxyOptionsLabel": {
+    "message": "Bu domain için proxy kullan?",
+    "description": "Label for proxy radio options"
+  },
+  "proxiesTitle": {
+    "message": "Proxy Sunucuları",
+    "description": "Title for proxy servers section"
+  },
+  "addProxy": {
+    "message": "Proxy Ekle",
+    "description": "Button text to add new proxy"
+  },
+
+  "save": {
+    "message": "Kaydet",
+    "description": "Save button text"
+  },
+  "cancel": {
+    "message": "İptal",
+    "description": "Cancel button text"
+  },
+  "delete": {
+    "message": "Sil",
+    "description": "Delete button text"
+  },
+
+  "confirmDelete": {
+    "message": "Bu proxy'yi silmek istediğinizden emin misiniz?",
+    "description": "Confirmation message for deleting proxy"
+  },
+  "confirmDeleteTitle": {
+    "message": "Proxy'yi Sil",
+    "description": "Title for delete confirmation dialog"
+  },
+  "proxyUrl": {
+    "message": "Proxy URL",
+    "description": "Label for proxy URL field"
+  },
+  "invalidUrl": {
+    "message": "Lütfen geçerli bir proxy URL'si girin (örn. http://proxy.example.com:8080)",
+    "description": "Error message for invalid proxy URL"
+  },
+  "invalidUrlRequired": {
+    "message": "URL gereklidir",
+    "description": "Error message when URL field is empty"
+  },
+  "invalidUrlProtocol": {
+    "message": "Sadece HTTP, HTTPS, SOCKS4 ve SOCKS5 protokolleri desteklenmektedir",
+    "description": "Error message for unsupported protocol"
+  },
+  "invalidUrlHostname": {
+    "message": "Hostname gereklidir",
+    "description": "Error message when hostname is missing"
+  },
+  "invalidUrlPort": {
+    "message": "Port 1 ile 65535 arasında olmalıdır",
+    "description": "Error message for invalid port number"
+  },
+  "invalidUrlFormat": {
+    "message": "Geçersiz URL formatı",
+    "description": "Error message for malformed URL"
+  },
+  "duplicateUrl": {
+    "message": "Bu proxy URL'si zaten mevcut",
+    "description": "Error message for duplicate proxy URL"
+  },
+
+  "activateProxy": {
+    "message": "Proxy'yi Etkinleştir",
+    "description": "Button to activate proxy"
+  },
+  "deactivateProxy": {
+    "message": "Proxy'yi Devre Dışı Bırak",
+    "description": "Button to deactivate proxy"
+  },
+  "proxyActive": {
+    "message": "Proxy Etkin",
+    "description": "Status when proxy is active"
+  },
+  "proxyInactive": {
+    "message": "Proxy Etkin Değil",
+    "description": "Status when proxy is inactive"
+  },
+  "noProxyServers": {
+    "message": "Yapılandırılmış proxy sunucusu yok",
+    "description": "Message when no proxy servers are set up"
+  },
+  "configureProxyServers": {
+    "message": "Proxy'yi etkinleştirmek için proxy sunucularını yapılandırın",
+    "description": "Instructions when no proxy servers exist"
+  },
+  "bulkImport": {
+    "message": "Toplu İçe Aktarım",
+    "description": "Button text for bulk import feature"
+  },
+  "bulkImportTitle": {
+    "message": "İstisnaları Toplu İçe Aktar",
+    "description": "Title for bulk import section"
+  },
+  "bulkImportPlaceholder": {
+    "message": "Domainleri girin (satır başına bir tane):\n*.example.com\n*.another-site.org\n*.third-domain.net",
+    "description": "Placeholder text for bulk import textarea"
+  },
+  "bulkImportYesTab": {
+    "message": "Proxy Zorla (Evet)",
+    "description": "Tab label for domains that should always use proxy"
+  },
+  "bulkImportNoTab": {
+    "message": "Proxy Engelle (Hayır)",
+    "description": "Tab label for domains that should never use proxy"
+  },
+  "bulkImportButton": {
+    "message": "İstisnaları İçe Aktar",
+    "description": "Button text to execute bulk import"
+  },
+  "currentExceptions": {
+    "message": "Mevcut İstisnalar",
+    "description": "Label for current exceptions section"
+  },
+  "noCurrentExceptions": {
+    "message": "Yapılandırılmış istisna yok",
+    "description": "Message when no exceptions exist"
+  },
+  "pacScriptsTitle": {
+    "message": "PAC Betikleri",
+    "description": "Title for PAC scripts section"
+  },
+  "addPacScript": {
+    "message": "PAC Betiği Ekleme",
+    "description": "Header text for adding new PAC script"
+  },
+  "noPacScripts": {
+    "message": "Yapılandırılmış PAC betiği yok",
+    "description": "Message when no PAC scripts exist"
+  },
+  "configurePacScripts": {
+    "message": "Proxy ayarlarını yönetmek için PAC betiklerini yapılandırın",
+    "description": "Instructions when no PAC scripts exist"
+  },
+  "pacScriptName": {
+    "message": "Betik Adı",
+    "description": "Label for PAC script name field"
+  },
+  "pacScriptNamePlaceholder": {
+    "message": "Benim PAC Betiğim",
+    "description": "Placeholder for PAC script name"
+  },
+  "pacScriptUrl": {
+    "message": "PAC Betiği URL",
+    "description": "Label for PAC script URL field"
+  },
+  "pacScriptUrlPlaceholder": {
+    "message": "http://example.com/proxy.pac",
+    "description": "Placeholder for PAC script URL"
+  },
+  "pacScriptContent": {
+    "message": "PAC Betiği İçeriği",
+    "description": "Label for PAC script content field"
+  },
+  "pacScriptContentPlaceholder": {
+    "message": "function FindProxyForURL(url, host) {\n    // PAC betiği mantığınız burada\n    return \"DIRECT\";\n}",
+    "description": "Placeholder for PAC script content"
+  },
+  "inputTypeUrl": {
+    "message": "URL",
+    "description": "URL input type option"
+  },
+  "inputTypePlain": {
+    "message": "Düz Metin",
+    "description": "Plain text input type option"
+  },
+  "inputTypeLabel": {
+    "message": "Giriş Türü",
+    "description": "Label for input type selection"
+  },
+  "enabled": {
+    "message": "Etkinleştirildi",
+    "description": "Enabled status"
+  },
+  "disabled": {
+    "message": "Devre Dışı",
+    "description": "Disabled status"
+  },
+  "fetchingPacScript": {
+    "message": "Yükleniyor...",
+    "description": "Loading message when fetching PAC script"
+  },
+  "invalidPacScriptName": {
+    "message": "Betik adı gereklidir",
+    "description": "Error message for invalid PAC script name"
+  },
+  "invalidPacScriptUrl": {
+    "message": "Lütfen geçerli bir URL girin",
+    "description": "Error message for invalid PAC script URL"
+  },
+  "invalidPacScriptContent": {
+    "message": "Betik içeriği gereklidir",
+    "description": "Error message for invalid PAC script content"
+  },
+  "duplicatePacScriptName": {
+    "message": "Bu isimde bir betik zaten mevcut",
+    "description": "Error message for duplicate PAC script name"
+  },
+  "fetchPacScriptError": {
+    "message": "PAC betiği alınamadı. Lütfen URL'yi kontrol edin ve tekrar deneyin.",
+    "description": "Error message when PAC script fetch fails"
+  },
+  "proxyServersInfo": {
+    "message": "Bu proxy sunucuları yapılandırıldığında PAC betik proxy'leri yerine kullanılacaktır",
+    "description": "Info text explaining proxy servers override PAC script proxies"
+  },
+  "exceptionsRequireProxies": {
+    "message": "Domain istisnaları önce proxy sunucularının yapılandırılmasını gerektirir",
+    "description": "Warning when trying to use exceptions without proxy servers"
+  },
+  "pacScriptTypePlain": {
+    "message": "düz metin",
+    "description": "Label for plain text PAC scripts"
+  },
+  "pacScriptTypeUrl": {
+    "message": "url",
+    "description": "Label for URL-based PAC scripts"
+  },
+  "reloadScript": {
+    "message": "URL'den Yeniden Yükle",
+    "description": "Tooltip for reload script button"
+  },
+  "reloadingScript": {
+    "message": "Yeniden yükleniyor...",
+    "description": "Loading message when reloading PAC script from URL"
+  },
+  "reloadSuccess": {
+    "message": "Betik başarıyla yeniden yüklendi",
+    "description": "Success message when script is reloaded"
+  },
+  "reloadError": {
+    "message": "Betik URL'den yeniden yüklenemedi",
+    "description": "Error message when script reload fails"
+  },
+  "importSuccess": {
+    "message": "İstisnalar başarıyla içe aktarıldı",
+    "description": "Success message when exceptions are imported"
+  },
+  "importError": {
+    "message": "İstisnalar içe aktarılamadı. Lütfen tekrar deneyin.",
+    "description": "Error message when exception import fails"
+  },
+  "aboutDescription": {
+    "message": "Akıllı proxy yönetimi ile tarama deneyiminizi kontrol edin. Ücretsiz, açık kaynak ve kullanımı kolay.",
+    "description": "Main description text in About tab"
+  },
+  "aboutMadeBy": {
+    "message": "❤️ ile yapıldı",
+    "description": "Made by text in About tab"
+  },
+  "aboutSupportAuthor": {
+    "message": "Yazarı destekle:",
+    "description": "Support author text in About tab"
+  },
+  "aboutSupportLink": {
+    "message": "ilyachase",
+    "description": "Support link text in About tab"
+  },
+  "aboutSupportUrl": {
+    "message": "https://buymeacoffee.com/ilyachase",
+    "description": "Support URL in About tab"
+  },
+  "aboutSourceCode": {
+    "message": "Kaynak kodu:",
+    "description": "Source code text in About tab"
+  },
+  "aboutSourceCodeLink": {
+    "message": "pac-proxy-manager",
+    "description": "Source code link text in About tab"
+  },
+  "proxyControlWarningTitle": {
+    "message": "Başka Bir Uzantı Proxy'yi Kontrol Ediyor",
+    "description": "Title for proxy control warning"
+  },
+  "proxyControlWarningDescription": {
+    "message": "Başka bir tarayıcı uzantısı şu anda proxy ayarlarını kontrol ediyor. Bu uzantının PAC betikleri, diğer proxy uzantısını devre dışı bırakana kadar etkin olamaz.",
+    "description": "Description explaining proxy control conflict"
+  },
+  "proxyControlWarningAction": {
+    "message": "Bu uzantının PAC betiklerini kullanmak için diğer proxy uzantılarını devre dışı bırakın.",
+    "description": "Action suggestion when another extension controls proxy"
+  }
+}

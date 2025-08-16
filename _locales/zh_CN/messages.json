@@ -1,0 +1,346 @@
+{
+  "appName": {
+    "message": "PAC代理管理器",
+    "description": "Name of the extension"
+  },
+  "appDescription": {
+    "message": "一个用于管理PAC（代理自动配置）文件的Chrome扩展",
+    "description": "Description of the extension"
+  },
+  "helloWorld": {
+    "message": "你好世界",
+    "description": "Default greeting text"
+  },
+  "changeText": {
+    "message": "更改文本：",
+    "description": "Label for the input field"
+  },
+  "typeSomething": {
+    "message": "输入一些内容...",
+    "description": "Placeholder text for the input field"
+  },
+  "pacProxyManager": {
+    "message": "PAC代理管理器",
+    "description": "Subtitle text in the popup"
+  },
+  "tabPacScript": {
+    "message": "PAC脚本",
+    "description": "PAC scripts tab label"
+  },
+  "tabExceptions": {
+    "message": "例外",
+    "description": "Exceptions tab label"
+  },
+  "tabProxies": {
+    "message": "代理服务器",
+    "description": "Proxy Servers tab label"
+  },
+  "tabAbout": {
+    "message": "关于",
+    "description": "About tab label"
+  },
+  "domainInputLabel": {
+    "message": "代理域名：",
+    "description": "Label for domain input field"
+  },
+
+  "proxyOptionPac": {
+    "message": "PAC",
+    "description": "PAC proxy option"
+  },
+  "proxyOptionYes": {
+    "message": "是",
+    "description": "Yes proxy option"
+  },
+  "proxyOptionNo": {
+    "message": "否",
+    "description": "No proxy option"
+  },
+  "proxyOptionsLabel": {
+    "message": "为此域名使用代理？",
+    "description": "Label for proxy radio options"
+  },
+  "proxiesTitle": {
+    "message": "代理服务器",
+    "description": "Title for proxy servers section"
+  },
+  "addProxy": {
+    "message": "添加代理",
+    "description": "Button text to add new proxy"
+  },
+
+  "save": {
+    "message": "保存",
+    "description": "Save button text"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "Cancel button text"
+  },
+  "delete": {
+    "message": "删除",
+    "description": "Delete button text"
+  },
+
+  "confirmDelete": {
+    "message": "您确定要删除此代理吗？",
+    "description": "Confirmation message for deleting proxy"
+  },
+  "confirmDeleteTitle": {
+    "message": "删除代理",
+    "description": "Title for delete confirmation dialog"
+  },
+  "proxyUrl": {
+    "message": "代理URL",
+    "description": "Label for proxy URL field"
+  },
+  "invalidUrl": {
+    "message": "请输入有效的代理URL（例如：http://proxy.example.com:8080）",
+    "description": "Error message for invalid proxy URL"
+  },
+  "invalidUrlRequired": {
+    "message": "URL是必需的",
+    "description": "Error message when URL field is empty"
+  },
+  "invalidUrlProtocol": {
+    "message": "仅支持HTTP、HTTPS、SOCKS4和SOCKS5协议",
+    "description": "Error message for unsupported protocol"
+  },
+  "invalidUrlHostname": {
+    "message": "主机名是必需的",
+    "description": "Error message when hostname is missing"
+  },
+  "invalidUrlPort": {
+    "message": "端口必须在1到65535之间",
+    "description": "Error message for invalid port number"
+  },
+  "invalidUrlFormat": {
+    "message": "无效的URL格式",
+    "description": "Error message for malformed URL"
+  },
+  "duplicateUrl": {
+    "message": "此代理URL已存在",
+    "description": "Error message for duplicate proxy URL"
+  },
+
+  "activateProxy": {
+    "message": "激活代理",
+    "description": "Button to activate proxy"
+  },
+  "deactivateProxy": {
+    "message": "停用代理",
+    "description": "Button to deactivate proxy"
+  },
+  "proxyActive": {
+    "message": "代理已激活",
+    "description": "Status when proxy is active"
+  },
+  "proxyInactive": {
+    "message": "代理未激活",
+    "description": "Status when proxy is inactive"
+  },
+  "noProxyServers": {
+    "message": "未配置代理服务器",
+    "description": "Message when no proxy servers are set up"
+  },
+  "configureProxyServers": {
+    "message": "配置代理服务器以激活代理",
+    "description": "Instructions when no proxy servers exist"
+  },
+  "bulkImport": {
+    "message": "批量导入",
+    "description": "Button text for bulk import feature"
+  },
+  "bulkImportTitle": {
+    "message": "批量导入例外",
+    "description": "Title for bulk import section"
+  },
+  "bulkImportPlaceholder": {
+    "message": "输入域名（每行一个）：\n*.example.com\n*.another-site.org\n*.third-domain.net",
+    "description": "Placeholder text for bulk import textarea"
+  },
+  "bulkImportYesTab": {
+    "message": "强制代理（是）",
+    "description": "Tab label for domains that should always use proxy"
+  },
+  "bulkImportNoTab": {
+    "message": "阻止代理（否）",
+    "description": "Tab label for domains that should never use proxy"
+  },
+  "bulkImportButton": {
+    "message": "导入例外",
+    "description": "Button text to execute bulk import"
+  },
+  "currentExceptions": {
+    "message": "当前例外",
+    "description": "Label for current exceptions section"
+  },
+  "noCurrentExceptions": {
+    "message": "未配置例外",
+    "description": "Message when no exceptions exist"
+  },
+  "pacScriptsTitle": {
+    "message": "PAC脚本",
+    "description": "Title for PAC scripts section"
+  },
+  "addPacScript": {
+    "message": "添加PAC脚本",
+    "description": "Header text for adding new PAC script"
+  },
+  "noPacScripts": {
+    "message": "未配置PAC脚本",
+    "description": "Message when no PAC scripts exist"
+  },
+  "configurePacScripts": {
+    "message": "配置PAC脚本以管理代理设置",
+    "description": "Instructions when no PAC scripts exist"
+  },
+  "pacScriptName": {
+    "message": "脚本名称",
+    "description": "Label for PAC script name field"
+  },
+  "pacScriptNamePlaceholder": {
+    "message": "我的PAC脚本",
+    "description": "Placeholder for PAC script name"
+  },
+  "pacScriptUrl": {
+    "message": "PAC脚本URL",
+    "description": "Label for PAC script URL field"
+  },
+  "pacScriptUrlPlaceholder": {
+    "message": "http://example.com/proxy.pac",
+    "description": "Placeholder for PAC script URL"
+  },
+  "pacScriptContent": {
+    "message": "PAC脚本内容",
+    "description": "Label for PAC script content field"
+  },
+  "pacScriptContentPlaceholder": {
+    "message": "function FindProxyForURL(url, host) {\n    // 您的PAC脚本逻辑在此\n    return \"DIRECT\";\n}",
+    "description": "Placeholder for PAC script content"
+  },
+  "inputTypeUrl": {
+    "message": "URL",
+    "description": "URL input type option"
+  },
+  "inputTypePlain": {
+    "message": "纯文本",
+    "description": "Plain text input type option"
+  },
+  "inputTypeLabel": {
+    "message": "输入类型",
+    "description": "Label for input type selection"
+  },
+  "enabled": {
+    "message": "已启用",
+    "description": "Enabled status"
+  },
+  "disabled": {
+    "message": "已禁用",
+    "description": "Disabled status"
+  },
+  "fetchingPacScript": {
+    "message": "加载中...",
+    "description": "Loading message when fetching PAC script"
+  },
+  "invalidPacScriptName": {
+    "message": "脚本名称是必需的",
+    "description": "Error message for invalid PAC script name"
+  },
+  "invalidPacScriptUrl": {
+    "message": "请输入有效的URL",
+    "description": "Error message for invalid PAC script URL"
+  },
+  "invalidPacScriptContent": {
+    "message": "脚本内容是必需的",
+    "description": "Error message for invalid PAC script content"
+  },
+  "duplicatePacScriptName": {
+    "message": "具有此名称的脚本已存在",
+    "description": "Error message for duplicate PAC script name"
+  },
+  "fetchPacScriptError": {
+    "message": "获取PAC脚本失败。请检查URL并重试。",
+    "description": "Error message when PAC script fetch fails"
+  },
+  "proxyServersInfo": {
+    "message": "当配置这些代理服务器时，它们将替代PAC脚本代理使用",
+    "description": "Info text explaining proxy servers override PAC script proxies"
+  },
+  "exceptionsRequireProxies": {
+    "message": "域名例外需要首先配置代理服务器",
+    "description": "Warning when trying to use exceptions without proxy servers"
+  },
+  "pacScriptTypePlain": {
+    "message": "纯文本",
+    "description": "Label for plain text PAC scripts"
+  },
+  "pacScriptTypeUrl": {
+    "message": "url",
+    "description": "Label for URL-based PAC scripts"
+  },
+  "reloadScript": {
+    "message": "从URL重新加载",
+    "description": "Tooltip for reload script button"
+  },
+  "reloadingScript": {
+    "message": "重新加载中...",
+    "description": "Loading message when reloading PAC script from URL"
+  },
+  "reloadSuccess": {
+    "message": "脚本重新加载成功",
+    "description": "Success message when script is reloaded"
+  },
+  "reloadError": {
+    "message": "从URL重新加载脚本失败",
+    "description": "Error message when script reload fails"
+  },
+  "importSuccess": {
+    "message": "例外导入成功",
+    "description": "Success message when exceptions are imported"
+  },
+  "importError": {
+    "message": "导入例外失败。请重试。",
+    "description": "Error message when exception import fails"
+  },
+  "aboutDescription": {
+    "message": "通过智能代理管理控制您的浏览体验。免费、开源且易于使用。",
+    "description": "Main description text in About tab"
+  },
+  "aboutMadeBy": {
+    "message": "用❤️制作",
+    "description": "Made by text in About tab"
+  },
+  "aboutSupportAuthor": {
+    "message": "支持作者：",
+    "description": "Support author text in About tab"
+  },
+  "aboutSupportLink": {
+    "message": "ilyachase",
+    "description": "Support link text in About tab"
+  },
+  "aboutSupportUrl": {
+    "message": "https://buymeacoffee.com/ilyachase",
+    "description": "Support URL in About tab"
+  },
+  "aboutSourceCode": {
+    "message": "源代码：",
+    "description": "Source code text in About tab"
+  },
+  "aboutSourceCodeLink": {
+    "message": "pac-proxy-manager",
+    "description": "Source code link text in About tab"
+  },
+  "proxyControlWarningTitle": {
+    "message": "其他扩展控制代理",
+    "description": "Title for proxy control warning"
+  },
+  "proxyControlWarningDescription": {
+    "message": "另一个浏览器扩展当前正在控制代理设置。在您禁用其他代理扩展之前，此扩展的PAC脚本无法激活。",
+    "description": "Description explaining proxy control conflict"
+  },
+  "proxyControlWarningAction": {
+    "message": "禁用其他代理扩展以使用此扩展的PAC脚本。",
+    "description": "Action suggestion when another extension controls proxy"
+  }
+}

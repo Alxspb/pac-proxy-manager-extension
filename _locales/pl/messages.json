@@ -1,0 +1,346 @@
+{
+  "appName": {
+    "message": "PAC Proxy Manager",
+    "description": "Name of the extension"
+  },
+  "appDescription": {
+    "message": "Rozszerzenie Chrome do zarządzania plikami PAC (Proxy Auto Configuration)",
+    "description": "Description of the extension"
+  },
+  "helloWorld": {
+    "message": "Witaj świecie",
+    "description": "Default greeting text"
+  },
+  "changeText": {
+    "message": "Zmień tekst:",
+    "description": "Label for the input field"
+  },
+  "typeSomething": {
+    "message": "Wpisz coś...",
+    "description": "Placeholder text for the input field"
+  },
+  "pacProxyManager": {
+    "message": "PAC Proxy Manager",
+    "description": "Subtitle text in the popup"
+  },
+  "tabPacScript": {
+    "message": "Skrypty PAC",
+    "description": "PAC scripts tab label"
+  },
+  "tabExceptions": {
+    "message": "Wyjątki",
+    "description": "Exceptions tab label"
+  },
+  "tabProxies": {
+    "message": "Serwery Proxy",
+    "description": "Proxy Servers tab label"
+  },
+  "tabAbout": {
+    "message": "Informacje",
+    "description": "About tab label"
+  },
+  "domainInputLabel": {
+    "message": "Domena dla proxy:",
+    "description": "Label for domain input field"
+  },
+
+  "proxyOptionPac": {
+    "message": "PAC",
+    "description": "PAC proxy option"
+  },
+  "proxyOptionYes": {
+    "message": "Tak",
+    "description": "Yes proxy option"
+  },
+  "proxyOptionNo": {
+    "message": "Nie",
+    "description": "No proxy option"
+  },
+  "proxyOptionsLabel": {
+    "message": "Użyć proxy dla tej domeny?",
+    "description": "Label for proxy radio options"
+  },
+  "proxiesTitle": {
+    "message": "Serwery Proxy",
+    "description": "Title for proxy servers section"
+  },
+  "addProxy": {
+    "message": "Dodaj Proxy",
+    "description": "Button text to add new proxy"
+  },
+
+  "save": {
+    "message": "Zapisz",
+    "description": "Save button text"
+  },
+  "cancel": {
+    "message": "Anuluj",
+    "description": "Cancel button text"
+  },
+  "delete": {
+    "message": "Usuń",
+    "description": "Delete button text"
+  },
+
+  "confirmDelete": {
+    "message": "Czy na pewno chcesz usunąć to proxy?",
+    "description": "Confirmation message for deleting proxy"
+  },
+  "confirmDeleteTitle": {
+    "message": "Usuń Proxy",
+    "description": "Title for delete confirmation dialog"
+  },
+  "proxyUrl": {
+    "message": "URL Proxy",
+    "description": "Label for proxy URL field"
+  },
+  "invalidUrl": {
+    "message": "Wprowadź prawidłowy URL proxy (np. http://proxy.example.com:8080)",
+    "description": "Error message for invalid proxy URL"
+  },
+  "invalidUrlRequired": {
+    "message": "URL jest wymagany",
+    "description": "Error message when URL field is empty"
+  },
+  "invalidUrlProtocol": {
+    "message": "Obsługiwane są tylko protokoły HTTP, HTTPS, SOCKS4 i SOCKS5",
+    "description": "Error message for unsupported protocol"
+  },
+  "invalidUrlHostname": {
+    "message": "Nazwa hosta jest wymagana",
+    "description": "Error message when hostname is missing"
+  },
+  "invalidUrlPort": {
+    "message": "Port musi być między 1 a 65535",
+    "description": "Error message for invalid port number"
+  },
+  "invalidUrlFormat": {
+    "message": "Nieprawidłowy format URL",
+    "description": "Error message for malformed URL"
+  },
+  "duplicateUrl": {
+    "message": "Ten URL proxy już istnieje",
+    "description": "Error message for duplicate proxy URL"
+  },
+
+  "activateProxy": {
+    "message": "Aktywuj Proxy",
+    "description": "Button to activate proxy"
+  },
+  "deactivateProxy": {
+    "message": "Dezaktywuj Proxy",
+    "description": "Button to deactivate proxy"
+  },
+  "proxyActive": {
+    "message": "Proxy Aktywne",
+    "description": "Status when proxy is active"
+  },
+  "proxyInactive": {
+    "message": "Proxy Nieaktywne",
+    "description": "Status when proxy is inactive"
+  },
+  "noProxyServers": {
+    "message": "Brak skonfigurowanych serwerów proxy",
+    "description": "Message when no proxy servers are set up"
+  },
+  "configureProxyServers": {
+    "message": "Skonfiguruj serwery proxy aby aktywować proxy",
+    "description": "Instructions when no proxy servers exist"
+  },
+  "bulkImport": {
+    "message": "Import Masowy",
+    "description": "Button text for bulk import feature"
+  },
+  "bulkImportTitle": {
+    "message": "Import Masowy Wyjątków",
+    "description": "Title for bulk import section"
+  },
+  "bulkImportPlaceholder": {
+    "message": "Wprowadź domeny (jedną w linii):\n*.example.com\n*.another-site.org\n*.third-domain.net",
+    "description": "Placeholder text for bulk import textarea"
+  },
+  "bulkImportYesTab": {
+    "message": "Wymuś Proxy (Tak)",
+    "description": "Tab label for domains that should always use proxy"
+  },
+  "bulkImportNoTab": {
+    "message": "Zablokuj Proxy (Nie)",
+    "description": "Tab label for domains that should never use proxy"
+  },
+  "bulkImportButton": {
+    "message": "Importuj Wyjątki",
+    "description": "Button text to execute bulk import"
+  },
+  "currentExceptions": {
+    "message": "Bieżące Wyjątki",
+    "description": "Label for current exceptions section"
+  },
+  "noCurrentExceptions": {
+    "message": "Brak skonfigurowanych wyjątków",
+    "description": "Message when no exceptions exist"
+  },
+  "pacScriptsTitle": {
+    "message": "Skrypty PAC",
+    "description": "Title for PAC scripts section"
+  },
+  "addPacScript": {
+    "message": "Dodawanie skryptu PAC",
+    "description": "Header text for adding new PAC script"
+  },
+  "noPacScripts": {
+    "message": "Brak skonfigurowanych skryptów PAC",
+    "description": "Message when no PAC scripts exist"
+  },
+  "configurePacScripts": {
+    "message": "Skonfiguruj skrypty PAC aby zarządzać ustawieniami proxy",
+    "description": "Instructions when no PAC scripts exist"
+  },
+  "pacScriptName": {
+    "message": "Nazwa Skryptu",
+    "description": "Label for PAC script name field"
+  },
+  "pacScriptNamePlaceholder": {
+    "message": "Mój skrypt PAC",
+    "description": "Placeholder for PAC script name"
+  },
+  "pacScriptUrl": {
+    "message": "URL skryptu PAC",
+    "description": "Label for PAC script URL field"
+  },
+  "pacScriptUrlPlaceholder": {
+    "message": "http://example.com/proxy.pac",
+    "description": "Placeholder for PAC script URL"
+  },
+  "pacScriptContent": {
+    "message": "Zawartość skryptu PAC",
+    "description": "Label for PAC script content field"
+  },
+  "pacScriptContentPlaceholder": {
+    "message": "function FindProxyForURL(url, host) {\n    // Logika twojego skryptu PAC tutaj\n    return \"DIRECT\";\n}",
+    "description": "Placeholder for PAC script content"
+  },
+  "inputTypeUrl": {
+    "message": "URL",
+    "description": "URL input type option"
+  },
+  "inputTypePlain": {
+    "message": "Zwykły Tekst",
+    "description": "Plain text input type option"
+  },
+  "inputTypeLabel": {
+    "message": "Typ Wejścia",
+    "description": "Label for input type selection"
+  },
+  "enabled": {
+    "message": "Włączony",
+    "description": "Enabled status"
+  },
+  "disabled": {
+    "message": "Wyłączony",
+    "description": "Disabled status"
+  },
+  "fetchingPacScript": {
+    "message": "Ładowanie...",
+    "description": "Loading message when fetching PAC script"
+  },
+  "invalidPacScriptName": {
+    "message": "Nazwa skryptu jest wymagana",
+    "description": "Error message for invalid PAC script name"
+  },
+  "invalidPacScriptUrl": {
+    "message": "Wprowadź prawidłowy URL",
+    "description": "Error message for invalid PAC script URL"
+  },
+  "invalidPacScriptContent": {
+    "message": "Zawartość skryptu jest wymagana",
+    "description": "Error message for invalid PAC script content"
+  },
+  "duplicatePacScriptName": {
+    "message": "Skrypt o tej nazwie już istnieje",
+    "description": "Error message for duplicate PAC script name"
+  },
+  "fetchPacScriptError": {
+    "message": "Nie udało się pobrać skryptu PAC. Sprawdź URL i spróbuj ponownie.",
+    "description": "Error message when PAC script fetch fails"
+  },
+  "proxyServersInfo": {
+    "message": "Te serwery proxy będą używane zamiast proxy ze skryptów PAC gdy są skonfigurowane",
+    "description": "Info text explaining proxy servers override PAC script proxies"
+  },
+  "exceptionsRequireProxies": {
+    "message": "Wyjątki domen wymagają najpierw skonfigurowania serwerów proxy",
+    "description": "Warning when trying to use exceptions without proxy servers"
+  },
+  "pacScriptTypePlain": {
+    "message": "zwykły tekst",
+    "description": "Label for plain text PAC scripts"
+  },
+  "pacScriptTypeUrl": {
+    "message": "url",
+    "description": "Label for URL-based PAC scripts"
+  },
+  "reloadScript": {
+    "message": "Przeładuj z URL",
+    "description": "Tooltip for reload script button"
+  },
+  "reloadingScript": {
+    "message": "Przeładowywanie...",
+    "description": "Loading message when reloading PAC script from URL"
+  },
+  "reloadSuccess": {
+    "message": "Skrypt pomyślnie przeładowany",
+    "description": "Success message when script is reloaded"
+  },
+  "reloadError": {
+    "message": "Nie udało się przeładować skryptu z URL",
+    "description": "Error message when script reload fails"
+  },
+  "importSuccess": {
+    "message": "Wyjątki pomyślnie zaimportowane",
+    "description": "Success message when exceptions are imported"
+  },
+  "importError": {
+    "message": "Nie udało się zaimportować wyjątków. Spróbuj ponownie.",
+    "description": "Error message when exception import fails"
+  },
+  "aboutDescription": {
+    "message": "Przejmij kontrolę nad swoim doświadczeniem przeglądania dzięki inteligentnemu zarządzaniu proxy. Darmowe, open source i łatwe w użyciu.",
+    "description": "Main description text in About tab"
+  },
+  "aboutMadeBy": {
+    "message": "Stworzone z ❤️ przez",
+    "description": "Made by text in About tab"
+  },
+  "aboutSupportAuthor": {
+    "message": "Wspieraj autora:",
+    "description": "Support author text in About tab"
+  },
+  "aboutSupportLink": {
+    "message": "ilyachase",
+    "description": "Support link text in About tab"
+  },
+  "aboutSupportUrl": {
+    "message": "https://buymeacoffee.com/ilyachase",
+    "description": "Support URL in About tab"
+  },
+  "aboutSourceCode": {
+    "message": "Kod źródłowy:",
+    "description": "Source code text in About tab"
+  },
+  "aboutSourceCodeLink": {
+    "message": "pac-proxy-manager",
+    "description": "Source code link text in About tab"
+  },
+  "proxyControlWarningTitle": {
+    "message": "Inne Rozszerzenie Kontroluje Proxy",
+    "description": "Title for proxy control warning"
+  },
+  "proxyControlWarningDescription": {
+    "message": "Inne rozszerzenie przeglądarki obecnie kontroluje ustawienia proxy. Skrypty PAC tego rozszerzenia nie mogą być aktywne, dopóki nie wyłączysz innego rozszerzenia proxy.",
+    "description": "Description explaining proxy control conflict"
+  },
+  "proxyControlWarningAction": {
+    "message": "Wyłącz inne rozszerzenia proxy aby używać skryptów PAC z tego rozszerzenia.",
+    "description": "Action suggestion when another extension controls proxy"
+  }
+}
