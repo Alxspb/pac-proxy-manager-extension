@@ -4,5 +4,4 @@ start "Chrome-EN" "C:\Program Files\Google\Chrome\Application\chrome.exe" --user
 ```
 
 Todo:
-- move fallback *.example.com domain to input placeholder
 - detect other extensions controlling proxy settings

@@ -61,9 +61,12 @@ const ExceptionsTab = () => {
           if (activeTab.url && (activeTab.url.startsWith('http://') || activeTab.url.startsWith('https://'))) {
             try {
               const url = new URL(activeTab.url);
-              const hostname = url.hostname;
+              let hostname = url.hostname;
               
               if (hostname && !hostname.match(/^[a-z]{32}$/) && hostname !== 'localhost') {
+                if (hostname.startsWith('www.')) {
+                  hostname = hostname.substring(4);
+                }
                 const domain = `*.${hostname}`;
                 setDomain(domain);
               }
@@ -133,6 +136,9 @@ const ExceptionsTab = () => {
   };
 
   const handleProxyOptionChange = (newOption) => {
+    if (!domain.trim()) {
+      return;
+    }
     setProxyOption(newOption);
     saveException(domain, newOption);
   };
@@ -221,39 +227,69 @@ const ExceptionsTab = () => {
                 {messages.proxyOptionsLabel}
               </RadioGroup.Label>
               <div className="flex gap-3">
-                <RadioGroup.Option value="pac">
-                  {({ checked }) => (
-                    <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
-                      checked ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                <RadioGroup.Option value="pac" disabled={!domain.trim()}>
+                  {({ checked, disabled }) => (
+                    <div className={`flex items-center gap-2 px-3 py-2 rounded-md border ${
+                      disabled 
+                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                        : checked 
+                          ? 'bg-slate-500 border-slate-500 text-white cursor-pointer' 
+                          : 'bg-white border-gray-300 text-gray-700 cursor-pointer'
                     }`}>
-                      <CogIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-slate-500'}`} />
-                      <RadioGroup.Label className="text-sm font-medium cursor-pointer">
+                      <CogIcon className={`w-4 h-4 flex-shrink-0 ${
+                        disabled 
+                          ? 'text-gray-400' 
+                          : checked 
+                            ? 'text-white' 
+                            : 'text-slate-500'
+                      }`} />
+                      <RadioGroup.Label className={`text-sm font-medium ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                         {messages.proxyOptionPac}
                       </RadioGroup.Label>
                     </div>
                   )}
                 </RadioGroup.Option>
 
-                <RadioGroup.Option value="yes">
-                  {({ checked }) => (
-                    <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
-                      checked ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                <RadioGroup.Option value="yes" disabled={!domain.trim()}>
+                  {({ checked, disabled }) => (
+                    <div className={`flex items-center gap-2 px-3 py-2 rounded-md border ${
+                      disabled 
+                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                        : checked 
+                          ? 'bg-slate-500 border-slate-500 text-white cursor-pointer' 
+                          : 'bg-white border-gray-300 text-gray-700 cursor-pointer'
                     }`}>
-                      <CheckIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-green-500'}`} />
-                      <RadioGroup.Label className="text-sm font-medium cursor-pointer">
+                      <CheckIcon className={`w-4 h-4 flex-shrink-0 ${
+                        disabled 
+                          ? 'text-gray-400' 
+                          : checked 
+                            ? 'text-white' 
+                            : 'text-green-500'
+                      }`} />
+                      <RadioGroup.Label className={`text-sm font-medium ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                         {messages.proxyOptionYes}
                       </RadioGroup.Label>
                     </div>
                   )}
                 </RadioGroup.Option>
 
-                <RadioGroup.Option value="no">
-                  {({ checked }) => (
-                    <div className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer border ${
-                      checked ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white border-gray-300 text-gray-700'
+                <RadioGroup.Option value="no" disabled={!domain.trim()}>
+                  {({ checked, disabled }) => (
+                    <div className={`flex items-center gap-2 px-3 py-2 rounded-md border ${
+                      disabled 
+                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                        : checked 
+                          ? 'bg-slate-500 border-slate-500 text-white cursor-pointer' 
+                          : 'bg-white border-gray-300 text-gray-700 cursor-pointer'
                     }`}>
-                      <XMarkIcon className={`w-4 h-4 flex-shrink-0 ${checked ? 'text-white' : 'text-red-500'}`} />
-                      <RadioGroup.Label className="text-sm font-medium cursor-pointer">
+                      <XMarkIcon className={`w-4 h-4 flex-shrink-0 ${
+                        disabled 
+                          ? 'text-gray-400' 
+                          : checked 
+                            ? 'text-white' 
+                            : 'text-red-500'
+                      }`} />
+                      <RadioGroup.Label className={`text-sm font-medium ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                         {messages.proxyOptionNo}
                       </RadioGroup.Label>
                     </div>
