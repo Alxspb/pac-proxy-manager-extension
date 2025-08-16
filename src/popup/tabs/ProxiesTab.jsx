@@ -435,7 +435,7 @@ const ProxiesTab = () => {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialog.isOpen} onClose={() => setDeleteDialog({ isOpen: false, proxyId: null, proxyUrl: '' })}>
-        <div className="fixed inset-0 bg-black bg-opacity-25" />
+        <div className="fixed inset-0 bg-gray-900/50" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <DialogPanel className="bg-white rounded-lg shadow-xl max-w-sm w-full">
             <div className="p-6">
