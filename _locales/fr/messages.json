@@ -303,6 +303,26 @@
     "message": "Échec de l'importation des exceptions. Veuillez réessayer.",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "Le domaine est requis",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "Format de domaine invalide. Utilisez un format comme example.com ou *.example.com",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "Le domaine générique ne peut pas être juste '*.'!",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "Le domaine doit avoir au moins deux parties (ex. example.com)",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "Certains domaines sont invalides et ont été ignorés",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "Prenez le contrôle de votre expérience de navigation avec une gestion intelligente du proxy. Gratuit, open source et facile à utiliser.",
     "description": "Main description text in About tab"

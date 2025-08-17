@@ -303,6 +303,26 @@
     "message": "例外のインポートに失敗しました。再試行してください。",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "ドメインが必要です",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "無効なドメイン形式です。example.com または *.example.com のような形式を使用してください",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "ワイルドカードドメインは '*.' だけであってはいけません",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "ドメインは少なくとも2つの部分が必要です（例：example.com）",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "一部のドメインが無効でスキップされました",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "インテリジェントなプロキシ管理でブラウジング体験をコントロールしましょう。無料、オープンソース、使いやすい。",
     "description": "Main description text in About tab"

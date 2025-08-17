@@ -303,6 +303,26 @@
     "message": "Failed to import exceptions. Please try again.",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "Domain is required",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "Invalid domain format. Use format like example.com or *.example.com",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "Wildcard domain cannot be just '*.'",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "Domain must have at least two parts (e.g., example.com)",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "Some domains are invalid and were skipped",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "Take control of your browsing experience with intelligent proxy management. Free, open source, and easy to use.",
     "description": "Main description text in About tab"

@@ -303,6 +303,26 @@
     "message": "Kon uitzonderingen niet importeren. Probeer opnieuw.",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "Domein is vereist",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "Ongeldig domeinformaat. Gebruik een formaat zoals example.com of *.example.com",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "Wildcard domein kan niet alleen '*.' zijn",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "Domein moet minstens twee delen hebben (bijv. example.com)",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "Sommige domeinen zijn ongeldig en werden overgeslagen",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "Neem controle over je browse-ervaring met intelligente proxy-beheer. Gratis, open source en eenvoudig te gebruiken.",
     "description": "Main description text in About tab"

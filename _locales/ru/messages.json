@@ -303,6 +303,26 @@
     "message": "Не удалось импортировать исключения. Попробуйте еще раз.",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "Домен обязателен",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "Неверный формат домена. Используйте формат example.com или *.example.com",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "Домен с маской не может быть просто '*.'",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "Домен должен состоять минимум из двух частей (напр. example.com)",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "Некоторые домены недействительны и были пропущены",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "Теперь ваш сёрфинг в интернете под контролем благодаря интеллектуальному управлению прокси. Бесплатно, с открытым исходным кодом и просто в использовании.",
     "description": "Main description text in About tab"

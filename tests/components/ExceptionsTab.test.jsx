@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ExceptionsTab from '../../src/popup/tabs/ExceptionsTab.jsx';
 import { createMockChrome } from '../mocks/chrome.js';
+import toast from 'react-hot-toast';
 
 vi.mock('chrome', () => ({
   default: {}
@@ -26,6 +27,8 @@ describe('ExceptionsTab Component', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    toast.success.mockClear();
+    toast.error.mockClear();
   });
 
   describe('Initial State', () => {
@@ -392,6 +395,171 @@ describe('ExceptionsTab Component', () => {
         const domainInput = screen.getByPlaceholderText('*.example.com');
         expect(domainInput).toHaveValue('');
       });
+    });
+  });
+
+  describe('Domain Validation', () => {
+    it('should show error toast for invalid domain when trying to save', async () => {
+      const user = userEvent.setup();
+      
+      mockChrome.storage.local.get.mockResolvedValue({ 
+        domainExceptions: {},
+        proxies: [{ id: 1, url: 'http://proxy.com:8080' }]
+      });
+
+      render(<ExceptionsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('*.example.com')).toBeInTheDocument();
+      });
+
+      const domainInput = screen.getByPlaceholderText('*.example.com');
+      await user.clear(domainInput);
+      await user.type(domainInput, 'invalid_domain');
+
+      const yesRadio = screen.getByRole('radio', { name: /yes/i });
+      await user.click(yesRadio);
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Invalid domain format'));
+      });
+
+      expect(mockChrome.storage.local.set).not.toHaveBeenCalled();
+    });
+
+    it('should allow valid domains', async () => {
+      const user = userEvent.setup();
+      
+      mockChrome.storage.local.get.mockResolvedValue({ 
+        domainExceptions: {},
+        proxies: [{ id: 1, url: 'http://proxy.com:8080' }]
+      });
+
+      render(<ExceptionsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('*.example.com')).toBeInTheDocument();
+      });
+
+      const domainInput = screen.getByPlaceholderText('*.example.com');
+      await user.clear(domainInput);
+      await user.type(domainInput, '*.valid-domain.com');
+
+      const yesRadio = screen.getByRole('radio', { name: /yes/i });
+      await user.click(yesRadio);
+
+      await waitFor(() => {
+        expect(mockChrome.storage.local.set).toHaveBeenCalledWith({
+          domainExceptions: { '*.valid-domain.com': 'yes' }
+        });
+      });
+
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+
+    it('should validate wildcard domains correctly', async () => {
+      const user = userEvent.setup();
+      
+      mockChrome.storage.local.get.mockResolvedValue({ 
+        domainExceptions: {},
+        proxies: [{ id: 1, url: 'http://proxy.com:8080' }]
+      });
+
+      render(<ExceptionsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('*.example.com')).toBeInTheDocument();
+      });
+
+      const domainInput = screen.getByPlaceholderText('*.example.com');
+      await user.clear(domainInput);
+      await user.type(domainInput, '*.');
+
+      const yesRadio = screen.getByRole('radio', { name: /yes/i });
+      await user.click(yesRadio);
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalled();
+      });
+
+      expect(mockChrome.storage.local.set).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Bulk Import Validation', () => {
+    it('should filter out invalid domains during bulk import', async () => {
+      const user = userEvent.setup();
+      
+      mockChrome.storage.local.get.mockResolvedValue({ 
+        domainExceptions: {},
+        proxies: [{ id: 1, url: 'http://proxy.com:8080' }]
+      });
+
+      render(<ExceptionsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Bulk Import')).toBeInTheDocument();
+      });
+
+      const bulkImportButton = screen.getByText('Bulk Import');
+      await user.click(bulkImportButton);
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText(/Enter domains/)).toBeInTheDocument();
+      });
+
+      const textarea = screen.getByPlaceholderText(/Enter domains/);
+      await user.type(textarea, '*.valid-domain.com\ninvalid_domain\n*.another-valid.org');
+
+      const importButton = screen.getByText('Import Exceptions');
+      await user.click(importButton);
+
+      await waitFor(() => {
+        expect(mockChrome.storage.local.set).toHaveBeenCalledWith({
+          domainExceptions: { 
+            '*.valid-domain.com': 'yes',
+            '*.another-valid.org': 'yes'
+          }
+        });
+      });
+
+      expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('invalid'));
+      expect(toast.success).toHaveBeenCalled();
+    });
+
+    it('should not import anything if all domains are invalid', async () => {
+      const user = userEvent.setup();
+      
+      mockChrome.storage.local.get.mockResolvedValue({ 
+        domainExceptions: {},
+        proxies: [{ id: 1, url: 'http://proxy.com:8080' }]
+      });
+
+      render(<ExceptionsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Bulk Import')).toBeInTheDocument();
+      });
+
+      const bulkImportButton = screen.getByText('Bulk Import');
+      await user.click(bulkImportButton);
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText(/Enter domains/)).toBeInTheDocument();
+      });
+
+      const textarea = screen.getByPlaceholderText(/Enter domains/);
+      await user.type(textarea, 'invalid_domain\nanother_invalid\n*.');
+
+      const importButton = screen.getByText('Import Exceptions');
+      await user.click(importButton);
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('invalid'));
+      });
+
+      expect(mockChrome.storage.local.set).not.toHaveBeenCalled();
+      expect(toast.success).not.toHaveBeenCalled();
     });
   });
 });

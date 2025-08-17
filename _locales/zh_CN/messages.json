@@ -303,6 +303,26 @@
     "message": "导入例外失败。请重试。",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "需要域名",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "无效的域名格式。请使用 example.com 或 *.example.com 这样的格式",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "通配符域名不能只是 '*.'",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "域名必须至少有两个部分（例如 example.com）",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "一些域名无效，已跳过",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "通过智能代理管理控制您的浏览体验。免费、开源且易于使用。",
     "description": "Main description text in About tab"

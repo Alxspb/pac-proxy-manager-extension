@@ -303,6 +303,26 @@
     "message": "İstisnalar içe aktarılamadı. Lütfen tekrar deneyin.",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "Alan adı gereklidir",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "Geçersiz alan adı formatı. example.com veya *.example.com gibi format kullanın",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "Joker alan adı sadece '*.' olamaz",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "Alan adı en az iki parçaya sahip olmalıdır (örn. example.com)",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "Bazı alan adları geçersiz ve atlandı",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "Akıllı proxy yönetimi ile tarama deneyiminizi kontrol edin. Ücretsiz, açık kaynak ve kullanımı kolay.",
     "description": "Main description text in About tab"

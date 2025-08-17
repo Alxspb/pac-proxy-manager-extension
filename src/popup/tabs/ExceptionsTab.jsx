@@ -3,6 +3,7 @@ import { RadioGroup, Disclosure, DisclosureButton, DisclosurePanel, Tab, TabGrou
 import { CogIcon, CheckIcon, XMarkIcon, ChevronDownIcon, DocumentArrowUpIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { ExceptionsSkeleton } from '../components/SkeletonLoader';
+import { validateDomain, validateDomainList } from '../../utils/domainValidation';
 
 const ExceptionsTab = () => {
   const [domain, setDomain] = useState('');
@@ -35,7 +36,12 @@ const ExceptionsTab = () => {
         noCurrentExceptions: chrome.i18n.getMessage('noCurrentExceptions'),
         exceptionsRequireProxies: chrome.i18n.getMessage('exceptionsRequireProxies'),
         importSuccess: chrome.i18n.getMessage('importSuccess'),
-        importError: chrome.i18n.getMessage('importError')
+        importError: chrome.i18n.getMessage('importError'),
+        domainRequired: chrome.i18n.getMessage('domainRequired'),
+        invalidDomainFormat: chrome.i18n.getMessage('invalidDomainFormat'),
+        invalidWildcardDomain: chrome.i18n.getMessage('invalidWildcardDomain'),
+        domainTooShort: chrome.i18n.getMessage('domainTooShort'),
+        invalidDomainsFound: chrome.i18n.getMessage('invalidDomainsFound')
       };
       setMessages(msgs);
     };
@@ -135,10 +141,21 @@ const ExceptionsTab = () => {
     }
   };
 
+  const handleDomainChange = (newDomain) => {
+    setDomain(newDomain);
+  };
+
   const handleProxyOptionChange = (newOption) => {
     if (!domain.trim()) {
       return;
     }
+    
+    const validation = validateDomain(domain);
+    if (!validation.isValid) {
+      toast.error(messages[validation.error] || validation.error);
+      return;
+    }
+    
     setProxyOption(newOption);
     saveException(domain, newOption);
   };
@@ -158,6 +175,16 @@ const ExceptionsTab = () => {
       return;
     }
 
+    const validation = validateDomainList(domains);
+    
+    if (validation.hasErrors) {
+      toast.error(messages.invalidDomainsFound);
+    }
+
+    if (validation.validDomains.length === 0) {
+      return;
+    }
+
     const option = selectedBulkOption === 0 ? 'yes' : 'no';
 
     try {
@@ -169,16 +196,18 @@ const ExceptionsTab = () => {
         }
       });
 
-      domains.forEach(domain => {
-        if (domain) {
-          updatedExceptions[domain] = option;
-        }
+      validation.validDomains.forEach(domain => {
+        updatedExceptions[domain] = option;
       });
 
       await chrome.storage.local.set({ domainExceptions: updatedExceptions });
       setExceptions(updatedExceptions);
       
-      toast.success(messages.importSuccess);
+      const successMessage = validation.hasErrors 
+        ? `${messages.importSuccess} (${validation.validDomains.length}/${domains.length})`
+        : messages.importSuccess;
+      
+      toast.success(successMessage);
     } catch (_error) {
       toast.error(messages.importError);
     }
@@ -215,7 +244,7 @@ const ExceptionsTab = () => {
               id="domain-input"
               type="text"
               value={domain}
-              onChange={(e) => setDomain(e.target.value)}
+              onChange={(e) => handleDomainChange(e.target.value)}
               placeholder="*.example.com"
               className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-slate-500 focus:ring-1 focus:ring-slate-500"
             />

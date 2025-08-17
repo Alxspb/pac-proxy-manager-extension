@@ -303,6 +303,26 @@
     "message": "예외 가져오기에 실패했습니다. 다시 시도하세요.",
     "description": "Error message when exception import fails"
   },
+  "domainRequired": {
+    "message": "도메인이 필요합니다",
+    "description": "Error message when domain field is empty"
+  },
+  "invalidDomainFormat": {
+    "message": "잘못된 도메인 형식입니다. example.com 또는 *.example.com 형식을 사용하세요",
+    "description": "Error message for invalid domain format"
+  },
+  "invalidWildcardDomain": {
+    "message": "와일드카드 도메인은 '*.'만 될 수 없습니다",
+    "description": "Error message for invalid wildcard domain"
+  },
+  "domainTooShort": {
+    "message": "도메인은 최소 두 부분이 필요합니다 (예: example.com)",
+    "description": "Error message when domain is too short"
+  },
+  "invalidDomainsFound": {
+    "message": "일부 도메인이 유효하지 않아 건너뛰었습니다",
+    "description": "Warning message when bulk import contains invalid domains"
+  },
   "aboutDescription": {
     "message": "지능적인 프록시 관리로 브라우징 경험을 제어하세요. 무료, 오픈 소스이며 사용하기 쉽습니다.",
     "description": "Main description text in About tab"
