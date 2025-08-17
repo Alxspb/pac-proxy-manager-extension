@@ -170,7 +170,11 @@ describe('PacScriptsTab Component', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/test.pac');
+        expect(fetch).toHaveBeenCalledWith('http://example.com/test.pac', expect.objectContaining({
+          method: 'GET',
+          redirect: 'follow',
+          mode: 'cors'
+        }));
         expect(indexedDBStorage.addPacScript).toHaveBeenCalledWith({
           id: expect.any(Number),
           name: 'URL Script',
@@ -269,7 +273,11 @@ describe('PacScriptsTab Component', () => {
 
       // Should fetch from URL and update script
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac');
+        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac', expect.objectContaining({
+          method: 'GET',
+          redirect: 'follow',
+          mode: 'cors'
+        }));
         expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith({
           id: 1,
           name: 'URL Script',
@@ -305,7 +313,11 @@ describe('PacScriptsTab Component', () => {
 
       // Wait for the fetch to complete and error to be handled
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac');
+        expect(fetch).toHaveBeenCalledWith('http://example.com/proxy.pac', expect.objectContaining({
+          method: 'GET',
+          redirect: 'follow',
+          mode: 'cors'
+        }));
       });
 
       // Should not update script on error
@@ -385,7 +397,11 @@ describe('PacScriptsTab Component', () => {
       await user.click(saveButton);
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith('http://example.com/new.pac');
+        expect(fetch).toHaveBeenCalledWith('http://example.com/new.pac', expect.objectContaining({
+          method: 'GET',
+          redirect: 'follow',
+          mode: 'cors'
+        }));
         expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
           expect.objectContaining({
             sourceUrl: 'http://example.com/new.pac'

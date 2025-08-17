@@ -142,11 +142,55 @@ const PacScriptsTab = () => {
   };
 
   const fetchPacScript = async (url) => {
-    const response = await fetch(url);
-    if (!response.ok) {
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-cache',
+        headers: {
+          'Accept': 'text/plain, text/javascript, application/javascript, */*'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return await response.text();
+    } catch (error) {
+      if (error.name === 'TypeError' && (error.message.includes('CORS') || error.message.includes('cors'))) {
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            redirect: 'follow'
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const text = await response.text();
+          
+          if (!text || text.trim().length === 0) {
+            throw new Error('Empty response received');
+          }
+          
+          return text;
+        } catch (fallbackError) {
+          throw new Error(messages.fetchPacScriptError + ' (Network error or CORS restriction)');
+        }
+      }
+      
+      if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('NetworkError'))) {
+        throw new Error(messages.fetchPacScriptError + ' (Network error or CORS restriction)');
+      }
+      if (error.message.startsWith('HTTP ')) {
+        throw new Error(messages.fetchPacScriptError + ' (' + error.message + ')');
+      }
       throw new Error(messages.fetchPacScriptError);
     }
-    return await response.text();
   };
 
   const handleSubmit = async (e) => {
