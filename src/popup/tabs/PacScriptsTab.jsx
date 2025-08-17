@@ -3,6 +3,7 @@ import { ExclamationTriangleIcon, PlusIcon, LinkIcon, DocumentIcon } from '@hero
 import { TrashIcon, CheckIcon, XMarkIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { Switch } from '@headlessui/react';
+import toast from 'react-hot-toast';
 import indexedDBStorage from '../../utils/indexedDB';
 import { PacScriptsSkeleton } from '../components/SkeletonLoader';
 
@@ -16,8 +17,7 @@ const PacScriptsTab = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingScriptId, setEditingScriptId] = useState(null);
   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, scriptId: null, scriptName: '' });
-  const [validationError, setValidationError] = useState('');
-  const [editValidationError, setEditValidationError] = useState('');
+  // Removed validation error states - using toast notifications instead
   const [fetchingScript, setFetchingScript] = useState(false);
   const [fetchingEditScript, setFetchingEditScript] = useState(false);
   const [reloadingScript, setReloadingScript] = useState(null);
@@ -198,11 +198,9 @@ const PacScriptsTab = () => {
     
     const error = validatePacScript(formData);
     if (error) {
-      setValidationError(error);
+      toast.error(error);
       return;
     }
-    
-    setValidationError('');
 
     let scriptContent = formData.content;
 
@@ -211,7 +209,7 @@ const PacScriptsTab = () => {
       try {
         scriptContent = await fetchPacScript(formData.url.trim());
       } catch (error) {
-        setValidationError(error.message);
+        toast.error(error.message);
         setFetchingScript(false);
         return;
       }
@@ -238,9 +236,9 @@ const PacScriptsTab = () => {
       chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
     } catch (error) {
       if (error.name === 'QuotaExceededError') {
-        setValidationError('Storage quota exceeded. PAC script is too large to save.');
+        toast.error('Storage quota exceeded. PAC script is too large to save.');
       } else {
-        setValidationError('Failed to save PAC script. Please try again.');
+        toast.error('Failed to save PAC script. Please try again.');
       }
     }
   };
@@ -260,18 +258,15 @@ const PacScriptsTab = () => {
   const cancelEdit = () => {
     setEditingScriptId(null);
     setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
-    setEditValidationError('');
   };
 
   const saveEdit = async () => {
     const error = validatePacScript(editFormData, editingScriptId);
     
     if (error) {
-      setEditValidationError(error);
+      toast.error(error);
       return;
     }
-    
-    setEditValidationError('');
 
     let scriptContent = editFormData.content;
 
@@ -280,7 +275,7 @@ const PacScriptsTab = () => {
       try {
         scriptContent = await fetchPacScript(editFormData.url.trim());
       } catch (error) {
-        setEditValidationError(error.message);
+        toast.error(error.message);
         setFetchingEditScript(false);
         return;
       }
@@ -309,9 +304,9 @@ const PacScriptsTab = () => {
       chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
     } catch (error) {
       if (error.name === 'QuotaExceededError') {
-        setEditValidationError('Storage quota exceeded. PAC script is too large to save.');
+        toast.error('Storage quota exceeded. PAC script is too large to save.');
       } else {
-        setEditValidationError('Failed to update PAC script. Please try again.');
+        toast.error('Failed to update PAC script. Please try again.');
       }
     }
   };
@@ -424,16 +419,9 @@ const PacScriptsTab = () => {
                           value={editFormData.name}
                           onChange={(e) => {
                             setEditFormData({ ...editFormData, name: e.target.value });
-                            if (editValidationError) {
-                              setEditValidationError('');
-                            }
                           }}
                           placeholder={messages.pacScriptNamePlaceholder}
-                          className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
-                            editValidationError 
-                              ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                              : 'border-slate-300 focus:border-slate-500 focus:ring-slate-500'
-                          }`}
+                          className="w-full px-2 py-1 border border-slate-300 focus:border-slate-500 focus:ring-slate-500 rounded text-sm focus:outline-none focus:ring-1"
                           disabled={fetchingEditScript}
                         />
                         {editFormData.inputType === 'url' ? (
@@ -442,16 +430,9 @@ const PacScriptsTab = () => {
                             value={editFormData.url}
                             onChange={(e) => {
                               setEditFormData({ ...editFormData, url: e.target.value });
-                              if (editValidationError) {
-                                setEditValidationError('');
-                              }
                             }}
                             placeholder={messages.pacScriptUrlPlaceholder}
-                            className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
-                              editValidationError 
-                                ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                                : 'border-slate-300 focus:border-slate-500 focus:ring-slate-500'
-                            }`}
+                            className="w-full px-2 py-1 border border-slate-300 focus:border-slate-500 focus:ring-slate-500 rounded text-sm focus:outline-none focus:ring-1"
                             disabled={fetchingEditScript}
                           />
                         ) : (
@@ -493,12 +474,7 @@ const PacScriptsTab = () => {
                             {messages.fetchingPacScript}
                           </div>
                         )}
-                        {editValidationError && !fetchingEditScript && (
-                          <div className="text-red-600 text-xs mt-1 flex items-center gap-1">
-                            <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
-                            {editValidationError}
-                          </div>
-                        )}
+
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
@@ -600,16 +576,9 @@ const PacScriptsTab = () => {
                   value={formData.name}
                   onChange={(e) => {
                     setFormData({ ...formData, name: e.target.value });
-                    if (validationError) {
-                      setValidationError('');
-                    }
                   }}
                   placeholder={messages.pacScriptNamePlaceholder}
-                  className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
-                    validationError && validationError.includes('name')
-                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-slate-500 focus:ring-slate-500'
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 focus:border-slate-500 focus:ring-slate-500 rounded-md text-sm focus:outline-none focus:ring-1"
                   required
                 />
               </div>
@@ -656,16 +625,9 @@ const PacScriptsTab = () => {
                     value={formData.url}
                     onChange={(e) => {
                       setFormData({ ...formData, url: e.target.value });
-                      if (validationError) {
-                        setValidationError('');
-                      }
                     }}
                     placeholder={messages.pacScriptUrlPlaceholder}
-                    className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
-                      validationError && validationError.includes('URL')
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 focus:border-slate-500 focus:ring-slate-500'
-                    }`}
+                    className="w-full px-3 py-2 border border-gray-300 focus:border-slate-500 focus:ring-slate-500 rounded-md text-sm focus:outline-none focus:ring-1"
                     required
                   />
                 </div>
@@ -678,17 +640,10 @@ const PacScriptsTab = () => {
                     value={formData.content}
                     onChange={(e) => {
                       setFormData({ ...formData, content: e.target.value });
-                      if (validationError) {
-                        setValidationError('');
-                      }
                     }}
                     placeholder={messages.pacScriptContentPlaceholder}
                     rows={6}
-                    className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 resize-none font-mono ${
-                      validationError && validationError.includes('content')
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 focus:border-slate-500 focus:ring-slate-500'
-                    }`}
+                    className="w-full px-3 py-2 border border-gray-300 focus:border-slate-500 focus:ring-slate-500 rounded-md text-sm focus:outline-none focus:ring-1 resize-none font-mono"
                     required
                   />
                 </div>
@@ -717,12 +672,7 @@ const PacScriptsTab = () => {
                 </Switch.Group>
               </div>
 
-              {validationError && (
-                <div className="text-red-600 text-xs flex items-center gap-1">
-                  <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
-                  {validationError}
-                </div>
-              )}
+
 
               <div className="flex gap-3">
                 <button
@@ -746,7 +696,6 @@ const PacScriptsTab = () => {
                     if (pacScripts.length > 0) {
                       setShowForm(false);
                     }
-                    setValidationError('');
                     setFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
                   }}
                   className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"

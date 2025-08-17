@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import PacScriptsTab from '../../src/popup/tabs/PacScriptsTab.jsx';
 import { createMockChrome } from '../mocks/chrome.js';
 import indexedDBStorage from '../../src/utils/indexedDB';
+import toast from 'react-hot-toast';
 
 // Mock IndexedDB storage
 vi.mock('../../src/utils/indexedDB', () => ({
@@ -13,6 +14,14 @@ vi.mock('../../src/utils/indexedDB', () => ({
     updatePacScript: vi.fn(),
     deletePacScript: vi.fn(),
     savePacScripts: vi.fn()
+  }
+}));
+
+// Mock react-hot-toast
+vi.mock('react-hot-toast', () => ({
+  default: {
+    error: vi.fn(),
+    success: vi.fn()
   }
 }));
 
@@ -211,7 +220,7 @@ describe('PacScriptsTab Component', () => {
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/Failed to fetch PAC script/)).toBeInTheDocument();
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Failed to fetch PAC script'));
       });
 
       expect(indexedDBStorage.addPacScript).not.toHaveBeenCalled();

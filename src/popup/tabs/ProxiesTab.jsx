@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import toast from 'react-hot-toast';
 import { ProxiesSkeleton } from '../components/SkeletonLoader';
 
 const ProxiesTab = () => {
@@ -17,8 +18,7 @@ const ProxiesTab = () => {
   const [editingProxyId, setEditingProxyId] = useState(null);
   const [editingUrl, setEditingUrl] = useState('');
   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, proxyId: null, proxyUrl: '' });
-  const [validationError, setValidationError] = useState('');
-  const [editValidationError, setEditValidationError] = useState('');
+  // Removed validation error states - using toast notifications instead
   const [formData, setFormData] = useState({ url: '' });
 
   useEffect(() => {
@@ -151,11 +151,9 @@ const ProxiesTab = () => {
     
     const error = validateProxyUrl(formData.url);
     if (error) {
-      setValidationError(error);
+      toast.error(error);
       return;
     }
-    
-    setValidationError('');
 
     const proxyData = {
       url: formData.url.trim(),
@@ -197,7 +195,6 @@ const ProxiesTab = () => {
   const cancelEdit = () => {
     setEditingProxyId(null);
     setEditingUrl('');
-    setEditValidationError('');
   };
 
   const saveEdit = async () => {
@@ -205,11 +202,9 @@ const ProxiesTab = () => {
     const error = validateProxyUrl(trimmedUrl, editingProxyId);
     
     if (error) {
-      setEditValidationError(error);
+      toast.error(error);
       return;
     }
-    
-    setEditValidationError('');
     
     const updatedProxies = proxies.map(proxy => 
       proxy.id === editingProxyId ? { ...proxy, url: trimmedUrl } : proxy
@@ -300,15 +295,8 @@ const ProxiesTab = () => {
                       value={editingUrl}
                       onChange={(e) => {
                         setEditingUrl(e.target.value);
-                        if (editValidationError) {
-                          setEditValidationError('');
-                        }
                       }}
-                      className={`w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 ${
-                        editValidationError 
-                          ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                          : 'border-slate-300 focus:border-slate-500 focus:ring-slate-500'
-                      }`}
+                      className="w-full px-2 py-1 border border-slate-300 focus:border-slate-500 focus:ring-slate-500 rounded text-sm focus:outline-none focus:ring-1"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           saveEdit();
@@ -322,12 +310,7 @@ const ProxiesTab = () => {
                   ) : (
                     <div className="text-sm text-gray-900 py-1">{proxy.url}</div>
                   )}
-                  {editingProxyId === proxy.id && editValidationError && (
-                    <div className="text-red-600 text-xs mt-1 flex items-center gap-1">
-                      <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
-                      {editValidationError}
-                    </div>
-                  )}
+
                 </div>
                   
                 <div className="flex gap-1">
@@ -385,24 +368,12 @@ const ProxiesTab = () => {
                   value={formData.url}
                   onChange={(e) => {
                     setFormData({ ...formData, url: e.target.value });
-                    if (validationError) {
-                      setValidationError('');
-                    }
                   }}
-                  className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 ${
-                    validationError 
-                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 focus:border-slate-500 focus:ring-slate-500'
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 focus:border-slate-500 focus:ring-slate-500 rounded-md text-sm focus:outline-none focus:ring-1"
                   placeholder="http://proxy.example.com:8080"
                   required
                 />
-                {validationError && (
-                  <div className="text-red-600 text-xs mt-1 flex items-center gap-1">
-                    <ExclamationTriangleIcon className="w-3 h-3 flex-shrink-0" />
-                    {validationError}
-                  </div>
-                )}
+
               </div>
 
               <div className="flex gap-3">
@@ -418,7 +389,6 @@ const ProxiesTab = () => {
                     if (proxies.length > 0) {
                       setShowForm(false);
                     }
-                    setValidationError('');
                     setFormData({ url: '' });
                   }}
                   className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"

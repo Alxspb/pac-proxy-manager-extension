@@ -9,3 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed PAC script fetching failures when URLs redirect or have CORS restrictions by adding host permissions and enhanced fetch logic with fallback handling
+
+### Improved  
+- Replaced custom error divs with toast notifications for cleaner, more consistent error messaging across PAC Scripts and Proxies tabs

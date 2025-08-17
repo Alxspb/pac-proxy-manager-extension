@@ -3,9 +3,18 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProxiesTab from '../../src/popup/tabs/ProxiesTab.jsx';
 import { createMockChrome } from '../mocks/chrome.js';
+import toast from 'react-hot-toast';
 
 vi.mock('chrome', () => ({
   default: {}
+}));
+
+// Mock react-hot-toast
+vi.mock('react-hot-toast', () => ({
+  default: {
+    error: vi.fn(),
+    success: vi.fn()
+  }
 }));
 
 describe('ProxiesTab Component', () => {
@@ -104,7 +113,7 @@ describe('ProxiesTab Component', () => {
       await user.click(saveButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/Invalid URL format/)).toBeInTheDocument();
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Invalid URL format'));
       });
     });
   });
