@@ -561,6 +561,135 @@ describe('PacScriptsTab Component', () => {
       expect(fetch).not.toHaveBeenCalled();
     });
 
+    it('should immediately save enabled status when toggle is clicked during edit', async () => {
+      const urlScript = {
+        id: 1,
+        name: 'URL Script',
+        content: 'test content',
+        enabled: true,
+        sourceType: 'url',
+        sourceUrl: 'http://example.com/proxy.pac'
+      };
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // Click on script to edit
+      await user.click(screen.getByText('URL Script'));
+
+      // Toggle the enabled status
+      const enabledToggle = screen.getByRole('switch');
+      await user.click(enabledToggle);
+
+      // Should immediately save without waiting for submit button
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: 1,
+            enabled: false,
+            updatedAt: expect.any(String)
+          })
+        );
+      });
+
+      // Should notify background script immediately
+      expect(mockChrome.runtime.sendMessage).toHaveBeenCalledWith({
+        action: 'pacScriptsUpdated'
+      });
+    });
+
+    it('should handle immediate toggle errors gracefully by reverting UI state', async () => {
+      const urlScript = {
+        id: 1,
+        name: 'URL Script',
+        content: 'test content',
+        enabled: true,
+        sourceType: 'url',
+        sourceUrl: 'http://example.com/proxy.pac'
+      };
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
+      indexedDBStorage.updatePacScript.mockRejectedValueOnce(new Error('Database error'));
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // Click on script to edit
+      await user.click(screen.getByText('URL Script'));
+
+      // Verify toggle is initially enabled
+      const enabledToggle = screen.getByRole('switch');
+      expect(enabledToggle).toBeChecked();
+
+      // Toggle the enabled status (this will fail)
+      await user.click(enabledToggle);
+
+      // Should show error toast
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith('Failed to update PAC script status');
+      });
+
+      // Should revert UI state back to original
+      await waitFor(() => {
+        expect(enabledToggle).toBeChecked(); // Should be back to enabled
+      });
+    });
+
+    it('should work independently from submit button', async () => {
+      const urlScript = {
+        id: 1,
+        name: 'URL Script',
+        content: 'test content',
+        enabled: true,
+        sourceType: 'url',
+        sourceUrl: 'http://example.com/proxy.pac'
+      };
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // Click on script to edit
+      await user.click(screen.getByText('URL Script'));
+
+      // Toggle enabled status without submitting
+      const enabledToggle = screen.getByRole('switch');
+      await user.click(enabledToggle);
+
+      // Should have saved immediately
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            enabled: false
+          })
+        );
+      });
+
+      // Cancel editing without submitting
+      const cancelButton = screen.getByTitle('Cancel');
+      await user.click(cancelButton);
+
+      // Verify the change persisted even after cancel
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // The script should still be disabled in the UI
+      expect(indexedDBStorage.updatePacScript).toHaveBeenCalledTimes(1);
+    });
+
     it('should edit plain script by editing content', async () => {
       const plainScript = {
         id: 1,

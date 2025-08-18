@@ -325,6 +325,34 @@ const PacScriptsTab = () => {
     }
   };
 
+  const handleImmediateToggle = async (enabled) => {
+    const currentScript = pacScripts.find(script => script.id === editingScriptId);
+    if (!currentScript) {
+      return;
+    }
+
+    const updatedScript = {
+      ...currentScript,
+      enabled: enabled,
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      await indexedDBStorage.updatePacScript(updatedScript);
+      const updatedScripts = pacScripts.map(script => 
+        script.id === editingScriptId ? updatedScript : script
+      );
+      setPacScripts(updatedScripts);
+      setEditFormData({ ...editFormData, enabled });
+      
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
+    } catch (error) {
+      toast.error('Failed to update PAC script status');
+      // Revert the UI state on error
+      setEditFormData({ ...editFormData, enabled: currentScript.enabled });
+    }
+  };
+
   const showDeleteDialog = (script) => {
     setDeleteDialog({ 
       isOpen: true, 
@@ -467,7 +495,7 @@ const PacScriptsTab = () => {
                               </Switch.Label>
                               <Switch
                                 checked={editFormData.enabled}
-                                onChange={(enabled) => setEditFormData({ ...editFormData, enabled })}
+                                onChange={handleImmediateToggle}
                                 disabled={fetchingEditScript}
                                 className={`relative inline-flex h-4 w-8 shrink-0 cursor-pointer rounded-full border-2 border-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
                                   editFormData.enabled ? 'bg-slate-500' : 'bg-gray-200'

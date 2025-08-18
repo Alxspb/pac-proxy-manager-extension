@@ -30,3 +30,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - Optimized PAC script editing to only reload script content when URL changes, preventing unnecessary network requests and improving performance
+- Enable/disable switch in PAC script editing now takes effect immediately without requiring form submission, providing better user feedback and interaction
