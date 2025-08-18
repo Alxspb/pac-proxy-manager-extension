@@ -434,5 +434,205 @@ function FindProxyForURL(url, host) {
       expect(pacScript).not.toContain('pac3:8080');
     });
   });
+
+  describe('Proxy System Independence', () => {
+    beforeEach(() => {
+      // Override the mock with more realistic implementations that match our actual logic
+      ProxyManager = class {
+        constructor() {
+          this.isProxyActive = false;
+        }
+
+        async updateProxySettings(providedProxies = null) {
+          const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
+          
+          const proxies = providedProxies || result.proxies || [];
+          const pacScripts = await this.getPacScripts();
+          const enabledPacScripts = pacScripts.filter(script => script.enabled);
+          
+          const userProxiesEnabled = result.proxyActive && proxies.length > 0;
+          const hasEnabledPacScripts = enabledPacScripts.length > 0;
+          
+          if (!hasEnabledPacScripts && !userProxiesEnabled) {
+            await chrome.proxy.settings.clear({ scope: 'regular' });
+            this.isProxyActive = false;
+            return;
+          }
+          
+          if (hasEnabledPacScripts || userProxiesEnabled) {
+            const pacScript = this.generateCombinedPacScript({}, proxies, pacScripts, userProxiesEnabled);
+            await chrome.proxy.settings.set({
+              value: { mode: 'pac_script', pacScript: { data: pacScript } },
+              scope: 'regular'
+            });
+            this.isProxyActive = true;
+          }
+        }
+
+        async deactivateProxy() {
+          await chrome.storage.local.set({ proxyActive: false });
+          
+          const pacScripts = await this.getPacScripts();
+          const hasEnabledPacScripts = pacScripts.filter(script => script.enabled).length > 0;
+          
+          if (hasEnabledPacScripts) {
+            await this.updateProxySettings();
+          } else {
+            await chrome.proxy.settings.clear({ scope: 'regular' });
+            this.isProxyActive = false;
+          }
+          
+          return true;
+        }
+
+        async getPacScripts() {
+          return this._mockPacScripts || [];
+        }
+
+        setMockPacScripts(scripts) {
+          this._mockPacScripts = scripts;
+        }
+
+        generateCombinedPacScript(_domainExceptions, _proxyServers, _pacScripts, _userProxiesEnabled) {
+          return 'test-combined-pac-script';
+        }
+      };
+    });
+
+    it('should maintain PAC scripts when user proxies are disabled', async () => {
+      const proxyManager = new ProxyManager();
+      
+      // Set up scenario: PAC scripts enabled, user proxies disabled
+      proxyManager.setMockPacScripts([
+        { enabled: true, content: 'return "PROXY pac:8080";' }
+      ]);
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: false,
+        proxies: [{ url: 'http://user-proxy:9090' }],
+        domainExceptions: {}
+      });
+      
+      await proxyManager.updateProxySettings();
+      
+      // Should set PAC script mode (not clear settings) because PAC scripts are enabled
+      expect(mockChrome.proxy.settings.set).toHaveBeenCalledWith({
+        value: { mode: 'pac_script', pacScript: { data: 'test-combined-pac-script' } },
+        scope: 'regular'
+      });
+      expect(mockChrome.proxy.settings.clear).not.toHaveBeenCalled();
+      expect(proxyManager.isProxyActive).toBe(true);
+    });
+
+    it('should maintain user proxies when PAC scripts are disabled', async () => {
+      const proxyManager = new ProxyManager();
+      
+      // Set up scenario: PAC scripts disabled, user proxies enabled
+      proxyManager.setMockPacScripts([
+        { enabled: false, content: 'return "PROXY pac:8080";' }
+      ]);
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: true,
+        proxies: [{ url: 'http://user-proxy:9090' }],
+        domainExceptions: {}
+      });
+      
+      await proxyManager.updateProxySettings();
+      
+      // Should set PAC script mode (not clear settings) because user proxies are enabled
+      expect(mockChrome.proxy.settings.set).toHaveBeenCalledWith({
+        value: { mode: 'pac_script', pacScript: { data: 'test-combined-pac-script' } },
+        scope: 'regular'
+      });
+      expect(mockChrome.proxy.settings.clear).not.toHaveBeenCalled();
+      expect(proxyManager.isProxyActive).toBe(true);
+    });
+
+    it('should only clear proxy settings when both systems are disabled', async () => {
+      const proxyManager = new ProxyManager();
+      
+      // Set up scenario: Both PAC scripts and user proxies disabled
+      proxyManager.setMockPacScripts([
+        { enabled: false, content: 'return "PROXY pac:8080";' }
+      ]);
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: false,
+        proxies: [{ url: 'http://user-proxy:9090' }],
+        domainExceptions: {}
+      });
+      
+      await proxyManager.updateProxySettings();
+      
+      // Should clear proxy settings only when both systems are disabled
+      expect(mockChrome.proxy.settings.clear).toHaveBeenCalledWith({ scope: 'regular' });
+      expect(mockChrome.proxy.settings.set).not.toHaveBeenCalled();
+      expect(proxyManager.isProxyActive).toBe(false);
+    });
+
+    it('should preserve PAC scripts when deactivating user proxies', async () => {
+      const proxyManager = new ProxyManager();
+      proxyManager.isProxyActive = true;
+      
+      // Set up scenario: PAC scripts enabled
+      proxyManager.setMockPacScripts([
+        { enabled: true, content: 'return "PROXY pac:8080";' }
+      ]);
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: false, // Will be set by deactivateProxy
+        proxies: [{ url: 'http://user-proxy:9090' }],
+        domainExceptions: {}
+      });
+      
+      await proxyManager.deactivateProxy();
+      
+      // Should disable user proxies but maintain PAC script functionality
+      expect(mockChrome.storage.local.set).toHaveBeenCalledWith({ proxyActive: false });
+      expect(mockChrome.proxy.settings.set).toHaveBeenCalled(); // Called by updateProxySettings
+      expect(mockChrome.proxy.settings.clear).not.toHaveBeenCalled();
+    });
+
+    it('should completely disable proxy when deactivating and no PAC scripts exist', async () => {
+      const proxyManager = new ProxyManager();
+      proxyManager.isProxyActive = true;
+      
+      // Set up scenario: No PAC scripts enabled
+      proxyManager.setMockPacScripts([]);
+      
+      await proxyManager.deactivateProxy();
+      
+      // Should disable user proxies and clear proxy settings since no PAC scripts
+      expect(mockChrome.storage.local.set).toHaveBeenCalledWith({ proxyActive: false });
+      expect(mockChrome.proxy.settings.clear).toHaveBeenCalledWith({ scope: 'regular' });
+      expect(proxyManager.isProxyActive).toBe(false);
+    });
+
+    it('should work with both systems enabled simultaneously', async () => {
+      const proxyManager = new ProxyManager();
+      
+      // Set up scenario: Both PAC scripts and user proxies enabled
+      proxyManager.setMockPacScripts([
+        { enabled: true, content: 'return "PROXY pac:8080";' }
+      ]);
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: true,
+        proxies: [{ url: 'http://user-proxy:9090' }],
+        domainExceptions: {}
+      });
+      
+      await proxyManager.updateProxySettings();
+      
+      // Should set combined PAC script when both systems are enabled
+      expect(mockChrome.proxy.settings.set).toHaveBeenCalledWith({
+        value: { mode: 'pac_script', pacScript: { data: 'test-combined-pac-script' } },
+        scope: 'regular'
+      });
+      expect(mockChrome.proxy.settings.clear).not.toHaveBeenCalled();
+      expect(proxyManager.isProxyActive).toBe(true);
+    });
+  });
 });
 

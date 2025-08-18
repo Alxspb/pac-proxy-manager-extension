@@ -172,24 +172,27 @@ function FindProxyForURL(url, host) {
       const userProxiesEnabled = result.proxyActive && proxies.length > 0;
       const hasEnabledPacScripts = enabledPacScripts.length > 0;
       
-      if (!hasEnabledPacScripts) {
-        await this.deactivateProxy();
+      if (!hasEnabledPacScripts && !userProxiesEnabled) {
+        await chrome.proxy.settings.clear({ scope: 'regular' });
+        this.isProxyActive = false;
         return;
       }
       
-      const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts, userProxiesEnabled);
-      
-      await chrome.proxy.settings.set({
-        value: {
-          mode: 'pac_script',
-          pacScript: {
-            data: pacScript
-          }
-        },
-        scope: 'regular'
-      });
+      if (hasEnabledPacScripts || userProxiesEnabled) {
+        const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts, userProxiesEnabled);
+        
+        await chrome.proxy.settings.set({
+          value: {
+            mode: 'pac_script',
+            pacScript: {
+              data: pacScript
+            }
+          },
+          scope: 'regular'
+        });
 
-      this.isProxyActive = true;
+        this.isProxyActive = true;
+      }
     } catch (_error) {
       // Silently ignore errors
     }
@@ -215,9 +218,18 @@ function FindProxyForURL(url, host) {
 
   async deactivateProxy() {
     try {
-      await chrome.proxy.settings.clear({ scope: 'regular' });
       await chrome.storage.local.set({ proxyActive: false });
-      this.isProxyActive = false;
+      
+      const pacScripts = await indexedDBStorage.getPacScripts();
+      const hasEnabledPacScripts = pacScripts.filter(script => script.enabled).length > 0;
+      
+      if (hasEnabledPacScripts) {
+        await this.updateProxySettings();
+      } else {
+        await chrome.proxy.settings.clear({ scope: 'regular' });
+        this.isProxyActive = false;
+      }
+      
       return true;
     } catch (error) {
       return false;

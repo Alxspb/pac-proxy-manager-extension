@@ -368,6 +368,224 @@ describe('PacScriptsTab Component', () => {
     });
   });
 
+  describe('PAC script List View Toggle', () => {
+    it('should display toggle switch for each script in list view', async () => {
+      const mockScripts = [
+        {
+          id: 1,
+          name: 'Enabled Script',
+          content: 'content1',
+          enabled: true,
+          sourceType: 'plain',
+          sourceUrl: null
+        },
+        {
+          id: 2,
+          name: 'Disabled Script',
+          content: 'content2',
+          enabled: false,
+          sourceType: 'url',
+          sourceUrl: 'http://example.com/proxy.pac'
+        }
+      ];
+
+      indexedDBStorage.getPacScripts.mockResolvedValue(mockScripts);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Enabled Script')).toBeInTheDocument();
+        expect(screen.getByText('Disabled Script')).toBeInTheDocument();
+      });
+
+      // Should have toggle switches for both scripts
+      const toggles = screen.getAllByRole('switch');
+      expect(toggles).toHaveLength(2);
+
+      // First toggle should be enabled (checked)
+      expect(toggles[0]).toBeChecked();
+      // Second toggle should be disabled (unchecked)
+      expect(toggles[1]).not.toBeChecked();
+    });
+
+    it('should immediately toggle script status when clicked in list view', async () => {
+      const mockScripts = [
+        {
+          id: 1,
+          name: 'Test Script 1',
+          content: 'content1',
+          enabled: true,
+          sourceType: 'plain',
+          sourceUrl: null
+        },
+        {
+          id: 2,
+          name: 'Test Script 2',
+          content: 'content2',
+          enabled: false,
+          sourceType: 'url',
+          sourceUrl: 'http://example.com/test.pac'
+        }
+      ];
+
+      indexedDBStorage.getPacScripts.mockResolvedValue(mockScripts);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Script 1')).toBeInTheDocument();
+        expect(screen.getByText('Test Script 2')).toBeInTheDocument();
+      });
+
+      const toggles = screen.getAllByRole('switch');
+      expect(toggles[0]).toBeChecked(); // First script enabled
+      expect(toggles[1]).not.toBeChecked(); // Second script disabled
+
+      // Click the first toggle to disable it
+      await user.click(toggles[0]);
+
+      // Should immediately update the database
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: 1,
+            enabled: false,
+            updatedAt: expect.any(String)
+          })
+        );
+      });
+
+      // Should notify background script
+      expect(mockChrome.runtime.sendMessage).toHaveBeenCalledWith({
+        action: 'pacScriptsUpdated'
+      });
+    });
+
+    it('should handle list toggle errors gracefully by reverting state', async () => {
+      const mockScript = {
+        id: 1,
+        name: 'Test Script',
+        content: 'content',
+        enabled: true,
+        sourceType: 'plain',
+        sourceUrl: null
+      };
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([mockScript]);
+      indexedDBStorage.updatePacScript.mockRejectedValueOnce(new Error('Database error'));
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Script')).toBeInTheDocument();
+      });
+
+      const toggle = screen.getByRole('switch');
+      expect(toggle).toBeChecked();
+
+      // Click the toggle (this will fail)
+      await user.click(toggle);
+
+      // Should show error toast
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith('Failed to update PAC script status');
+      });
+
+      // Should revert UI state back to original
+      await waitFor(() => {
+        expect(toggle).toBeChecked(); // Should be back to enabled
+      });
+    });
+
+    it('should prevent edit mode when clicking toggle switch', async () => {
+      const mockScripts = [
+        {
+          id: 1,
+          name: 'Test Script',
+          content: 'content',
+          enabled: true,
+          sourceType: 'plain',
+          sourceUrl: null
+        }
+      ];
+
+      indexedDBStorage.getPacScripts.mockResolvedValue(mockScripts);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Script')).toBeInTheDocument();
+      });
+
+      // Click the toggle switch - should NOT trigger edit mode
+      const toggle = screen.getByRole('switch');
+      await user.click(toggle);
+
+      // Should update the script status
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            enabled: false
+          })
+        );
+      });
+
+      // Should still be in list view (not edit mode)
+      // Edit mode would show input fields, but we should still see the script name as text
+      expect(screen.getByText('Test Script')).toBeInTheDocument();
+      
+      // Should not see edit mode input field
+      const inputField = screen.queryByDisplayValue('Test Script');
+      expect(inputField).not.toBeInTheDocument();
+    });
+
+    it('should update optimistically and show immediate visual feedback', async () => {
+      const mockScript = {
+        id: 1,
+        name: 'Test Script',
+        content: 'content',
+        enabled: false,
+        sourceType: 'plain',
+        sourceUrl: null
+      };
+
+      // Mock a slow database update
+      let resolveUpdate;
+      const slowUpdate = new Promise(resolve => {
+        resolveUpdate = resolve;
+      });
+      indexedDBStorage.updatePacScript.mockReturnValueOnce(slowUpdate);
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([mockScript]);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Script')).toBeInTheDocument();
+      });
+
+      const toggle = screen.getByRole('switch');
+      expect(toggle).not.toBeChecked();
+
+      // Click the toggle
+      await user.click(toggle);
+
+      // Should immediately show as enabled (optimistic update)
+      await waitFor(() => {
+        expect(toggle).toBeChecked();
+      });
+
+      // Complete the database update
+      resolveUpdate();
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalled();
+      });
+
+      // Should still be enabled
+      expect(toggle).toBeChecked();
+    });
+  });
+
   describe('PAC script Editing', () => {
     it('should edit URL-based script by editing URL', async () => {
       const urlScript = {

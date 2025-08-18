@@ -27,7 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added inline enable/disable toggles for PAC scripts in list view  
 - Fixed storage inconsistency between chrome.storage and IndexedDB for PAC scripts
 - Updated test suite to reflect new PAC proxy logic and architecture
+- Fixed PAC script toggles incorrectly affecting user proxy switch - systems now operate independently
 
 ### Improved
 - Optimized PAC script editing to only reload script content when URL changes, preventing unnecessary network requests and improving performance
 - Enable/disable switch in PAC script editing now takes effect immediately without requiring form submission, providing better user feedback and interaction
+- Added enable/disable toggle switches directly in PAC script list view for quick status changes without entering edit mode

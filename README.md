@@ -155,6 +155,30 @@ graph TD
     F1 --> F2[Result: PAC scripts work independently<br/>No domain exceptions, no user override]
 ```
 
+### System Independence Architecture
+The extension ensures complete independence between PAC scripts and user proxy settings:
+
+```mermaid
+graph TB
+    A["User Proxy Toggle"] --> A1["Only affects proxyActive flag"]
+    B["PAC Script Toggle"] --> B1["Only affects PAC script enabled state"]
+    
+    A1 --> C["Combined Logic Check"]
+    B1 --> C
+    
+    C --> D{"Both Disabled?"}
+    D -->|Yes| E["Clear All Proxy Settings"]
+    D -->|No| F["Generate Combined PAC Script"]
+    
+    F --> G["Include User Proxies if enabled"]
+    F --> H["Include PAC Scripts if enabled"]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style F fill:#f3e5f5
+```
+
 ### Key Design Principles
 - **User Proxy Toggle**: Controls user-defined proxies and domain exceptions only
 - **PAC Scripts**: Work independently when user proxy toggle is OFF

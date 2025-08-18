@@ -353,6 +353,39 @@ const PacScriptsTab = () => {
     }
   };
 
+  const handleListToggle = async (scriptId, enabled) => {
+    const currentScript = pacScripts.find(script => script.id === scriptId);
+    if (!currentScript) {
+      return;
+    }
+
+    const originalEnabled = currentScript.enabled;
+    
+    // Optimistically update UI first
+    const optimisticScripts = pacScripts.map(script => 
+      script.id === scriptId ? { ...script, enabled } : script
+    );
+    setPacScripts(optimisticScripts);
+
+    const updatedScript = {
+      ...currentScript,
+      enabled: enabled,
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      await indexedDBStorage.updatePacScript(updatedScript);
+      chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
+    } catch (error) {
+      toast.error('Failed to update PAC script status');
+      // Revert the UI state on error
+      const revertedScripts = pacScripts.map(script => 
+        script.id === scriptId ? { ...script, enabled: originalEnabled } : script
+      );
+      setPacScripts(revertedScripts);
+    }
+  };
+
   const showDeleteDialog = (script) => {
     setDeleteDialog({ 
       isOpen: true, 
@@ -564,6 +597,27 @@ const PacScriptsTab = () => {
                       </>
                     ) : (
                       <>
+                        <div 
+                          className="p-1 flex items-center justify-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Switch
+                            checked={script.enabled}
+                            onChange={(enabled) => {
+                              handleListToggle(script.id, enabled);
+                            }}
+                            className={`relative inline-flex h-4 w-7 shrink-0 cursor-pointer rounded-full border-2 border-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
+                              script.enabled ? 'bg-slate-500' : 'bg-gray-200'
+                            }`}
+                            title={script.enabled ? messages.enabled : messages.disabled}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow-lg ring-0 transition ${
+                                script.enabled ? 'translate-x-3' : 'translate-x-0'
+                              }`}
+                            />
+                          </Switch>
+                        </div>
                         {script.sourceType === 'url' && (
                           <button 
                             onClick={(e) => {
