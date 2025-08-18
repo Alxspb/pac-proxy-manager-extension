@@ -9,8 +9,7 @@
     "test": "vitest --run",
     "lint": "eslint src/ tests/ --ext .js,.jsx",
     "lint:fix": "eslint src/ tests/ --ext .js,.jsx --fix",
-    "zip": "powershell -Command \"Compress-Archive -Path 'manifest.json','dist','icons','_locales' -DestinationPath 'chrome-extension.zip' -Force\"",
-    "package": "npm run build && npm run zip"
+    "package": "npm run build && powershell -Command \"Compress-Archive -Path 'manifest.json','dist','icons','_locales' -DestinationPath 'chrome-extension.zip' -Force\""
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",

@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "当配置这些代理服务器时，它们将替代PAC脚本代理使用",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "这些代理服务器用于：1）启用时的域名例外，2）当两者都存在时覆盖PAC脚本代理选择",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "域名例外需要首先配置代理服务器",

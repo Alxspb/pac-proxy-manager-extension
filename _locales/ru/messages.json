@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "Эти прокси-серверы будут использоваться вместо прокси из PAC скриптов",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "Эти прокси-серверы используются для: 1) Исключений доменов, 2) Переопределения прокси PAC-скрипта",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "Для работы исключений доменов необходимо сначала настроить прокси-серверы",

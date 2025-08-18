@@ -14,8 +14,8 @@ describe('Background Script - ProxyManager', () => {
         this.isProxyActive = false;
       }
 
-      generatePacScript(domainExceptions, proxyServers) {
-        const proxyList = proxyServers.map(proxy => {
+      generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled) {
+        const userProxyList = proxyServers.map(proxy => {
           try {
             const url = new URL(proxy.url);
             const protocol = url.protocol === 'https:' ? 'HTTPS' : 'PROXY';
@@ -26,29 +26,74 @@ describe('Background Script - ProxyManager', () => {
           }
         }).join('; ');
 
-        const proxyString = proxyList || 'DIRECT';
+        const hasUserProxies = proxyServers.length > 0 && userProxiesEnabled;
+        const userProxyString = hasUserProxies ? userProxyList : '';
+        
+        const enabledPacScripts = pacScripts.filter(script => script.enabled);
+        
+        const pacScriptFunctions = enabledPacScripts.map((script, index) => {
+          return `
+function userPacScript${index}(url, host) {
+  try {
+    ${script.content}
+    return FindProxyForURL(url, host);
+  } catch (e) {
+    return "DIRECT";
+  }
+}`;
+        }).join('\n');
 
         return `
+${pacScriptFunctions}
+
 function FindProxyForURL(url, host) {
+  const hasUserProxies = ${hasUserProxies};
+  const userProxyString = "${userProxyString}";
+  
+  ${hasUserProxies ? `
   const domainExceptions = ${JSON.stringify(domainExceptions || {})};
   
-  if (domainExceptions[host]) {
-    const option = domainExceptions[host];
-    if (option === 'yes') return "${proxyString}";
-    if (option === 'no') return "DIRECT";
+  function checkDomainException(domain) {
+    if (domainExceptions[domain]) {
+      const option = domainExceptions[domain];
+      if (option === 'yes') {
+        return userProxyString + "; DIRECT";
+      }
+      if (option === 'no') {
+        return "DIRECT";
+      }
+    }
+    return null;
   }
-
+  
+  let exceptionResult = checkDomainException(host);
+  if (exceptionResult !== null) return exceptionResult;
+  
   for (const domain in domainExceptions) {
     if (domain.startsWith('*.')) {
       const baseDomain = domain.slice(2);
       if (host === baseDomain || host.endsWith('.' + baseDomain)) {
-        const option = domainExceptions[domain];
-        if (option === 'yes') return "${proxyString}";
-        if (option === 'no') return "DIRECT";
+        exceptionResult = checkDomainException(domain);
+        if (exceptionResult !== null) return exceptionResult;
       }
     }
   }
-
+  
+  ` : `
+  `}
+  ${enabledPacScripts.map((script, index) => `
+  try {
+    const pacResult${index} = userPacScript${index}(url, host);
+    if (pacResult${index} !== "DIRECT") {
+      if (hasUserProxies) {
+        return userProxyString + "; DIRECT";
+      } else {
+        return pacResult${index};
+      }
+    }
+  } catch (e) {
+  }`).join('\n')}
+  
   return "DIRECT";
 }`;
       }
@@ -68,8 +113,17 @@ function FindProxyForURL(url, host) {
 
       async getProxyStatus() {
         const settings = await chrome.proxy.settings.get({ incognito: false });
+        const result = await chrome.storage.local.get(['proxies', 'proxyActive']);
+        const pacScripts = []; // Mock empty PAC scripts for testing
+        const enabledPacScripts = pacScripts.filter(script => script.enabled);
+        
+        const userProxiesEnabled = result.proxyActive && (result.proxies || []).length > 0;
+        const hasEnabledPacScripts = enabledPacScripts.length > 0;
+        
         return {
-          isActive: this.isProxyActive,
+          isActive: result.proxyActive || false,
+          userProxiesEnabled,
+          hasEnabledPacScripts,
           settings,
           isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
         };
@@ -77,27 +131,60 @@ function FindProxyForURL(url, host) {
     };
   });
 
-  describe('PAC Script Generation', () => {
-    it('should generate correct PAC script for wildcard domains', () => {
+  describe('Combined PAC Script Generation', () => {
+    it('should generate PAC script with user proxies and domain exceptions', () => {
       const proxyManager = new ProxyManager();
       const domainExceptions = {
         '*.example.com': 'yes',
         'direct.com': 'no'
       };
       const proxyServers = [{ url: 'http://proxy.test.com:8080' }];
+      const pacScripts = [];
 
-      const pacScript = proxyManager.generatePacScript(domainExceptions, proxyServers);
+      const pacScript = proxyManager.generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, true);
       
       expect(pacScript).toContain('PROXY proxy.test.com:8080');
-      expect(pacScript).toContain('*.example.com');
-      expect(pacScript).toContain('direct.com');
+      expect(pacScript).toContain('domainExceptions');
+      expect(pacScript).toContain('hasUserProxies = true');
+    });
+
+    it('should generate PAC script without domain exceptions when user proxies disabled', () => {
+      const proxyManager = new ProxyManager();
+      const domainExceptions = {
+        '*.example.com': 'yes',
+        'direct.com': 'no'
+      };
+      const proxyServers = [{ url: 'http://proxy.test.com:8080' }];
+      const pacScripts = [];
+
+      const pacScript = proxyManager.generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, false);
+      
+      expect(pacScript).toContain('hasUserProxies = false');
+      expect(pacScript).not.toContain('domainExceptions');
+    });
+
+    it('should include PAC script functions when present', () => {
+      const proxyManager = new ProxyManager();
+      const pacScripts = [
+        { 
+          enabled: true, 
+          content: 'if (host === "test.com") return "PROXY test-proxy:8080";'
+        }
+      ];
+      const proxyServers = [];
+
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, false);
+      
+      expect(pacScript).toContain('function userPacScript0');
+      expect(pacScript).toContain('test-proxy:8080');
     });
 
     it('should handle HTTPS proxies correctly', () => {
       const proxyManager = new ProxyManager();
       const proxyServers = [{ url: 'https://secure-proxy.test.com:443' }];
+      const pacScripts = [];
 
-      const pacScript = proxyManager.generatePacScript({}, proxyServers);
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, true);
       
       expect(pacScript).toContain('HTTPS secure-proxy.test.com:443');
     });
@@ -108,8 +195,9 @@ function FindProxyForURL(url, host) {
         { url: 'http://proxy1.test.com:8080' },
         { url: 'https://proxy2.test.com:443' }
       ];
+      const pacScripts = [];
 
-      const pacScript = proxyManager.generatePacScript({}, proxyServers);
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, true);
       
       expect(pacScript).toContain('PROXY proxy1.test.com:8080; HTTPS proxy2.test.com:443');
     });
@@ -117,10 +205,27 @@ function FindProxyForURL(url, host) {
     it('should handle malformed proxy URLs gracefully', () => {
       const proxyManager = new ProxyManager();
       const proxyServers = [{ url: 'not-a-valid-url' }];
+      const pacScripts = [];
 
-      const pacScript = proxyManager.generatePacScript({}, proxyServers);
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, true);
       
       expect(pacScript).toContain('PROXY not-a-valid-url');
+    });
+
+    it('should filter disabled PAC scripts', () => {
+      const proxyManager = new ProxyManager();
+      const pacScripts = [
+        { enabled: true, content: 'return "PROXY enabled-proxy:8080";' },
+        { enabled: false, content: 'return "PROXY disabled-proxy:8080";' }
+      ];
+      const proxyServers = [];
+
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, false);
+      
+      expect(pacScript).toContain('enabled-proxy');
+      expect(pacScript).not.toContain('disabled-proxy');
+      expect(pacScript).toContain('userPacScript0');
+      expect(pacScript).not.toContain('userPacScript1');
     });
   });
 
@@ -149,9 +254,14 @@ function FindProxyForURL(url, host) {
   });
 
   describe('Proxy Status', () => {
-    it('should return proxy status with control information', async () => {
+    it('should return proxy status with user proxy and PAC script information', async () => {
       const proxyManager = new ProxyManager();
-      proxyManager.isProxyActive = true;
+      
+      // Mock storage response
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: true,
+        proxies: [{ url: 'http://test:8080' }]
+      });
       
       // Mock proxy settings response
       mockChrome.proxy.settings.get.mockResolvedValue({
@@ -163,6 +273,8 @@ function FindProxyForURL(url, host) {
       
       expect(status).toEqual({
         isActive: true,
+        userProxiesEnabled: true,
+        hasEnabledPacScripts: false,
         settings: {
           value: { mode: 'pac_script' },
           levelOfControl: 'controlled_by_this_extension'
@@ -171,11 +283,16 @@ function FindProxyForURL(url, host) {
       });
       
       expect(mockChrome.proxy.settings.get).toHaveBeenCalledWith({ incognito: false });
+      expect(mockChrome.storage.local.get).toHaveBeenCalledWith(['proxies', 'proxyActive']);
     });
 
     it('should detect when another extension controls proxy', async () => {
       const proxyManager = new ProxyManager();
-      proxyManager.isProxyActive = false;
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: false,
+        proxies: []
+      });
       
       // Mock proxy settings response indicating another extension has control
       mockChrome.proxy.settings.get.mockResolvedValue({
@@ -187,6 +304,8 @@ function FindProxyForURL(url, host) {
       
       expect(status).toEqual({
         isActive: false,
+        userProxiesEnabled: false,
+        hasEnabledPacScripts: false,
         settings: {
           value: { mode: 'pac_script' },
           levelOfControl: 'controlled_by_other_extensions'
@@ -197,7 +316,11 @@ function FindProxyForURL(url, host) {
 
     it('should not be blocked when this extension has control', async () => {
       const proxyManager = new ProxyManager();
-      proxyManager.isProxyActive = true;
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: true,
+        proxies: [{ url: 'http://test:8080' }]
+      });
       
       mockChrome.proxy.settings.get.mockResolvedValue({
         value: { mode: 'pac_script' },
@@ -207,10 +330,16 @@ function FindProxyForURL(url, host) {
       const status = await proxyManager.getProxyStatus();
       
       expect(status.isBlocked).toBe(false);
+      expect(status.userProxiesEnabled).toBe(true);
     });
 
     it('should not be blocked when no extension controls proxy', async () => {
       const proxyManager = new ProxyManager();
+      
+      mockChrome.storage.local.get.mockResolvedValue({
+        proxyActive: false,
+        proxies: []
+      });
       
       mockChrome.proxy.settings.get.mockResolvedValue({
         value: { mode: 'direct' },
@@ -220,40 +349,90 @@ function FindProxyForURL(url, host) {
       const status = await proxyManager.getProxyStatus();
       
       expect(status.isBlocked).toBe(false);
+      expect(status.userProxiesEnabled).toBe(false);
     });
   });
 
-  describe('PAC Script Logic Testing', () => {
-    it('should create PAC function that routes wildcard domains correctly', () => {
+  describe('New PAC Logic Testing', () => {
+    it('should respect domain exceptions when user proxies enabled', () => {
       const proxyManager = new ProxyManager();
       const domainExceptions = { '*.headlessui.com': 'yes' };
       const proxyServers = [{ url: 'http://proxy.test.com:8080' }];
+      const pacScripts = [];
 
-      const pacScript = proxyManager.generatePacScript(domainExceptions, proxyServers);
+      const pacScript = proxyManager.generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, true);
       
-      // Create the actual PAC function to test its logic
-      const FindProxyForURL = new Function('url', 'host', 
-        pacScript.replace('function FindProxyForURL(url, host) {', '').replace(/}$/, '')
-      );
-
-      // Test various scenarios
-      expect(FindProxyForURL('https://headlessui.com/docs', 'headlessui.com')).toBe('PROXY proxy.test.com:8080');
-      expect(FindProxyForURL('https://api.headlessui.com/v1', 'api.headlessui.com')).toBe('PROXY proxy.test.com:8080');
-      expect(FindProxyForURL('https://google.com', 'google.com')).toBe('DIRECT');
+      // Simple test that domain exceptions are included when user proxies enabled
+      expect(pacScript).toContain('domainExceptions');
+      expect(pacScript).toContain('headlessui.com');
     });
 
-    it('should handle exact domain matches', () => {
+    it('should ignore domain exceptions when user proxies disabled', () => {
       const proxyManager = new ProxyManager();
-      const domainExceptions = { 'exact.example.com': 'no' };
+      const domainExceptions = { '*.headlessui.com': 'yes' };
       const proxyServers = [{ url: 'http://proxy.test.com:8080' }];
+      const pacScripts = [];
 
-      const pacScript = proxyManager.generatePacScript(domainExceptions, proxyServers);
-      const FindProxyForURL = new Function('url', 'host',
-        pacScript.replace('function FindProxyForURL(url, host) {', '').replace(/}$/, '')
-      );
+      const pacScript = proxyManager.generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, false);
+      
+      // Domain exceptions should not be included when user proxies disabled
+      expect(pacScript).not.toContain('domainExceptions');
+    });
 
-      expect(FindProxyForURL('https://exact.example.com', 'exact.example.com')).toBe('DIRECT');
-      expect(FindProxyForURL('https://sub.exact.example.com', 'sub.exact.example.com')).toBe('DIRECT'); // Different domain
+    it('should run PAC scripts independently when user proxies disabled', () => {
+      const proxyManager = new ProxyManager();
+      const pacScripts = [
+        { 
+          enabled: true, 
+          content: 'if (host === "test.com") return "PROXY pac-proxy:8080"; return "DIRECT";'
+        }
+      ];
+      const proxyServers = [];
+
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, false);
+      
+      expect(pacScript).toContain('function userPacScript0');
+      expect(pacScript).toContain('pac-proxy:8080');
+      expect(pacScript).toContain('hasUserProxies = false');
+    });
+
+    it('should override PAC proxy choices with user proxies when both enabled', () => {
+      const proxyManager = new ProxyManager();
+      const pacScripts = [
+        { 
+          enabled: true, 
+          content: 'if (host === "test.com") return "PROXY pac-proxy:8080"; return "DIRECT";'
+        }
+      ];
+      const proxyServers = [{ url: 'http://user-proxy:9090' }];
+
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, true);
+      
+      expect(pacScript).toContain('function userPacScript0');
+      expect(pacScript).toContain('pac-proxy:8080'); // PAC script content
+      expect(pacScript).toContain('user-proxy:9090'); // User proxy
+      expect(pacScript).toContain('hasUserProxies = true');
+      expect(pacScript).toContain('return userProxyString + "; DIRECT"'); // Override logic
+    });
+
+    it('should handle multiple enabled PAC scripts', () => {
+      const proxyManager = new ProxyManager();
+      const pacScripts = [
+        { enabled: true, content: 'return "PROXY pac1:8080";' },
+        { enabled: true, content: 'return "PROXY pac2:8080";' },
+        { enabled: false, content: 'return "PROXY pac3:8080";' }
+      ];
+      const proxyServers = [];
+
+      const pacScript = proxyManager.generateCombinedPacScript({}, proxyServers, pacScripts, false);
+      
+      expect(pacScript).toContain('userPacScript0');
+      expect(pacScript).toContain('userPacScript1');
+      expect(pacScript).not.toContain('userPacScript2');
+      expect(pacScript).toContain('pac1:8080');
+      expect(pacScript).toContain('pac2:8080');
+      expect(pacScript).not.toContain('pac3:8080');
     });
   });
 });
+

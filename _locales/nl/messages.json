@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "Deze proxy-servers worden gebruikt in plaats van PAC-script proxy's wanneer geconfigureerd",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "Deze proxy-servers worden gebruikt voor: 1) Domeinnuitzonderingen wanneer ingeschakeld, 2) PAC-script proxy-keuzes vervangen wanneer beide aanwezig zijn",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "Domein-uitzonderingen vereisen dat proxy-servers eerst worden geconfigureerd",

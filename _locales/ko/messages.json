@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "이 프록시 서버들은 구성 시 PAC 스크립트 프록시 대신 사용됩니다",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "이 프록시 서버들은 다음 용도로 사용됩니다: 1) 활성화 시 도메인 예외, 2) 둘 다 존재할 때 PAC 스크립트 프록시 선택 재정의",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "도메인 예외를 사용하려면 먼저 프록시 서버를 구성해야 합니다",

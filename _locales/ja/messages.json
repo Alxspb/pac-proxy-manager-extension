@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "設定時、これらのプロキシサーバーはPACスクリプトのプロキシの代わりに使用されます",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "これらのプロキシサーバーは次の用途で使用されます：1）有効時のドメイン例外、2）両方が存在する場合のPACスクリプトプロキシ選択の上書き",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "ドメイン例外を使用するには、まずプロキシサーバーを設定する必要があります",

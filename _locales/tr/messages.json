@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "Bu proxy sunucuları yapılandırıldığında PAC betik proxy'leri yerine kullanılacaktır",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "Bu proxy sunucuları şu amaçlarla kullanılır: 1) Etkinleştirildiğinde alan adı istisnaları, 2) Her ikisi de mevcut olduğunda PAC betik proxy seçimlerini geçersiz kılma",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "Domain istisnaları önce proxy sunucularının yapılandırılmasını gerektirir",

@@ -68,16 +68,15 @@ class ProxyManager {
       }
     });
 
-    const result = await chrome.storage.local.get(['proxyActive']);
-    this.isProxyActive = result.proxyActive || false;
-
-    if (this.isProxyActive) {
+    const pacScripts = await indexedDBStorage.getPacScripts();
+    const hasEnabledPacScripts = pacScripts.filter(script => script.enabled).length > 0;
+    
+    if (hasEnabledPacScripts) {
       await this.updateProxySettings();
     }
   }
 
-  generateCombinedPacScript(domainExceptions, proxyServers, pacScripts) {
-    // Generate user proxy string
+  generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled) {
     const userProxyList = proxyServers.map(proxy => {
       try {
         const url = new URL(proxy.url);
@@ -89,15 +88,12 @@ class ProxyManager {
       }
     }).join('; ');
 
-    const hasUserProxies = proxyServers.length > 0;
+    const hasUserProxies = proxyServers.length > 0 && userProxiesEnabled;
     const userProxyString = hasUserProxies ? userProxyList : '';
     
-    // Get enabled PAC scripts
     const enabledPacScripts = pacScripts.filter(script => script.enabled);
     
-    // Generate PAC script functions for each enabled script
     const pacScriptFunctions = enabledPacScripts.map((script, index) => {
-      // Wrap user PAC script in a function and handle errors
       return `
 function userPacScript${index}(url, host) {
   try {
@@ -113,31 +109,28 @@ function userPacScript${index}(url, host) {
 ${pacScriptFunctions}
 
 function FindProxyForURL(url, host) {
-  const domainExceptions = ${JSON.stringify(domainExceptions || {})};
   const hasUserProxies = ${hasUserProxies};
   const userProxyString = "${userProxyString}";
   
-  // 1. Check domain exceptions first (highest priority)
+  ${hasUserProxies ? `
+  const domainExceptions = ${JSON.stringify(domainExceptions || {})};
+  
   function checkDomainException(domain) {
     if (domainExceptions[domain]) {
       const option = domainExceptions[domain];
       if (option === 'yes') {
-        // Exception says "yes" - use user proxies if available
-        return hasUserProxies ? userProxyString + "; DIRECT" : "DIRECT";
+        return userProxyString + "; DIRECT";
       }
       if (option === 'no') {
-        // Exception says "no" - always direct, skip PAC scripts
         return "DIRECT";
       }
     }
     return null;
   }
   
-  // Check exact host match
   let exceptionResult = checkDomainException(host);
   if (exceptionResult !== null) return exceptionResult;
   
-  // Check wildcard domain matches
   for (const domain in domainExceptions) {
     if (domain.startsWith('*.')) {
       const baseDomain = domain.slice(2);
@@ -148,25 +141,21 @@ function FindProxyForURL(url, host) {
     }
   }
   
-  // 2. No exception found - try PAC scripts
+  ` : `
+  `}
   ${enabledPacScripts.map((script, index) => `
   try {
     const pacResult${index} = userPacScript${index}(url, host);
     if (pacResult${index} !== "DIRECT") {
-      // PAC script wants to use proxy
       if (hasUserProxies) {
-        // Use user-configured proxies instead of PAC script's proxies
         return userProxyString + "; DIRECT";
       } else {
-        // No user proxies, use what PAC script returned
         return pacResult${index};
       }
     }
   } catch (e) {
-    // PAC script failed, continue to next one
   }`).join('\n')}
   
-  // 3. All PAC scripts returned DIRECT or none exist - return DIRECT
   return "DIRECT";
 }`;
   }
@@ -175,16 +164,20 @@ function FindProxyForURL(url, host) {
     try {
       const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
       
-      if (!result.proxyActive) {
-        await this.deactivateProxy();
-        return;
-      }
-
       const domainExceptions = result.domainExceptions || {};
       const proxies = providedProxies || result.proxies || [];
       const pacScripts = await indexedDBStorage.getPacScripts();
+      const enabledPacScripts = pacScripts.filter(script => script.enabled);
       
-      const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts);
+      const userProxiesEnabled = result.proxyActive && proxies.length > 0;
+      const hasEnabledPacScripts = enabledPacScripts.length > 0;
+      
+      if (!hasEnabledPacScripts) {
+        await this.deactivateProxy();
+        return;
+      }
+      
+      const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts, userProxiesEnabled);
       
       await chrome.proxy.settings.set({
         value: {
@@ -198,14 +191,13 @@ function FindProxyForURL(url, host) {
 
       this.isProxyActive = true;
     } catch (_error) {
-      // Silently handle error
+      // Silently ignore errors
     }
   }
 
   async activateProxy(proxies = null) {
     try {
       if (proxies) {
-        // Atomic operation: save both proxies and activation state together
         await chrome.storage.local.set({ 
           proxies: proxies,
           proxyActive: true 
@@ -234,12 +226,23 @@ function FindProxyForURL(url, host) {
 
   async getProxyStatus() {
     const settings = await chrome.proxy.settings.get({ incognito: false });
+    const result = await chrome.storage.local.get(['proxies', 'proxyActive']);
+    const pacScripts = await indexedDBStorage.getPacScripts();
+    const enabledPacScripts = pacScripts.filter(script => script.enabled);
+    
+    const userProxiesEnabled = result.proxyActive && (result.proxies || []).length > 0;
+    const hasEnabledPacScripts = enabledPacScripts.length > 0;
+    
     return {
-      isActive: this.isProxyActive,
+      isActive: result.proxyActive || false,
+      userProxiesEnabled,
+      hasEnabledPacScripts,
       settings,
       isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
     };
   }
+
+
 }
 
 const proxyManager = new ProxyManager();
@@ -257,6 +260,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       case 'deactivateProxy': {
         const deactivateResult = await proxyManager.deactivateProxy();
         sendResponse(deactivateResult);
+        break;
+      }
+
+
+
+      case 'togglePacScript': {
+        try {
+          const script = await indexedDBStorage.getPacScripts().then(scripts => 
+            scripts.find(s => s.id === request.scriptId)
+          );
+          if (script) {
+            script.enabled = request.enabled;
+            await indexedDBStorage.updatePacScript(script);
+            await proxyManager.updateProxySettings();
+            sendResponse(true);
+          } else {
+            sendResponse(false);
+          }
+        } catch (error) {
+          sendResponse(false);
+        }
         break;
       }
 

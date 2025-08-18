@@ -8,17 +8,13 @@ import { ProxiesSkeleton } from '../components/SkeletonLoader';
 const ProxiesTab = () => {
   const [proxyStatus, setProxyStatus] = useState(false);
   const [proxies, setProxies] = useState([]);
-  const [pacScripts, setPacScripts] = useState([]);
   const [messages, setMessages] = useState({});
   const [loading, setLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  
-  // Proxy management states
   const [showForm, setShowForm] = useState(false);
   const [editingProxyId, setEditingProxyId] = useState(null);
   const [editingUrl, setEditingUrl] = useState('');
   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, proxyId: null, proxyUrl: '' });
-  // Removed validation error states - using toast notifications instead
   const [formData, setFormData] = useState({ url: '' });
 
   useEffect(() => {
@@ -52,18 +48,14 @@ const ProxiesTab = () => {
 
     const loadData = async () => {
       try {
-        // Load proxy status
         const statusResponse = await chrome.runtime.sendMessage({ action: 'getProxyStatus' });
         setProxyStatus(statusResponse.isActive);
 
-        // Load proxies and PAC scripts
-        const result = await chrome.storage.local.get(['proxies', 'pacScripts']);
+        const result = await chrome.storage.local.get(['proxies']);
         const storedProxies = result.proxies || [];
-        const storedPacScripts = result.pacScripts || [];
         setProxies(storedProxies);
-        setPacScripts(storedPacScripts);
       } catch (_error) {
-        // Silently handle error
+      // Silently ignore errors
       } finally {
         setIsInitialLoading(false);
       }
@@ -78,7 +70,7 @@ const ProxiesTab = () => {
   }, []);
 
   const toggleProxy = async () => {
-    if (proxies.length === 0) {
+    if (proxies.length === 0 && !proxyStatus) {
       return;
     }
 
@@ -91,13 +83,13 @@ const ProxiesTab = () => {
         setProxyStatus(!proxyStatus);
       }
     } catch (_error) {
-      // Silently handle error
+      // Silently ignore errors
     } finally {
       setLoading(false);
     }
   };
 
-  // Proxy management functions
+
   const validateProxyUrl = (url, excludeId = null) => {
     if (!url || !url.trim()) {
       return messages.invalidUrlRequired || 'URL is required';
@@ -245,14 +237,14 @@ const ProxiesTab = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleProxy}
-              disabled={loading || proxies.length === 0}
+              disabled={loading || (!proxyStatus && proxies.length === 0)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                 proxyStatus ? 'bg-slate-500' : 'bg-gray-200'
               }`}
               role="switch"
               aria-checked={proxyStatus}
               aria-label={proxyStatus ? messages.deactivateProxy : messages.activateProxy}
-              title={proxies.length === 0 ? messages.configureProxyServers : (proxyStatus ? messages.deactivateProxy : messages.activateProxy)}
+              title={(!proxyStatus && proxies.length === 0) ? messages.configureProxyServers : (proxyStatus ? messages.deactivateProxy : messages.activateProxy)}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out ${
@@ -268,15 +260,11 @@ const ProxiesTab = () => {
           </div>
         </div>
 
-
-
-        {pacScripts.length > 0 && proxies.length > 0 && (
-          <div className="mb-4 p-3 bg-slate-100 border border-slate-300 rounded-md">
-            <p className="text-sm text-slate-600">
-              ℹ️ {messages.proxyServersInfo}
-            </p>
-          </div>
-        )}
+        <div className="mb-4 p-3 bg-slate-100 border border-slate-300 rounded-md">
+          <p className="text-sm text-slate-600">
+            ℹ️ {messages.proxyServersInfo}
+          </p>
+        </div>
 
         <div className="space-y-2">
           {proxies.map((proxy) => (

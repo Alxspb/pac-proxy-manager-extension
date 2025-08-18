@@ -264,8 +264,8 @@
     "description": "Error message when PAC script fetch fails"
   },
   "proxyServersInfo": {
-    "message": "Estos servidores proxy se utilizarán en lugar de los proxies del script PAC cuando estén configurados",
-    "description": "Info text explaining proxy servers override PAC script proxies"
+    "message": "Estos servidores proxy se usan para: 1) Servir excepciones de dominio cuando están activados, 2) Reemplazar las opciones de proxy del script PAC cuando ambos están presentes",
+    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
   },
   "exceptionsRequireProxies": {
     "message": "Las excepciones de dominio requieren que se configuren primero los servidores proxy",
