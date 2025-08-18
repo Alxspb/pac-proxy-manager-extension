@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed storage inconsistency between chrome.storage and IndexedDB for PAC scripts
 - Updated test suite to reflect new PAC proxy logic and architecture
 - Fixed PAC script toggles incorrectly affecting user proxy switch - systems now operate independently
+- Fixed long PAC script names overflowing UI
 
 ### Improved
 - Optimized PAC script editing to only reload script content when URL changes, preventing unnecessary network requests and improving performance
