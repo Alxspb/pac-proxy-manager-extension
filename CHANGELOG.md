@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced bulk import to filter out invalid domains and provide detailed feedback
 - Replaced custom error divs with toast notifications for cleaner, more consistent error messaging across PAC Scripts and Proxies tabs
 
-## [1.0.2] - 2025-08-28
+## [1.0.2] - 2025-08-18
 
 ### Fixed
 - Clarified proxy toggle logic: toggle now controls user proxies only, not entire system
@@ -27,3 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added inline enable/disable toggles for PAC scripts in list view  
 - Fixed storage inconsistency between chrome.storage and IndexedDB for PAC scripts
 - Updated test suite to reflect new PAC proxy logic and architecture
+
+### Improved
+- Optimized PAC script editing to only reload script content when URL changes, preventing unnecessary network requests and improving performance

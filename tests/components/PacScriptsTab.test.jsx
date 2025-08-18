@@ -419,6 +419,148 @@ describe('PacScriptsTab Component', () => {
       });
     });
 
+    it('should not fetch content when editing URL-based script without changing URL', async () => {
+      const urlScript = {
+        id: 1,
+        name: 'URL Script',
+        content: 'existing content',
+        enabled: true,
+        sourceType: 'url',
+        sourceUrl: 'http://example.com/proxy.pac'
+      };
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // Click on script to edit
+      await user.click(screen.getByText('URL Script'));
+
+      // Change only the name, not the URL
+      const nameInput = screen.getByDisplayValue('URL Script');
+      await user.clear(nameInput);
+      await user.type(nameInput, 'Updated Script Name');
+
+      // URL should remain the same
+      const urlInput = screen.getByDisplayValue('http://example.com/proxy.pac');
+      expect(urlInput).toBeInTheDocument();
+
+      // Save changes
+      const saveButton = screen.getByTitle('Save');
+      await user.click(saveButton);
+
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            name: 'Updated Script Name',
+            content: 'existing content', // Should use existing content, not fetch new
+            sourceUrl: 'http://example.com/proxy.pac'
+          })
+        );
+      });
+
+      // Should not fetch from URL since URL didn't change
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    it('should fetch content when URL changes during edit', async () => {
+      const urlScript = {
+        id: 1,
+        name: 'URL Script',
+        content: 'old content',
+        enabled: true,
+        sourceType: 'url',
+        sourceUrl: 'http://example.com/old.pac'
+      };
+
+      const newContent = 'new fetched content';
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        text: () => Promise.resolve(newContent)
+      });
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // Click on script to edit
+      await user.click(screen.getByText('URL Script'));
+
+      // Change URL
+      const urlInput = screen.getByDisplayValue('http://example.com/old.pac');
+      await user.clear(urlInput);
+      await user.type(urlInput, 'http://example.com/new.pac');
+
+      // Save changes
+      const saveButton = screen.getByTitle('Save');
+      await user.click(saveButton);
+
+      await waitFor(() => {
+        expect(fetch).toHaveBeenCalledWith('http://example.com/new.pac', expect.objectContaining({
+          method: 'GET',
+          redirect: 'follow',
+          mode: 'cors'
+        }));
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            content: newContent, // Should use newly fetched content
+            sourceUrl: 'http://example.com/new.pac'
+          })
+        );
+      });
+    });
+
+    it('should preserve existing content when editing enabled status without URL change', async () => {
+      const urlScript = {
+        id: 1,
+        name: 'URL Script',
+        content: 'preserved content',
+        enabled: true,
+        sourceType: 'url',
+        sourceUrl: 'http://example.com/proxy.pac'
+      };
+
+      indexedDBStorage.getPacScripts.mockResolvedValue([urlScript]);
+
+      render(<PacScriptsTab />);
+
+      await waitFor(() => {
+        expect(screen.getByText('URL Script')).toBeInTheDocument();
+      });
+
+      // Click on script to edit
+      await user.click(screen.getByText('URL Script'));
+
+      // Toggle the enabled status
+      const enabledToggle = screen.getByRole('switch');
+      await user.click(enabledToggle);
+
+      // Save changes
+      const saveButton = screen.getByTitle('Save');
+      await user.click(saveButton);
+
+      await waitFor(() => {
+        expect(indexedDBStorage.updatePacScript).toHaveBeenCalledWith(
+          expect.objectContaining({
+            content: 'preserved content', // Should preserve existing content
+            enabled: false, // Should reflect the toggle change
+            sourceUrl: 'http://example.com/proxy.pac'
+          })
+        );
+      });
+
+      // Should not fetch since URL didn't change
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
     it('should edit plain script by editing content', async () => {
       const plainScript = {
         id: 1,

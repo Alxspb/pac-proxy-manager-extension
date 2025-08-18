@@ -38,6 +38,8 @@ const PacScriptsTab = () => {
     enabled: true
   });
 
+  const [originalEditUrl, setOriginalEditUrl] = useState('');
+
   useEffect(() => {
     const loadMessages = () => {
       const msgs = {
@@ -246,10 +248,12 @@ const PacScriptsTab = () => {
   const startEdit = (script) => {
     setEditingScriptId(script.id);
     const isUrlScript = script.sourceType === 'url';
+    const scriptUrl = isUrlScript ? script.sourceUrl || '' : '';
+    setOriginalEditUrl(scriptUrl);
     setEditFormData({
       name: script.name,
       inputType: isUrlScript ? 'url' : 'plain',
-      url: isUrlScript ? script.sourceUrl || '' : '',
+      url: scriptUrl,
       content: isUrlScript ? '' : script.content,
       enabled: script.enabled
     });
@@ -258,6 +262,7 @@ const PacScriptsTab = () => {
   const cancelEdit = () => {
     setEditingScriptId(null);
     setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
+    setOriginalEditUrl('');
   };
 
   const saveEdit = async () => {
@@ -268,18 +273,26 @@ const PacScriptsTab = () => {
       return;
     }
 
+    const currentScript = pacScripts.find(script => script.id === editingScriptId);
     let scriptContent = editFormData.content;
 
     if (editFormData.inputType === 'url') {
-      setFetchingEditScript(true);
-      try {
-        scriptContent = await fetchPacScript(editFormData.url.trim());
-      } catch (error) {
-        toast.error(error.message);
+      const currentUrl = editFormData.url.trim();
+      const urlChanged = currentUrl !== originalEditUrl;
+      
+      if (urlChanged) {
+        setFetchingEditScript(true);
+        try {
+          scriptContent = await fetchPacScript(currentUrl);
+        } catch (error) {
+          toast.error(error.message);
+          setFetchingEditScript(false);
+          return;
+        }
         setFetchingEditScript(false);
-        return;
+      } else {
+        scriptContent = currentScript.content;
       }
-      setFetchingEditScript(false);
     }
     
     const updatedScript = {
@@ -300,6 +313,7 @@ const PacScriptsTab = () => {
       setPacScripts(updatedScripts);
       setEditingScriptId(null);
       setEditFormData({ name: '', inputType: 'url', url: '', content: '', enabled: true });
+      setOriginalEditUrl('');
       
       chrome.runtime.sendMessage({ action: 'pacScriptsUpdated' }).catch(() => {});
     } catch (error) {
