@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Schakel andere proxy-extensies uit om PAC-scripts van deze extensie te gebruiken.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Wat is nieuw",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Laatste versie (v1.1.0) - 26 augustus 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• PAC Script Override Control toegevoegd: Nieuwe schakelknop op het Proxies tabblad om te bepalen of door gebruiker gedefinieerde proxy servers PAC script resultaten overschrijven",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Functie aanvragen",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Heb je een idee voor verbetering?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Functie-aanvraag indienen",
+    "description": "Link text for submitting feature requests"
   }
 }

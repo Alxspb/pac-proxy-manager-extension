@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "禁用其他代理扩展以使用此扩展的PAC脚本。",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "新功能",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "最新版本 (v1.1.0) - 2025年8月26日",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• 添加了PAC脚本覆盖控制：代理选项卡中的新切换开关，用于控制用户定义的代理服务器是否覆盖PAC脚本结果",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "请求功能",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "有改进的想法吗？",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "提交功能请求",
+    "description": "Link text for submitting feature requests"
   }
 }

@@ -1,3 +1,4 @@
+import { LinkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 
 const AboutTab = () => {
@@ -24,7 +25,12 @@ const AboutTab = () => {
                 aboutSupportLink: chrome.i18n.getMessage('aboutSupportLink'),
                 aboutSupportUrl: chrome.i18n.getMessage('aboutSupportUrl'),
                 aboutSourceCode: chrome.i18n.getMessage('aboutSourceCode'),
-                aboutSourceCodeLink: chrome.i18n.getMessage('aboutSourceCodeLink')
+                aboutSourceCodeLink: chrome.i18n.getMessage('aboutSourceCodeLink'),
+                changelogTitle: chrome.i18n.getMessage('changelogTitle'),
+                changelogLatestVersion: chrome.i18n.getMessage('changelogLatestVersion'),
+                changelogContent: chrome.i18n.getMessage('changelogContent'),
+                featureRequestText: chrome.i18n.getMessage('featureRequestText'),
+                featureRequestLinkText: chrome.i18n.getMessage('featureRequestLinkText')
             };
             setMessages(msgs);
         };
@@ -84,6 +90,30 @@ const AboutTab = () => {
                                 rel="noopener noreferrer"
                             >
                                 {messages.aboutSupportLink}
+                            </a>
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-3">{messages.changelogTitle}</h3>
+                            <h4 className="font-semibold text-gray-900 text-sm mb-2">
+                                {messages.changelogLatestVersion}
+                            </h4>
+                            <div className="text-gray-600 text-sm space-y-2">
+                                {messages.changelogContent?.split('\n').map((line, index) => (
+                                    // biome-ignore lint/suspicious/noArrayIndexKey: Static changelog content with no reordering
+                                    <p key={index}>{line}</p>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-1 mt-3">
+                            <span>{messages.featureRequestText}</span>
+                            <LinkIcon className="w-4 h-4" />
+                            <a
+                                className="text-blue-500 hover:text-blue-600 underline"
+                                href="https://github.com/ilyachase/pac-proxy-manager-extension/issues/new"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {messages.featureRequestLinkText}
                             </a>
                         </div>
                     </div>

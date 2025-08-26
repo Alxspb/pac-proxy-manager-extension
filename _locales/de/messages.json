@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Deaktivieren Sie andere Proxy-Erweiterungen, um PAC-Skripte von dieser Erweiterung zu verwenden.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Was ist neu",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Neueste Version (v1.1.0) - 26. August 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• PAC-Skript-Override-Kontrolle hinzugefügt: Neuer Umschalter auf der Proxies-Registerkarte zur Kontrolle, ob benutzerdefinierte Proxy-Server PAC-Skript-Ergebnisse überschreiben",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Feature anfordern",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Haben Sie eine Verbesserungsidee?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Feature-Anfrage senden",
+    "description": "Link text for submitting feature requests"
   }
 }

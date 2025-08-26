@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "이 확장 프로그램의 PAC 스크립트를 사용하려면 다른 프록시 확장 프로그램을 비활성화하세요.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "새로운 기능",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "최신 버전 (v1.1.0) - 2025년 8월 26일",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• PAC 스크립트 재정의 제어 추가: 사용자 정의 프록시 서버가 PAC 스크립트 결과를 재정의할지 여부를 제어하는 프록시 탭의 새로운 토글 스위치",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "기능 요청",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "개선 아이디어가 있으신가요?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "기능 요청 제출",
+    "description": "Link text for submitting feature requests"
   }
 }

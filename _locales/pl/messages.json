@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Wyłącz inne rozszerzenia proxy aby używać skryptów PAC z tego rozszerzenia.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Co nowego",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Najnowsza wersja (v1.1.0) - 26 sierpnia 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Dodano kontrolę nadpisywania skryptów PAC: Nowy przełącznik na karcie Proxies do kontrolowania, czy serwery proxy zdefiniowane przez użytkownika nadpisują wyniki skryptu PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Poproś o funkcję",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Masz pomysł na ulepszenie?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Wyślij prośbę o funkcję",
+    "description": "Link text for submitting feature requests"
   }
 }

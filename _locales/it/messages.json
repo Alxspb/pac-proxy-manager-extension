@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Disabilita le altre estensioni proxy per utilizzare gli script PAC di questa estensione.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Cosa c'è di nuovo",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Ultima versione (v1.1.0) - 26 agosto 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Aggiunto controllo di sovrascrittura script PAC: Nuovo interruttore nella scheda Proxies per controllare se i server proxy definiti dall'utente sovrascrivono i risultati dello script PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Richiedi una funzionalità",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Hai un'idea per un miglioramento?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Invia richiesta funzionalità",
+    "description": "Link text for submitting feature requests"
   }
 }

@@ -367,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Desabilite outras extensões de proxy para usar scripts PAC desta extensão.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "O que há de novo",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Versão mais recente (v1.1.0) - 26 de agosto de 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Adicionado Controle de Substituição de Script PAC: Novo botão de alternância na aba Proxies para controlar se servidores proxy definidos pelo usuário substituem resultados do script PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Solicitar um recurso",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Tem uma ideia de melhoria?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Enviar solicitação de recurso",
+    "description": "Link text for submitting feature requests"
   }
 }
