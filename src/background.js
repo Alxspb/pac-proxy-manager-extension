@@ -1,100 +1,103 @@
 // IndexedDB Storage for PAC Scripts
 class IndexedDBStorage {
-  constructor() {
-    this.dbName = 'PacProxyManagerDB';
-    this.version = 1;
-    this.db = null;
-  }
-
-  async init() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.version);
-
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        this.db = request.result;
-        resolve(this.db);
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        
-        if (!db.objectStoreNames.contains('pacScripts')) {
-          const store = db.createObjectStore('pacScripts', { keyPath: 'id' });
-          store.createIndex('name', 'name', { unique: false });
-          store.createIndex('enabled', 'enabled', { unique: false });
-        }
-      };
-    });
-  }
-
-  async ensureDB() {
-    if (!this.db) {
-      await this.init();
+    constructor() {
+        this.dbName = 'PacProxyManagerDB';
+        this.version = 1;
+        this.db = null;
     }
-    return this.db;
-  }
 
-  async getPacScripts() {
-    const db = await this.ensureDB();
-    const transaction = db.transaction(['pacScripts'], 'readonly');
-    const store = transaction.objectStore('pacScripts');
+    async init() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, this.version);
 
-    return new Promise((resolve, reject) => {
-      const request = store.getAll();
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  }
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                this.db = request.result;
+                resolve(this.db);
+            };
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+
+                if (!db.objectStoreNames.contains('pacScripts')) {
+                    const store = db.createObjectStore('pacScripts', { keyPath: 'id' });
+                    store.createIndex('name', 'name', { unique: false });
+                    store.createIndex('enabled', 'enabled', { unique: false });
+                }
+            };
+        });
+    }
+
+    async ensureDB() {
+        if (!this.db) {
+            await this.init();
+        }
+        return this.db;
+    }
+
+    async getPacScripts() {
+        const db = await this.ensureDB();
+        const transaction = db.transaction(['pacScripts'], 'readonly');
+        const store = transaction.objectStore('pacScripts');
+
+        return new Promise((resolve, reject) => {
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
 }
 
 const indexedDBStorage = new IndexedDBStorage();
 
 class ProxyManager {
-  constructor() {
-    this.isProxyActive = false;
-    this.init().catch(() => {});
-  }
-
-  async init() {
-    chrome.storage.onChanged.addListener((changes, namespace) => {
-      if (namespace === 'local') {
-        const relevantChanges = ['domainExceptions', 'proxies', 'proxyActive'];
-        const hasRelevantChanges = relevantChanges.some(key => changes[key]);
-
-        if (hasRelevantChanges) {
-          this.updateProxySettings().catch(() => {});
-        }
-      }
-    });
-
-    const pacScripts = await indexedDBStorage.getPacScripts();
-    const hasEnabledPacScripts = pacScripts.filter(script => script.enabled).length > 0;
-    
-    if (hasEnabledPacScripts) {
-      await this.updateProxySettings();
+    constructor() {
+        this.isProxyActive = false;
+        this.init().catch(() => {});
     }
-  }
 
-  generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled) {
-    const userProxyList = proxyServers.map(proxy => {
-      try {
-        const url = new URL(proxy.url);
-        const protocol = url.protocol === 'https:' ? 'HTTPS' : 'PROXY';
-        const port = url.port || (url.protocol === 'https:' ? '443' : '80');
-        return `${protocol} ${url.hostname}:${port}`;
-      } catch (_e) {
-        return `PROXY ${proxy.url}`;
-      }
-    }).join('; ');
+    async init() {
+        chrome.storage.onChanged.addListener((changes, namespace) => {
+            if (namespace === 'local') {
+                const relevantChanges = ['domainExceptions', 'proxies', 'proxyActive'];
+                const hasRelevantChanges = relevantChanges.some((key) => changes[key]);
 
-    const hasUserProxies = proxyServers.length > 0 && userProxiesEnabled;
-    const userProxyString = hasUserProxies ? userProxyList : '';
-    
-    const enabledPacScripts = pacScripts.filter(script => script.enabled);
-    
-    const pacScriptFunctions = enabledPacScripts.map((script, index) => {
-      return `
+                if (hasRelevantChanges) {
+                    this.updateProxySettings().catch(() => {});
+                }
+            }
+        });
+
+        const pacScripts = await indexedDBStorage.getPacScripts();
+        const hasEnabledPacScripts = pacScripts.filter((script) => script.enabled).length > 0;
+
+        if (hasEnabledPacScripts) {
+            await this.updateProxySettings();
+        }
+    }
+
+    generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled) {
+        const userProxyList = proxyServers
+            .map((proxy) => {
+                try {
+                    const url = new URL(proxy.url);
+                    const protocol = url.protocol === 'https:' ? 'HTTPS' : 'PROXY';
+                    const port = url.port || (url.protocol === 'https:' ? '443' : '80');
+                    return `${protocol} ${url.hostname}:${port}`;
+                } catch (_e) {
+                    return `PROXY ${proxy.url}`;
+                }
+            })
+            .join('; ');
+
+        const hasUserProxies = proxyServers.length > 0 && userProxiesEnabled;
+        const userProxyString = hasUserProxies ? userProxyList : '';
+
+        const enabledPacScripts = pacScripts.filter((script) => script.enabled);
+
+        const pacScriptFunctions = enabledPacScripts
+            .map((script, index) => {
+                return `
 function userPacScript${index}(url, host) {
   try {
     ${script.content}
@@ -103,16 +106,19 @@ function userPacScript${index}(url, host) {
     return "DIRECT";
   }
 }`;
-    }).join('\n');
+            })
+            .join('\n');
 
-    return `
+        return `
 ${pacScriptFunctions}
 
 function FindProxyForURL(url, host) {
   const hasUserProxies = ${hasUserProxies};
   const userProxyString = "${userProxyString}";
   
-  ${hasUserProxies ? `
+  ${
+      hasUserProxies
+          ? `
   const domainExceptions = ${JSON.stringify(domainExceptions || {})};
   
   function checkDomainException(domain) {
@@ -141,9 +147,13 @@ function FindProxyForURL(url, host) {
     }
   }
   
-  ` : `
-  `}
-  ${enabledPacScripts.map((script, index) => `
+  `
+          : `
+  `
+  }
+  ${enabledPacScripts
+      .map(
+          (_script, index) => `
   try {
     const pacResult${index} = userPacScript${index}(url, host);
     if (pacResult${index} !== "DIRECT") {
@@ -154,172 +164,175 @@ function FindProxyForURL(url, host) {
       }
     }
   } catch (e) {
-  }`).join('\n')}
+  }`
+      )
+      .join('\n')}
   
   return "DIRECT";
 }`;
-  }
+    }
 
-  async updateProxySettings(providedProxies = null) {
-    try {
-      const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
-      
-      const domainExceptions = result.domainExceptions || {};
-      const proxies = providedProxies || result.proxies || [];
-      const pacScripts = await indexedDBStorage.getPacScripts();
-      const enabledPacScripts = pacScripts.filter(script => script.enabled);
-      
-      const userProxiesEnabled = result.proxyActive && proxies.length > 0;
-      const hasEnabledPacScripts = enabledPacScripts.length > 0;
-      
-      if (!hasEnabledPacScripts && !userProxiesEnabled) {
-        await chrome.proxy.settings.clear({ scope: 'regular' });
-        this.isProxyActive = false;
-        return;
-      }
-      
-      if (hasEnabledPacScripts || userProxiesEnabled) {
-        const pacScript = this.generateCombinedPacScript(domainExceptions, proxies, pacScripts, userProxiesEnabled);
-        
-        await chrome.proxy.settings.set({
-          value: {
-            mode: 'pac_script',
-            pacScript: {
-              data: pacScript
+    async updateProxySettings(providedProxies = null) {
+        try {
+            const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
+
+            const domainExceptions = result.domainExceptions || {};
+            const proxies = providedProxies || result.proxies || [];
+            const pacScripts = await indexedDBStorage.getPacScripts();
+            const enabledPacScripts = pacScripts.filter((script) => script.enabled);
+
+            const userProxiesEnabled = result.proxyActive && proxies.length > 0;
+            const hasEnabledPacScripts = enabledPacScripts.length > 0;
+
+            if (!hasEnabledPacScripts && !userProxiesEnabled) {
+                await chrome.proxy.settings.clear({ scope: 'regular' });
+                this.isProxyActive = false;
+                return;
             }
-          },
-          scope: 'regular'
-        });
 
-        this.isProxyActive = true;
-      }
-    } catch (_error) {
-      // Silently ignore errors
+            if (hasEnabledPacScripts || userProxiesEnabled) {
+                const pacScript = this.generateCombinedPacScript(
+                    domainExceptions,
+                    proxies,
+                    pacScripts,
+                    userProxiesEnabled
+                );
+
+                await chrome.proxy.settings.set({
+                    value: {
+                        mode: 'pac_script',
+                        pacScript: {
+                            data: pacScript
+                        }
+                    },
+                    scope: 'regular'
+                });
+
+                this.isProxyActive = true;
+            }
+        } catch (_error) {
+            // Silently ignore errors
+        }
     }
-  }
 
-  async activateProxy(proxies = null) {
-    try {
-      if (proxies) {
-        await chrome.storage.local.set({ 
-          proxies: proxies,
-          proxyActive: true 
-        });
-      } else {
-        await chrome.storage.local.set({ proxyActive: true });
-      }
-      this.isProxyActive = true;
-      await this.updateProxySettings(proxies);
-      return true;
-    } catch (error) {
-      return false;
+    async activateProxy(proxies = null) {
+        try {
+            if (proxies) {
+                await chrome.storage.local.set({
+                    proxies: proxies,
+                    proxyActive: true
+                });
+            } else {
+                await chrome.storage.local.set({ proxyActive: true });
+            }
+            this.isProxyActive = true;
+            await this.updateProxySettings(proxies);
+            return true;
+        } catch (_error) {
+            return false;
+        }
     }
-  }
 
-  async deactivateProxy() {
-    try {
-      await chrome.storage.local.set({ proxyActive: false });
-      
-      const pacScripts = await indexedDBStorage.getPacScripts();
-      const hasEnabledPacScripts = pacScripts.filter(script => script.enabled).length > 0;
-      
-      if (hasEnabledPacScripts) {
-        await this.updateProxySettings();
-      } else {
-        await chrome.proxy.settings.clear({ scope: 'regular' });
-        this.isProxyActive = false;
-      }
-      
-      return true;
-    } catch (error) {
-      return false;
+    async deactivateProxy() {
+        try {
+            await chrome.storage.local.set({ proxyActive: false });
+
+            const pacScripts = await indexedDBStorage.getPacScripts();
+            const hasEnabledPacScripts = pacScripts.filter((script) => script.enabled).length > 0;
+
+            if (hasEnabledPacScripts) {
+                await this.updateProxySettings();
+            } else {
+                await chrome.proxy.settings.clear({ scope: 'regular' });
+                this.isProxyActive = false;
+            }
+
+            return true;
+        } catch (_error) {
+            return false;
+        }
     }
-  }
 
-  async getProxyStatus() {
-    const settings = await chrome.proxy.settings.get({ incognito: false });
-    const result = await chrome.storage.local.get(['proxies', 'proxyActive']);
-    const pacScripts = await indexedDBStorage.getPacScripts();
-    const enabledPacScripts = pacScripts.filter(script => script.enabled);
-    
-    const userProxiesEnabled = result.proxyActive && (result.proxies || []).length > 0;
-    const hasEnabledPacScripts = enabledPacScripts.length > 0;
-    
-    return {
-      isActive: result.proxyActive || false,
-      userProxiesEnabled,
-      hasEnabledPacScripts,
-      settings,
-      isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
-    };
-  }
+    async getProxyStatus() {
+        const settings = await chrome.proxy.settings.get({ incognito: false });
+        const result = await chrome.storage.local.get(['proxies', 'proxyActive']);
+        const pacScripts = await indexedDBStorage.getPacScripts();
+        const enabledPacScripts = pacScripts.filter((script) => script.enabled);
 
+        const userProxiesEnabled = result.proxyActive && (result.proxies || []).length > 0;
+        const hasEnabledPacScripts = enabledPacScripts.length > 0;
 
+        return {
+            isActive: result.proxyActive || false,
+            userProxiesEnabled,
+            hasEnabledPacScripts,
+            settings,
+            isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
+        };
+    }
 }
 
 const proxyManager = new ProxyManager();
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  const handleAsync = async () => {
-    try {
-      switch (request.action) {
-      case 'activateProxy': {
-        const activateResult = await proxyManager.activateProxy(request.proxies);
-        sendResponse(activateResult);
-        break;
-      }
-
-      case 'deactivateProxy': {
-        const deactivateResult = await proxyManager.deactivateProxy();
-        sendResponse(deactivateResult);
-        break;
-      }
-
-
-
-      case 'togglePacScript': {
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    const handleAsync = async () => {
         try {
-          const script = await indexedDBStorage.getPacScripts().then(scripts => 
-            scripts.find(s => s.id === request.scriptId)
-          );
-          if (script) {
-            script.enabled = request.enabled;
-            await indexedDBStorage.updatePacScript(script);
-            await proxyManager.updateProxySettings();
-            sendResponse(true);
-          } else {
-            sendResponse(false);
-          }
+            switch (request.action) {
+                case 'activateProxy': {
+                    const activateResult = await proxyManager.activateProxy(request.proxies);
+                    sendResponse(activateResult);
+                    break;
+                }
+
+                case 'deactivateProxy': {
+                    const deactivateResult = await proxyManager.deactivateProxy();
+                    sendResponse(deactivateResult);
+                    break;
+                }
+
+                case 'togglePacScript': {
+                    try {
+                        const script = await indexedDBStorage
+                            .getPacScripts()
+                            .then((scripts) => scripts.find((s) => s.id === request.scriptId));
+                        if (script) {
+                            script.enabled = request.enabled;
+                            await indexedDBStorage.updatePacScript(script);
+                            await proxyManager.updateProxySettings();
+                            sendResponse(true);
+                        } else {
+                            sendResponse(false);
+                        }
+                    } catch (_error) {
+                        sendResponse(false);
+                    }
+                    break;
+                }
+
+                case 'getProxyStatus': {
+                    const status = await proxyManager.getProxyStatus();
+                    sendResponse(status);
+                    break;
+                }
+
+                case 'updateProxySettings':
+                    await proxyManager.updateProxySettings();
+                    sendResponse(true);
+                    break;
+
+                case 'pacScriptsUpdated':
+                    await proxyManager.updateProxySettings();
+                    sendResponse(true);
+                    break;
+
+                default:
+                    sendResponse({ error: 'Unknown action' });
+            }
         } catch (error) {
-          sendResponse(false);
+            sendResponse({ error: error.message });
         }
-        break;
-      }
+    };
 
-      case 'getProxyStatus': {
-        const status = await proxyManager.getProxyStatus();
-        sendResponse(status);
-        break;
-      }
-
-      case 'updateProxySettings':
-        await proxyManager.updateProxySettings();
-        sendResponse(true);
-        break;
-
-      case 'pacScriptsUpdated':
-        await proxyManager.updateProxySettings();
-        sendResponse(true);
-        break;
-
-      default:
-        sendResponse({ error: 'Unknown action' });
-      }
-    } catch (error) {
-      sendResponse({ error: error.message });
-    }
-  };
-
-  handleAsync();
-  return true;
+    handleAsync();
+    return true;
 });
