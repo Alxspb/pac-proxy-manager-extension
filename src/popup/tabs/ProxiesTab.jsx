@@ -8,6 +8,7 @@ const ProxiesTab = () => {
     const proxyUrlId = useId();
     const [proxyStatus, setProxyStatus] = useState(false);
     const [proxies, setProxies] = useState([]);
+    const [overridePacScript, setOverridePacScript] = useState(true);
     const [messages, setMessages] = useState({});
     const [loading, setLoading] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -41,7 +42,8 @@ const ProxiesTab = () => {
                 invalidUrlPort: chrome.i18n.getMessage('invalidUrlPort'),
                 invalidUrlFormat: chrome.i18n.getMessage('invalidUrlFormat'),
                 duplicateUrl: chrome.i18n.getMessage('duplicateUrl'),
-                proxyServersInfo: chrome.i18n.getMessage('proxyServersInfo')
+                overridePacScriptLabel: chrome.i18n.getMessage('overridePacScriptLabel'),
+                overridePacScriptDescription: chrome.i18n.getMessage('overridePacScriptDescription')
             };
             setMessages(msgs);
         };
@@ -50,6 +52,7 @@ const ProxiesTab = () => {
             try {
                 const statusResponse = await chrome.runtime.sendMessage({ action: 'getProxyStatus' });
                 setProxyStatus(statusResponse.isActive);
+                setOverridePacScript(statusResponse.overridePacScript);
 
                 const result = await chrome.storage.local.get(['proxies']);
                 const storedProxies = result.proxies || [];
@@ -68,6 +71,16 @@ const ProxiesTab = () => {
 
         initializeTab();
     }, []);
+
+    const toggleOverridePacScript = async () => {
+        const newValue = !overridePacScript;
+        try {
+            await chrome.storage.local.set({ overridePacScript: newValue });
+            setOverridePacScript(newValue);
+        } catch (_error) {
+            // Silently ignore errors
+        }
+    };
 
     const toggleProxy = async () => {
         if (proxies.length === 0 && !proxyStatus) {
@@ -216,6 +229,19 @@ const ProxiesTab = () => {
 
     const confirmDelete = async () => {
         const updatedProxies = proxies.filter((proxy) => proxy.id !== deleteDialog.proxyId);
+
+        // If this is the last proxy and proxy is currently active, deactivate it
+        if (updatedProxies.length === 0 && proxyStatus) {
+            try {
+                const response = await chrome.runtime.sendMessage({ action: 'deactivateProxy' });
+                if (response === true) {
+                    setProxyStatus(false);
+                }
+            } catch (_error) {
+                // Silently ignore errors
+            }
+        }
+
         await saveProxies(updatedProxies);
         setDeleteDialog({ isOpen: false, proxyId: null, proxyUrl: '' });
     };
@@ -264,9 +290,35 @@ const ProxiesTab = () => {
                     </div>
                 </div>
 
-                <div className="mb-4 p-3 bg-slate-100 border border-slate-300 rounded-md">
-                    <p className="text-sm text-slate-600">ℹ️ {messages.proxyServersInfo}</p>
-                </div>
+                {/* PAC Script Override Switch - Only show if there are proxies */}
+                {proxies.length > 0 && (
+                    <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                        <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                                <h4 className="text-sm font-medium text-gray-900 mb-1">
+                                    {messages.overridePacScriptLabel}
+                                </h4>
+                                <p className="text-xs text-gray-600">{messages.overridePacScriptDescription}</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={toggleOverridePacScript}
+                                className={`relative ml-4 inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 ${
+                                    overridePacScript ? 'bg-slate-500' : 'bg-gray-200'
+                                }`}
+                                role="switch"
+                                aria-checked={overridePacScript}
+                                aria-label={messages.overridePacScriptLabel}
+                            >
+                                <span
+                                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out ${
+                                        overridePacScript ? 'translate-x-6' : 'translate-x-1'
+                                    }`}
+                                />
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="space-y-2">
                     {proxies.map((proxy) => (

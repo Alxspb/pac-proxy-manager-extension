@@ -263,9 +263,14 @@
     "message": "Échec de récupération du script PAC. Veuillez vérifier l'URL et réessayer.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Ces serveurs proxy sont utilisés pour : 1) Servir les exceptions de domaine quand activés, 2) Remplacer les choix de proxy du script PAC quand les deux sont présents",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Remplacer les Scripts PAC",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Quand activé, les serveurs proxy remplaceront les résultats du script PAC. Quand désactivé, les scripts PAC fonctionnent indépendamment.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Les exceptions de domaine nécessitent la configuration préalable des serveurs proxy",

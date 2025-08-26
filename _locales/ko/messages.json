@@ -263,9 +263,14 @@
     "message": "PAC 스크립트를 가져오는데 실패했습니다. URL을 확인하고 다시 시도하세요.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "이 프록시 서버들은 다음 용도로 사용됩니다: 1) 활성화 시 도메인 예외, 2) 둘 다 존재할 때 PAC 스크립트 프록시 선택 재정의",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "PAC 스크립트 재정의",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "활성화되면 프록시 서버가 PAC 스크립트 결과를 재정의합니다. 비활성화되면 PAC 스크립트가 독립적으로 작동합니다.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "도메인 예외를 사용하려면 먼저 프록시 서버를 구성해야 합니다",

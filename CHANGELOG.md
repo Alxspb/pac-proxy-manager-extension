@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-08-26
+
+### Added
+- **PAC Script Override Control**: Added a new toggle switch on the Proxies tab that allows users to control whether user-defined proxy servers override PAC script results
+- When enabled (default): User proxies override PAC script proxy choices as before
+- When disabled: PAC scripts work independently, allowing both systems to coexist without interference
+
+### Changed
+- **Main proxy switch automatically deactivates when the last proxy is deleted** - prevents inconsistent states and improves user experience
+
 ## [1.0.1] - 2025-08-17
 
 ### Added

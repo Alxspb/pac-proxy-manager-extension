@@ -59,7 +59,7 @@ class ProxyManager {
     async init() {
         chrome.storage.onChanged.addListener((changes, namespace) => {
             if (namespace === 'local') {
-                const relevantChanges = ['domainExceptions', 'proxies', 'proxyActive'];
+                const relevantChanges = ['domainExceptions', 'proxies', 'proxyActive', 'overridePacScript'];
                 const hasRelevantChanges = relevantChanges.some((key) => changes[key]);
 
                 if (hasRelevantChanges) {
@@ -76,7 +76,13 @@ class ProxyManager {
         }
     }
 
-    generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled) {
+    generateCombinedPacScript(
+        domainExceptions,
+        proxyServers,
+        pacScripts,
+        userProxiesEnabled,
+        overridePacScript = true
+    ) {
         const userProxyList = proxyServers
             .map((proxy) => {
                 try {
@@ -157,7 +163,7 @@ function FindProxyForURL(url, host) {
   try {
     const pacResult${index} = userPacScript${index}(url, host);
     if (pacResult${index} !== "DIRECT") {
-      if (hasUserProxies) {
+      if (hasUserProxies && ${overridePacScript}) {
         return userProxyString + "; DIRECT";
       } else {
         return pacResult${index};
@@ -174,10 +180,16 @@ function FindProxyForURL(url, host) {
 
     async updateProxySettings(providedProxies = null) {
         try {
-            const result = await chrome.storage.local.get(['domainExceptions', 'proxies', 'proxyActive']);
+            const result = await chrome.storage.local.get([
+                'domainExceptions',
+                'proxies',
+                'proxyActive',
+                'overridePacScript'
+            ]);
 
             const domainExceptions = result.domainExceptions || {};
             const proxies = providedProxies || result.proxies || [];
+            const overridePacScript = result.overridePacScript !== false;
             const pacScripts = await indexedDBStorage.getPacScripts();
             const enabledPacScripts = pacScripts.filter((script) => script.enabled);
 
@@ -195,7 +207,8 @@ function FindProxyForURL(url, host) {
                     domainExceptions,
                     proxies,
                     pacScripts,
-                    userProxiesEnabled
+                    userProxiesEnabled,
+                    overridePacScript
                 );
 
                 await chrome.proxy.settings.set({
@@ -255,7 +268,7 @@ function FindProxyForURL(url, host) {
 
     async getProxyStatus() {
         const settings = await chrome.proxy.settings.get({ incognito: false });
-        const result = await chrome.storage.local.get(['proxies', 'proxyActive']);
+        const result = await chrome.storage.local.get(['proxies', 'proxyActive', 'overridePacScript']);
         const pacScripts = await indexedDBStorage.getPacScripts();
         const enabledPacScripts = pacScripts.filter((script) => script.enabled);
 
@@ -266,6 +279,7 @@ function FindProxyForURL(url, host) {
             isActive: result.proxyActive || false,
             userProxiesEnabled,
             hasEnabledPacScripts,
+            overridePacScript: result.overridePacScript !== false,
             settings,
             isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
         };

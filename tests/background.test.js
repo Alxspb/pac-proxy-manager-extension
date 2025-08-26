@@ -14,7 +14,7 @@ describe('Background Script - ProxyManager', () => {
         this.isProxyActive = false;
       }
 
-      generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled) {
+      generateCombinedPacScript(domainExceptions, proxyServers, pacScripts, userProxiesEnabled, overridePacScript = true) {
         const userProxyList = proxyServers.map(proxy => {
           try {
             const url = new URL(proxy.url);
@@ -85,7 +85,7 @@ function FindProxyForURL(url, host) {
   try {
     const pacResult${index} = userPacScript${index}(url, host);
     if (pacResult${index} !== "DIRECT") {
-      if (hasUserProxies) {
+      if (hasUserProxies && ${overridePacScript}) {
         return userProxyString + "; DIRECT";
       } else {
         return pacResult${index};
@@ -632,6 +632,105 @@ function FindProxyForURL(url, host) {
       });
       expect(mockChrome.proxy.settings.clear).not.toHaveBeenCalled();
       expect(proxyManager.isProxyActive).toBe(true);
+    });
+  });
+
+  describe('PAC Script Override Control', () => {
+    let proxyManager;
+    
+    beforeEach(() => {
+      proxyManager = new ProxyManager();
+    });
+
+    it('should override PAC scripts when override is enabled (default)', () => {
+      const domainExceptions = {};
+      const proxyServers = [{ url: 'http://user-proxy:8080' }];
+      const pacScripts = [{ 
+        enabled: true, 
+        content: 'return "PROXY pac-proxy:9090";' 
+      }];
+      
+      const pacScript = proxyManager.generateCombinedPacScript(
+        domainExceptions, 
+        proxyServers, 
+        pacScripts, 
+        true, // userProxiesEnabled
+        true  // overridePacScript (default)
+      );
+      
+      expect(pacScript).toContain('if (hasUserProxies && true)');
+      expect(pacScript).toContain('return userProxyString + "; DIRECT";');
+    });
+
+    it('should not override PAC scripts when override is disabled', () => {
+      const domainExceptions = {};
+      const proxyServers = [{ url: 'http://user-proxy:8080' }];
+      const pacScripts = [{ 
+        enabled: true, 
+        content: 'return "PROXY pac-proxy:9090";' 
+      }];
+      
+      const pacScript = proxyManager.generateCombinedPacScript(
+        domainExceptions, 
+        proxyServers, 
+        pacScripts, 
+        true,  // userProxiesEnabled
+        false  // overridePacScript disabled
+      );
+      
+      expect(pacScript).toContain('if (hasUserProxies && false)');
+      expect(pacScript).toContain('return pacResult');
+    });
+
+    it('should work correctly when user proxies are disabled regardless of override setting', () => {
+      const domainExceptions = {};
+      const proxyServers = [{ url: 'http://user-proxy:8080' }];
+      const pacScripts = [{ 
+        enabled: true, 
+        content: 'return "PROXY pac-proxy:9090";' 
+      }];
+      
+      const pacScript = proxyManager.generateCombinedPacScript(
+        domainExceptions, 
+        proxyServers, 
+        pacScripts, 
+        false, // userProxiesEnabled disabled
+        true   // overridePacScript enabled
+      );
+      
+      expect(pacScript).toContain('const hasUserProxies = false');
+      expect(pacScript).toContain('return pacResult');
+    });
+
+    it('should preserve domain exception logic regardless of override setting', () => {
+      const domainExceptions = { 'example.com': 'yes' };
+      const proxyServers = [{ url: 'http://user-proxy:8080' }];
+      const pacScripts = [{ 
+        enabled: true, 
+        content: 'return "PROXY pac-proxy:9090";' 
+      }];
+      
+      const pacScriptWithOverride = proxyManager.generateCombinedPacScript(
+        domainExceptions, 
+        proxyServers, 
+        pacScripts, 
+        true, // userProxiesEnabled
+        true  // overridePacScript enabled
+      );
+
+      const pacScriptWithoutOverride = proxyManager.generateCombinedPacScript(
+        domainExceptions, 
+        proxyServers, 
+        pacScripts, 
+        true,  // userProxiesEnabled
+        false  // overridePacScript disabled
+      );
+      
+      // Both should contain domain exception logic
+      expect(pacScriptWithOverride).toContain('const domainExceptions = {"example.com":"yes"}');
+      expect(pacScriptWithoutOverride).toContain('const domainExceptions = {"example.com":"yes"}');
+      expect(pacScriptWithOverride).toContain('checkDomainException');
+      expect(pacScriptWithoutOverride).toContain('checkDomainException');
     });
   });
 });

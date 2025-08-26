@@ -263,9 +263,14 @@
     "message": "Kon PAC-script niet ophalen. Controleer de URL en probeer opnieuw.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Deze proxy-servers worden gebruikt voor: 1) Domeinnuitzonderingen wanneer ingeschakeld, 2) PAC-script proxy-keuzes vervangen wanneer beide aanwezig zijn",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "PAC-scripts Vervangen",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Wanneer ingeschakeld, vervangen proxy-servers de PAC-script resultaten. Wanneer uitgeschakeld, werken PAC-scripts onafhankelijk.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Domein-uitzonderingen vereisen dat proxy-servers eerst worden geconfigureerd",
