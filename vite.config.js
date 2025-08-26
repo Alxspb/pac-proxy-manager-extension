@@ -19,7 +19,8 @@ export default defineConfig({
       }
     },
     outDir: 'dist',
-    emptyOutDir: true
+    emptyOutDir: true,
+    minify: true
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
