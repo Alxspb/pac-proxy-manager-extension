@@ -88,21 +88,21 @@ class ProxyManager {
                 try {
                     const url = new URL(proxy.url);
 
-                    // убираем ":" из конца protocol
+                    // remove ":" from the end of protocol
                     const scheme = url.protocol.replace(':', '').toLowerCase();
 
-                    // сопоставление URL scheme → PAC keyword
+                    // URL scheme → PAC keyword mapping
                     const schemeMap = {
                         http: 'PROXY',
                         https: 'HTTPS',
-                        socks: 'SOCKS', // chrome трактует как SOCKS v4
+                        socks: 'SOCKS', // chrome treats it as SOCKS v4
                         socks4: 'SOCKS',
                         socks5: 'SOCKS5'
                     };
 
                     const protocol = schemeMap[scheme] || 'PROXY';
 
-                    // дефолтные порты
+                    // default ports
                     const defaultPortMap = {
                         http: '80',
                         https: '443',
@@ -115,7 +115,7 @@ class ProxyManager {
 
                     return `${protocol} ${url.hostname}:${port}`;
                 } catch (_e) {
-                    // если это невалидный URL — пусть остаётся HTTP-proxy
+                    // if invalid URL - keep as HTTP-proxy
                     return `PROXY ${proxy.url}`;
                 }
             })
@@ -309,6 +309,11 @@ function FindProxyForURL(url, host) {
             isBlocked: settings.levelOfControl === 'controlled_by_other_extensions'
         };
     }
+}
+
+// Export for testing (browser-compatible)
+if (typeof globalThis !== 'undefined') {
+    globalThis._testExports = { ProxyManager, IndexedDBStorage };
 }
 
 const proxyManager = new ProxyManager();
