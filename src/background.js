@@ -83,41 +83,43 @@ class ProxyManager {
         userProxiesEnabled,
         overridePacScript = true
     ) {
-        const userProxyList = proxyServers.map(proxy => {
-            try {
-                const url = new URL(proxy.url);
+        const userProxyList = proxyServers
+            .map((proxy) => {
+                try {
+                    const url = new URL(proxy.url);
 
-                // убираем ":" из конца protocol
-                const scheme = url.protocol.replace(':', '').toLowerCase();
+                    // убираем ":" из конца protocol
+                    const scheme = url.protocol.replace(':', '').toLowerCase();
 
-                // сопоставление URL scheme → PAC keyword
-                const schemeMap = {
-                    'http':  'PROXY',
-                    'https': 'HTTPS',
-                    'socks': 'SOCKS',   // chrome трактует как SOCKS v4
-                    'socks4': 'SOCKS',
-                    'socks5': 'SOCKS5'
-                };
+                    // сопоставление URL scheme → PAC keyword
+                    const schemeMap = {
+                        http: 'PROXY',
+                        https: 'HTTPS',
+                        socks: 'SOCKS', // chrome трактует как SOCKS v4
+                        socks4: 'SOCKS',
+                        socks5: 'SOCKS5'
+                    };
 
-                const protocol = schemeMap[scheme] || 'PROXY';
+                    const protocol = schemeMap[scheme] || 'PROXY';
 
-                // дефолтные порты
-                const defaultPortMap = {
-                    'http': '80',
-                    'https': '443',
-                    'socks': '1080',
-                    'socks4': '1080',
-                    'socks5': '1080'
-                };
+                    // дефолтные порты
+                    const defaultPortMap = {
+                        http: '80',
+                        https: '443',
+                        socks: '1080',
+                        socks4: '1080',
+                        socks5: '1080'
+                    };
 
-                const port = url.port || defaultPortMap[scheme] || '80';
+                    const port = url.port || defaultPortMap[scheme] || '80';
 
-                return `${protocol} ${url.hostname}:${port}`;
-            } catch (_e) {
-                // если это невалидный URL — пусть остаётся HTTP-proxy
-                return `PROXY ${proxy.url}`;
-            }
-        }).join('; ');
+                    return `${protocol} ${url.hostname}:${port}`;
+                } catch (_e) {
+                    // если это невалидный URL — пусть остаётся HTTP-proxy
+                    return `PROXY ${proxy.url}`;
+                }
+            })
+            .join('; ');
 
         const hasUserProxies = proxyServers.length > 0 && userProxiesEnabled;
         const userProxyString = hasUserProxies ? userProxyList : '';
