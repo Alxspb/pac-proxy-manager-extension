@@ -263,9 +263,14 @@
     "message": "PACスクリプトの取得に失敗しました。URLを確認して再試行してください。",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "これらのプロキシサーバーは次の用途で使用されます：1）有効時のドメイン例外、2）両方が存在する場合のPACスクリプトプロキシ選択の上書き",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "PACスクリプトを上書き",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "有効にすると、プロキシサーバーがPACスクリプトの結果を上書きします。無効にすると、PACスクリプトは独立して動作します。",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "ドメイン例外を使用するには、まずプロキシサーバーを設定する必要があります",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "この拡張機能のPACスクリプトを使用するには、他のプロキシ拡張機能を無効にしてください。",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "新機能",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "最新バージョン (v1.1.0) - 2025年8月26日",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• PACスクリプトオーバーライド制御の追加：ユーザー定義のプロキシサーバーがPACスクリプトの結果を上書きするかどうかを制御するプロキシタブの新しいトグルスイッチ",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "機能をリクエスト",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "改善のアイデアはありますか？",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "機能リクエストを送信",
+    "description": "Link text for submitting feature requests"
   }
 }

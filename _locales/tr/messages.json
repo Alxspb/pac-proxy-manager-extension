@@ -362,5 +362,29 @@
   "proxyControlWarningAction": {
     "message": "Bu uzantının PAC betiklerini kullanmak için diğer proxy uzantılarını devre dışı bırakın.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Yeni özellikler",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "En son sürüm (v1.1.0) - 26 Ağustos 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• PAC Betiği Geçersiz Kılma Kontrolü eklendi: Kullanıcı tanımlı proxy sunucularının PAC betiği sonuçlarını geçersiz kılıp kılmayacağını kontrol etmek için Proxies sekmesinde yeni geçiş anahtarı",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Özellik talep et",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Geliştirme için bir fikriniz var mı?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Özellik talebi gönder",
+    "description": "Link text for submitting feature requests"
   }
 }

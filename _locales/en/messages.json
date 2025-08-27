@@ -263,9 +263,14 @@
     "message": "Failed to fetch PAC script. Please check the URL and try again.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "These proxy servers are used to: 1) Serve domain exceptions when enabled, 2) Override PAC script proxy choices when both are present",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Override PAC Scripts",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "When enabled, proxy servers will override PAC script results. When disabled, PAC scripts work independently.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Domain exceptions require proxy servers to be configured first",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Disable other proxy extensions to use PAC scripts from this extension.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "What's New",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Latest Version (v1.1.0) - August 26, 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Added PAC Script Override Control: New toggle switch on the Proxies tab to control whether user-defined proxy servers override PAC script results",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Request a Feature",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Have an idea for improvement?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Submit a feature request",
+    "description": "Link text for submitting feature requests"
   }
 }

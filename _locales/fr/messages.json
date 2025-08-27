@@ -263,9 +263,14 @@
     "message": "Échec de récupération du script PAC. Veuillez vérifier l'URL et réessayer.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Ces serveurs proxy sont utilisés pour : 1) Servir les exceptions de domaine quand activés, 2) Remplacer les choix de proxy du script PAC quand les deux sont présents",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Remplacer les Scripts PAC",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Quand activé, les serveurs proxy remplaceront les résultats du script PAC. Quand désactivé, les scripts PAC fonctionnent indépendamment.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Les exceptions de domaine nécessitent la configuration préalable des serveurs proxy",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Désactivez les autres extensions proxy pour utiliser les scripts PAC de cette extension.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Quoi de neuf",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Dernière version (v1.1.0) - 26 août 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Ajout du contrôle de substitution de script PAC : Nouveau commutateur dans l'onglet Proxies pour contrôler si les serveurs proxy définis par l'utilisateur remplacent les résultats du script PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Demander une fonctionnalité",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Avez-vous une idée d'amélioration ?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Soumettre une demande de fonctionnalité",
+    "description": "Link text for submitting feature requests"
   }
 }

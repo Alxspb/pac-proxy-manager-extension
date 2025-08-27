@@ -263,9 +263,14 @@
     "message": "Не удалось загрузить PAC скрипт. Проверьте URL и попробуйте снова.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Эти прокси-серверы используются для: 1) Исключений доменов, 2) Переопределения прокси PAC-скрипта",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Переопределить PAC-скрипты",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Когда включено, прокси-серверы будут переопределять результаты PAC-скрипта. Когда выключено, PAC-скрипты работают независимо.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Для работы исключений доменов необходимо сначала настроить прокси-серверы",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Отключите другие прокси-расширения для использования PAC скриптов из этого расширения.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Что нового",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Последняя версия (v1.1.0) - 26 августа 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Добавлен контроль переопределения PAC-скриптов: новый переключатель на вкладке «Прокси» для управления тем, переопределяют ли пользовательские прокси-серверы результаты PAC-скрипта",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Запросить функцию",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Есть идея для улучшения?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Оставьте заявку",
+    "description": "Link text for submitting feature requests"
   }
 }

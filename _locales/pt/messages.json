@@ -263,9 +263,14 @@
     "message": "Falha ao buscar script PAC. Por favor, verifique a URL e tente novamente.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Estes servidores proxy são usados para: 1) Exceções de domínio quando ativados, 2) Substituir as opções de proxy do script PAC quando ambos estão presentes",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Substituir Scripts PAC",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Quando ativado, os servidores proxy substituirão os resultados do script PAC. Quando desativado, os scripts PAC funcionam independentemente.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Exceções de domínio requerem que servidores proxy sejam configurados primeiro",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Desabilite outras extensões de proxy para usar scripts PAC desta extensão.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "O que há de novo",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Versão mais recente (v1.1.0) - 26 de agosto de 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Adicionado Controle de Substituição de Script PAC: Novo botão de alternância na aba Proxies para controlar se servidores proxy definidos pelo usuário substituem resultados do script PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Solicitar um recurso",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Tem uma ideia de melhoria?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Enviar solicitação de recurso",
+    "description": "Link text for submitting feature requests"
   }
 }

@@ -263,9 +263,14 @@
     "message": "Impossibile recuperare lo script PAC. Controlla l'URL e riprova.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Questi server proxy sono utilizzati per: 1) Eccezioni di dominio quando abilitati, 2) Sostituire le scelte proxy dello script PAC quando entrambi sono presenti",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Sostituisci Script PAC",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Quando abilitato, i server proxy sostituiranno i risultati dello script PAC. Quando disabilitato, gli script PAC funzionano indipendentemente.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Le eccezioni di dominio richiedono la configurazione preventiva dei server proxy",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Disabilita le altre estensioni proxy per utilizzare gli script PAC di questa estensione.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Cosa c'è di nuovo",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Ultima versione (v1.1.0) - 26 agosto 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Aggiunto controllo di sovrascrittura script PAC: Nuovo interruttore nella scheda Proxies per controllare se i server proxy definiti dall'utente sovrascrivono i risultati dello script PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Richiedi una funzionalità",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Hai un'idea per un miglioramento?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Invia richiesta funzionalità",
+    "description": "Link text for submitting feature requests"
   }
 }

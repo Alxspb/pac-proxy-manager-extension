@@ -263,9 +263,14 @@
     "message": "Nie udało się pobrać skryptu PAC. Sprawdź URL i spróbuj ponownie.",
     "description": "Error message when PAC script fetch fails"
   },
-  "proxyServersInfo": {
-    "message": "Te serwery proxy są używane do: 1) Wyjątków domen gdy włączone, 2) Zastąpienia wyboru proxy skryptów PAC gdy oba są obecne",
-    "description": "Info text explaining proxy servers usage for exceptions and PAC script override"
+
+  "overridePacScriptLabel": {
+    "message": "Zastąp Skrypty PAC",
+    "description": "Label for the PAC script override toggle switch"
+  },
+  "overridePacScriptDescription": {
+    "message": "Gdy włączone, serwery proxy zastąpią wyniki skryptu PAC. Gdy wyłączone, skrypty PAC działają niezależnie.",
+    "description": "Description explaining the PAC script override functionality"
   },
   "exceptionsRequireProxies": {
     "message": "Wyjątki domen wymagają najpierw skonfigurowania serwerów proxy",
@@ -362,5 +367,29 @@
   "proxyControlWarningAction": {
     "message": "Wyłącz inne rozszerzenia proxy aby używać skryptów PAC z tego rozszerzenia.",
     "description": "Action suggestion when another extension controls proxy"
+  },
+  "changelogTitle": {
+    "message": "Co nowego",
+    "description": "Title for the changelog section in About tab"
+  },
+  "changelogLatestVersion": {
+    "message": "Najnowsza wersja (v1.1.0) - 26 sierpnia 2025",
+    "description": "Latest version header in changelog section"
+  },
+  "changelogContent": {
+    "message": "• Dodano kontrolę nadpisywania skryptów PAC: Nowy przełącznik na karcie Proxies do kontrolowania, czy serwery proxy zdefiniowane przez użytkownika nadpisują wyniki skryptu PAC",
+    "description": "Content describing the latest version changes"
+  },
+  "featureRequestTitle": {
+    "message": "Poproś o funkcję",
+    "description": "Title for the feature request section in About tab"
+  },
+  "featureRequestText": {
+    "message": "Masz pomysł na ulepszenie?",
+    "description": "Text prompting users to request features"
+  },
+  "featureRequestLinkText": {
+    "message": "Wyślij prośbę o funkcję",
+    "description": "Link text for submitting feature requests"
   }
 }
